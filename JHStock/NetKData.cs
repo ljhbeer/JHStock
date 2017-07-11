@@ -61,6 +61,7 @@ namespace JHStock
 		private void GetDataFromNet(int locallength, List<int> Netexcept){
 			ThreadUpdateStocksQQDayly qf = new ThreadUpdateStocksQQDayly(_stocks,Netexcept.Count);
 			qf.MaxThreadSum = 50;
+            if(ThreadShowMsg!=null)
 			qf.showmsg = new ShowDeleGate(ThreadShowMsg);
 			List<Stock> ss = new List<Stock>(){
 				_stocks.StockByIndex(2),

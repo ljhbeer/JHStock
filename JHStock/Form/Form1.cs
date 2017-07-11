@@ -25,11 +25,17 @@ namespace JHStock
 			itemsShow = new List<string>();
 			columntitles = new List<string>();
 			DateTime dt = DateTime.Today;
-            //textBox_backendday.Text = Config.ToIntDate(dt).ToString();
-            //textBox_backbeginday.Text = Config.ToIntDate(dt.AddYears(-1)).ToString();
-            //textBox_backgreendays.Text = "20";
-            //textBox_backnowdays.Text = "1";
+
+            textBox_backendday.Text = ToIntDate(dt).ToString();
+            textBox_backbeginday.Text = ToIntDate(dt.AddYears(-1)).ToString();
+            textBox_backgreendays.Text = "20";
+            textBox_backnowdays.Text = "1";
 		}
+
+        private int ToIntDate(DateTime dt)
+        {
+            return dt.Year * 10000 + dt.Month * 100 + dt.Day;
+        }
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			InitDBAndStocks();			
@@ -135,11 +141,12 @@ namespace JHStock
 			if(!isrunning){
 				isrunning = false;
 				NetKData nkd = new NetKData(_jscfg);
+                nkd.ThreadShowMsg = ThreadShowMsg;
 				System.Threading.Thread nonParameterThread = 
 					new Thread( new ThreadStart( nkd.GetNetKData ));
 				nonParameterThread.Start();
 			}
-		}
+		} ///??
 		
 
 		private void listBox1_KeyUp(object sender, KeyEventArgs e)
@@ -163,6 +170,7 @@ namespace JHStock
 				sql = sql.Replace("[id]", "stockid");
 			dgv.DataSource =_stocks.Gcfg.db.query(sql).Tables[0];
 		}
+
 		private void buttonMACD_Click(object sender, EventArgs e)
 		{
 			String Msg = "";

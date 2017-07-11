@@ -79,7 +79,7 @@ namespace JHStock
 			}catch{
 	        	Tag[s.ID].txt = txt;
 	        	Tag[s.ID].value = -2;
-//				MFile.AppendAllText("UpdatePrice.log",s.ID + "  "+ Tag[s.ID].txt+"\r\n\r\n");
+                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + Tag[s.ID].txt + "\r\n\r\n");
 			}
 	    }      
 		private void UpdateItem(List<Stock> usstocks)
@@ -97,6 +97,7 @@ namespace JHStock
 				if( time>10){
 					TimeSpan ts = System.DateTime.Now.Subtract(dt1);
 					if(ts.TotalSeconds>5){
+                        if(showmsg!=null)
 						showmsg("已完成："+threadcompletesum+"");
 						time=0;
 						dt1 = System.DateTime.Now;
