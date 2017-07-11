@@ -21,14 +21,14 @@ namespace JHStock.Update
 				.Replace("[daylength]",daylength.ToString());
 			string txt = CWeb.GetWebClient(url).Substring(13);
 			QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
-			return qs.data["sh000001"].day.Select( r => Convert.ToInt32( r[0].Replace("-",""))).ToList();
+			return qs.data["sh000001"].day.Select( r => Convert.ToInt32(   r[0].ToString().Replace("-",""))).ToList();
 			}catch{
 				return new List<int>();
 			}
 		}
 	}	
 	public class  QQStockDetail{
-		public List<List<string>> day {get; set;}
+		public List<List<object>> day {get; set;}
 		public object qt { get; set; }
 		public object mx_price { get; set; }
 		public string prec { get; set; }

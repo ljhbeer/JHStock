@@ -1,0 +1,3 @@
+//debug 102  in NetKData.cs line 39
+				List<int> netexcept = shnetdate.Except(shdate).ToList();  // 需要Debug
+                netexcept = shnetdate;

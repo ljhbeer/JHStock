@@ -33,8 +33,10 @@ namespace JHStock
 					ErrorMsg = "无法核对完整数据，请更新数据后再运行本程序";
 					return;
 				}
-				List<int> netexcept = shnetdate.Except(shdate).ToList();
-				
+
+                //debug 102
+				List<int> netexcept = shnetdate.Except(shdate).ToList();  // 需要Debug
+                netexcept = shnetdate;
 				bool bfromnet = true;
 				if(File.Exists( cfg.WorkPath +"data\\ExpPrice.dat")){
 					string txt = File.ReadAllText(cfg.WorkPath +"data\\ExpPrice.dat");
@@ -50,11 +52,7 @@ namespace JHStock
 					//OutThreadMsg();
 				}
 			}finally{
-				isrunning = true;
-//				Invoke(new CompleteRunDeleGate(
-//					()=> {
-//				 	completebtn.Enabled = true;
-//				 }));				
+                CompleteRun();
 			}
 		}
 		
@@ -63,11 +61,11 @@ namespace JHStock
 			qf.MaxThreadSum = 50;
             if(ThreadShowMsg!=null)
 			qf.showmsg = new ShowDeleGate(ThreadShowMsg);
-			List<Stock> ss = new List<Stock>(){
-				_stocks.StockByIndex(2),
-				_stocks.StockByIndex(3),
-				_stocks.StockByIndex(4)
-			};
+            //List<Stock> ss = new List<Stock>(){
+            //    _stocks.StockByIndex(2),
+            //    _stocks.StockByIndex(3),
+            //    _stocks.StockByIndex(4)
+            //};
 			qf.DealStocks = _stocks.stocks;
 			this.Tag = qf.Tag;
 			updatetime = DateTime.Now;
@@ -76,12 +74,10 @@ namespace JHStock
 		
 		private JSConfig _jscfg;
 		private Stocks _stocks;
-		private Button completebtn;
-		private Boolean isrunning;
-		private bool bshowtime;
 		private DateTime updatetime;
 		public string ErrorMsg;
 		public tagstock[] Tag;
 		public ShowDeleGate ThreadShowMsg;
+        public CompleteDeleGate CompleteRun; 
 	}
 }

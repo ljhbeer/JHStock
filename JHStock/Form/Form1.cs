@@ -142,6 +142,7 @@ namespace JHStock
 				isrunning = false;
 				NetKData nkd = new NetKData(_jscfg);
                 nkd.ThreadShowMsg = ThreadShowMsg;
+                nkd.CompleteRun = ThreadCompleteRun;
 				System.Threading.Thread nonParameterThread = 
 					new Thread( new ThreadStart( nkd.GetNetKData ));
 				nonParameterThread.Start();
@@ -242,7 +243,8 @@ namespace JHStock
 			MFile.AppendAllText("update.log", msg.Trim() + "ErrorMsg:" + ErrorMsg + "\r\n\r\n");
 		}
 		public void CompleteRun(){
-			;
+            showappendfiletxt("已全部完成");
+            completebtn.Enabled = true;
 		}
 		public void showfiletxt(string file)
 		{

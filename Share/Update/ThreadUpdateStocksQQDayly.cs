@@ -67,19 +67,19 @@ namespace JHStock
 				 Tag[s.ID].kd = qs.data[s.Code.ToLower()].day
 	        		.Select( r => {
 	        		 KData k = 	new KData();
-	        		 k.date =Convert.ToInt32( r[0].Replace("-",""));	
+	        		 k.date =Convert.ToInt32( r[0].ToString().Replace("-",""));	
 	        		 k.open = (int)(Convert.ToSingle(r[1])*100);
 	        		 k.close = (int)(Convert.ToSingle(r[2])*100);
 	        		 k.high= (int)(Convert.ToSingle(r[3])*100);
 	        		 k.low = (int)(Convert.ToSingle(r[4])*100);
-	        		 k.vol = (int)(Convert.ToSingle(r[4])*100);
+	        		 k.vol = (int)(Convert.ToSingle(r[5])*100);
 	        		 return k;
 	        		}).ToList();
 				 Tag[s.ID].value = 1;
-			}catch{
+			}catch(Exception e){
 	        	Tag[s.ID].txt = txt;
 	        	Tag[s.ID].value = -2;
-                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + Tag[s.ID].txt + "\r\n\r\n");
+                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + Tag[s.ID].txt+"\t"+e.Message + "\r\n\r\n");
 			}
 	    }      
 		private void UpdateItem(List<Stock> usstocks)
@@ -97,7 +97,6 @@ namespace JHStock
 				if( time>10){
 					TimeSpan ts = System.DateTime.Now.Subtract(dt1);
 					if(ts.TotalSeconds>5){
-                        if(showmsg!=null)
 						showmsg("已完成："+threadcompletesum+"");
 						time=0;
 						dt1 = System.DateTime.Now;
@@ -111,6 +110,8 @@ namespace JHStock
 			}
 			while(threadsum > 0 )
 				Thread.Sleep(10);
+            if(showmsg!=null)
+            showmsg("已完成：" + threadcompletesum + "");
 		}	
 			
 	    private Stocks _stocks;
