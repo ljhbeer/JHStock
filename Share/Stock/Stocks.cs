@@ -209,7 +209,7 @@ namespace JHStock
 					string txt = CWeb.GetWebClient(url).Substring(13);
 					QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
 					_netszdate=qs.data["sh000001"].day.Select(
-						r => Convert.ToInt32( r[0].Replace("-",""))).ToList();
+						r => Convert.ToInt32( r[0].ToString().Replace("-",""))).ToList();
         		}
         		return _netszdate;
         	}
