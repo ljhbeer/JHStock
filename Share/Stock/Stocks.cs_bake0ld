@@ -1,0 +1,176 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.IO;
+using System.Runtime.InteropServices;
+
+namespace JHStock
+{
+    public  class Stocks
+    {
+        public Stocks(Config cfg)
+        {
+            this.cfg = cfg;
+            this.db = cfg.db;
+            _stocks = null;
+            _indexstocks = null;
+            _numcodestocks = null;
+            _indexdata = null;
+            _drnowbase = null;
+            NowMins = 0;
+        }
+        public Stock StockByIndex(int index)
+        {
+            if (_indexstocks == null)
+                InitStocks();
+            if (index > 0 && index < 2048)
+                return _indexstocks[index];
+            return null;
+        }
+        public Stock StockByNumCode(string NumCode)
+        {
+            if (_numcodestocks == null)
+                InitStocks();
+            if (_numcodestocks.ContainsKey(NumCode))
+                return _numcodestocks[NumCode];
+            return null;
+        }
+        public List<Stock> stocks { 
+            get
+            {
+                InitStocks();
+                return _stocks;
+            }
+        }
+        public int GetStartDatePos(int  day)
+        {
+            InitStocks();
+            InitIndexDay();
+            for (int i = 0; i <_indexdata.GetLength(0); i++)
+            {
+                if (_indexdata[i, 0] >= day)
+                    return i;
+            }
+            return -1;
+        }
+        public void InitNowBase()
+        {
+            InitStocks();
+            LoadNowBase();
+        }
+        public void InitStocksUpdateUrl(string sqltemplate){
+        	ClearUpdateUrl();
+        	DataTable dt = db.query(sqltemplate).Tables[0];
+            foreach (DataRow dr in dt.Rows)
+            {
+                Stock s = StockByIndex((int)dr["id"]);
+                if (s != null)
+                    s.UpdateUrl = dr["url"].ToString();
+            }
+        }
+        public void InitStocksItem(string sqltemplate){
+        	ClearItemTxt();
+        	DataTable dt = db.query(sqltemplate).Tables[0];
+            foreach (DataRow dr in dt.Rows)
+            {
+                Stock s = StockByIndex((int)dr["id"]);
+                if (s != null)
+                    s.ItemTxt = dr["item"].ToString();
+            }
+        }
+        public void LoadAllData(string allstockfile = "", int StructSize = 2048*4)
+        {
+            if (allstockfile == "")
+                allstockfile = cfg.IndexPath();
+            if (File.Exists(allstockfile))
+            {
+                byte[] buffer = File.ReadAllBytes(allstockfile);
+                int intsize = sizeof(int);
+                int itemintsize = StructSize / intsize;
+                int itemcount = (int)(buffer.Length / StructSize);
+                _indexdata = new int[itemcount, itemintsize];
+                unsafe
+                {
+                    IntPtr bytePtr = Marshal.AllocHGlobal(intsize);
+                    for (int i = 0; i < _indexdata.Length; i++)
+                    {
+                        Marshal.Copy(buffer, i * intsize, bytePtr, intsize);
+                        _indexdata[i / itemintsize, i % itemintsize] = *((int*)bytePtr);
+                    }
+                    Marshal.FreeHGlobal(bytePtr);
+                }
+            }
+        }    
+        public int NowMins { get; set; }
+        public Config CFG { get{return cfg;} }
+        public int[,] IndexData { get { InitIndexDay(); return _indexdata; } }   
+
+        private void InitIndexDay()
+        {
+            if (_indexdata == null)
+            {
+                LoadAllData();
+            }
+        }
+        private void InitStocks()
+        {
+            if (_stocks == null)
+            {
+                _stocks = new List<Stock>();
+                string sql = "select * from stockcode order by ID";
+                DataSet ds = db.query(sql);
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    Stock s = new Stock((int)dr["ID"], (string)dr["scode"], (string)dr["sname"],this);
+                    _stocks.Add(s);
+                }
+                //Init _indexstocks
+                _indexstocks = new Stock[2048];
+                for (int i = 0; i < 2048; i++)
+                    _indexstocks[i] = null;
+                foreach (Stock s in _stocks)
+                    _indexstocks[s.ID] = s;
+                //Init _Numstocks
+                _numcodestocks = new Dictionary<string, Stock>();
+                foreach (Stock s in _stocks)
+                    _numcodestocks.Add(s.NumCode, s);
+            }
+        }
+        private void LoadNowBase()
+        {
+            if (_drnowbase == null)
+            {
+                string sql = "select StockHexin.*,StockTopTen.TopTenRate,StockTopTen.TopTenLiuRate from "
+                            + "StockHexin,StockTopTen  where StockHexin.id=StockTopTen.id order by StockHexin.ID";
+                DataSet ds = db.query(sql);
+                _drnowbase = ds.Tables[0];
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    Stock s = StockByIndex((int)dr["ID"]);
+                    if(s!=null)
+                        s.DrNowBase = dr;
+                }              
+            }
+        }
+		private void ClearUpdateUrl()
+		{
+			foreach (Stock s in stocks)
+                s.UpdateUrl = ""; 
+		}
+		private void ClearItemTxt()
+		{
+			foreach (Stock s in stocks)
+                s.ItemTxt = ""; 
+		}
+
+        private Dictionary<string, Stock> _numcodestocks;
+        private Stock[] _indexstocks;
+        private List<Stock> _stocks;
+        private Config cfg;
+        private Db.ConnDb db;
+        private int[,]  _indexdata;
+        private DataTable _drnowbase;     	
+    }
+}
