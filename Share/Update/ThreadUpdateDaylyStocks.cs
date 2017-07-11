@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ToolsCXml;
-using StockTest;
 using Tools;
 using JHStock.Update;
 namespace JHStock

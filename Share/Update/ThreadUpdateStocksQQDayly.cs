@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using JHStock.Update;
 using Tools;
 using ToolsCXml;
-using StockTest;
 namespace JHStock
 {
 	public class ThreadUpdateStocksQQDayly{

@@ -11,7 +11,8 @@
     <RootNamespace>JHStock</RootNamespace>
     <AssemblyName>JHStock</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -34,8 +36,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Share\Component\QQFin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +52,217 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Share\Component\Component.cs">
+      <Link>Share\Component.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Component\DB.cs">
+      <Link>Share\DB.cs</Link>
+      <DependentUpon>component.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\MACD.cs">
+      <Link>Share\MACD.cs</Link>
+      <DependentUpon>component.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\MFile.cs">
+      <Link>Share\MFile.cs</Link>
+      <DependentUpon>component.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\CNFITool.cs">
+      <Link>Share\CNFITool.cs</Link>
+      <DependentUpon>QQFin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\CQFITool.cs">
+      <Link>Share\CQFITool.cs</Link>
+      <DependentUpon>QQFin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\NFinItem.cs">
+      <Link>Share\NFinItem.cs</Link>
+      <DependentUpon>QQFin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\QQFin.cs">
+      <Link>Share\QQFin.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\QQfinConfig.cs">
+      <Link>Share\QQfinConfig.cs</Link>
+      <DependentUpon>QQFin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\QQfinItem.cs">
+      <Link>Share\QQfinItem.cs</Link>
+      <DependentUpon>QQFin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\QQStocks.cs">
+      <Link>Share\QQStocks.cs</Link>
+      <DependentUpon>QQFin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\QQFin\ThreadUpdateStocksQQFin.cs">
+      <Link>Share\ThreadUpdateStocksQQFin.cs</Link>
+      <DependentUpon>QQFin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Component\XmlConfig.cs">
+      <Link>Share\XmlConfig.cs</Link>
+      <DependentUpon>component.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Config\BaseConfig.cs">
+      <Link>Share\BaseConfig.cs</Link>
+      <DependentUpon>JSConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Config\JSConfig.cs">
+      <Link>Share\JSConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\MyExtend.cs">
+      <Link>Share\MyExtend.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Stock\ActivePrice.cs">
+      <Link>Share\ActivePrice.cs</Link>
+      <DependentUpon>Stock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Stock\CAllStockData.cs">
+      <Link>Share\CAllStockData.cs</Link>
+      <DependentUpon>Stock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Stock\Stock.cs">
+      <Link>Share\Stock.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Stock\StockComponent.cs">
+      <Link>Share\StockComponent.cs</Link>
+      <DependentUpon>Stock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Stock\StockNowBase.cs">
+      <Link>Share\StockNowBase.cs</Link>
+      <DependentUpon>Stock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Stock\Stocks.cs">
+      <Link>Share\Stocks.cs</Link>
+      <DependentUpon>Stock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\BEId.cs">
+      <Link>Share\BEId.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\BEPos.cs">
+      <Link>Share\BEPos.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\BETag.cs">
+      <Link>Share\BETag.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\BETags.cs">
+      <Link>Share\BETags.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\CaseCmd.cs">
+      <Link>Share\CaseCmd.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\CItem.cs">
+      <Link>Share\CItem.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\Cmd.cs">
+      <Link>Share\Cmd.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\Condition.cs">
+      <Link>Share\Condition.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\FieldSet.cs">
+      <Link>Share\FieldSet.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\TableCmd.cs">
+      <Link>Share\TableCmd.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\TableRowCmd.cs">
+      <Link>Share\TableRowCmd.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\TableRowValueCmd.cs">
+      <Link>Share\TableRowValueCmd.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\TableValueCmd.cs">
+      <Link>Share\TableValueCmd.cs</Link>
+      <DependentUpon>ToolsCXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\ToolsCXml\ToolsCXml.cs">
+      <Link>Share\ToolsCXml.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Tools\BinTools.cs">
+      <Link>Share\BinTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\BitmapTools.cs">
+      <Link>Share\BitmapTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\Compare.cs">
+      <Link>Share\Compare.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\DataTableTools.cs">
+      <Link>Share\DataTableTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\DgvTools.cs">
+      <Link>Share\DgvTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\JsonFormatTool.cs">
+      <Link>Share\JsonFormatTool.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\PYTool.cs">
+      <Link>Share\PYTool.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\StaticsTools.cs">
+      <Link>Share\StaticsTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\StringTools.cs">
+      <Link>Share\StringTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\TimeStringTools.cs">
+      <Link>Share\TimeStringTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Tools\Tools.cs">
+      <Link>Share\Tools.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Tools\ValidTools.cs">
+      <Link>Share\ValidTools.cs</Link>
+      <DependentUpon>Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Update\ThreadUpdateDaylyStock.cs">
+      <Link>Share\ThreadUpdateDaylyStock.cs</Link>
+      <DependentUpon>UpdateStocks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Update\ThreadUpdateDaylyStocks.cs">
+      <Link>Share\ThreadUpdateDaylyStocks.cs</Link>
+      <DependentUpon>UpdateStocks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Update\ThreadUpdateStocks.cs">
+      <Link>Share\ThreadUpdateStocks.cs</Link>
+      <DependentUpon>UpdateStocks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Update\ThreadUpdateStocksQQDayly.cs">
+      <Link>Share\ThreadUpdateStocksQQDayly.cs</Link>
+      <DependentUpon>UpdateStocks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Share\Update\UpdateStocks.cs">
+      <Link>Share\UpdateStocks.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Web\CWeb.cs">
+      <Link>Share\CWeb.cs</Link>
+    </Compile>
+    <Compile Include="..\Share\Web\PostSubmitter.cs">
+      <Link>Share\PostSubmitter.cs</Link>
+      <DependentUpon>CWeb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +271,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Share\InDicator.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -65,7 +283,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -76,6 +296,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
