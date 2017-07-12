@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using Tools;
 using JHStock.Update;
+using System.Xml;
+
 namespace JHStock
 {
 	public partial class Form1 : Form
@@ -18,7 +20,6 @@ namespace JHStock
 		public Form1()
 		{
 			InitializeComponent();
-			dtsave = null;
 			_stocks = null;
 			_jscfg = null;
 			items = new List<string>();
@@ -171,76 +172,32 @@ namespace JHStock
 				sql = sql.Replace("[id]", "stockid");
 			dgv.DataSource =_stocks.Gcfg.db.query(sql).Tables[0];
 		}
-
-		private void buttonMACD_Click(object sender, EventArgs e)
-		{
-			String Msg = "";
-			((Button)sender).Enabled = false;
-			_stocks.ReloadListDate();
-			if (exchangestatus.StatusCheck(_stocks, ref Msg))
-				ShowFormMonit(exchangestatus, "MACD");
-			else
-				MessageBox.Show(Msg);
-			((Button)sender).Enabled = true;
-		}
+		
 		private void buttonMA_Click(object sender, EventArgs e)
 		{
 			String Msg = "";
 			((Button)sender).Enabled = false;
 			_stocks.ReloadListDate();
+
+            //检测有无数据 
+            if (Tag == null)
+            {
+                if (File.Exists(_jscfg.baseconfig .WorkPath + "data\\ExpPrice.dat"))
+                {
+                    string txt = File.ReadAllText(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");
+                    SaveTag sst = JsonConvert.DeserializeObject<SaveTag>(txt);
+                    this.Tag = sst.Tag;
+                    if (sst.now.Date == DateTime.Now.Date)
+                    {
+                    }
+                }
+            }
+
 			if (exchangestatus.StatusCheck(_stocks, ref Msg))
 				ShowFormMonit(exchangestatus, "MA");
 			else
 				MessageBox.Show(Msg);
 			((Button)sender).Enabled = true;
-		}
-		private void buttonCreateMacd_Click(object sender, EventArgs e)
-		{
-//			((Button)sender).Enabled = false;
-//			MACD macd = new MACD();
-//			if (checkBoxBeforeDate.Checked)
-//			{
-//				int backdate = Config.ToIntDate(DateTime.Today.AddDays(-1));
-//				int datepos = _stocks.GetStartDatePos(backdate);
-//				
-//				CreateAllStockMACDData(cfg, _stocks, cfg.StaticDays,datepos );
-//			}
-//			else
-//			{
-//				CreateAllStockMACDData(cfg, _stocks, cfg.StaticDays);
-//			}
-//			_stocks.ResetMacdData();
-//			((Button)sender).Enabled = true;
-		}
-		private void BTN_BACKMACDClick(object sender, EventArgs e)
-		{
-//			int begindate = Convert.ToInt32( textBox_backbeginday.Text);
-//			int enddate = Convert.ToInt32(textBox_backendday.Text);
-//			int greendays = Convert.ToInt32(textBox_backgreendays.Text);
-//			int nowdays = Convert.ToInt32(textBox_backnowdays.Text);
-//			string type = "MACD";
-//			if (itemsShow.Count > 0)
-//			{
-//				FormMonitBack f = new FormMonitBack(_stocks, itemsShow, exchangestatus, type, begindate, enddate, greendays, nowdays);
-//				f.ShowDialog();
-//			}
-//			else
-//			{
-//				MessageBox.Show("没有添加回测股票");
-//			}
-		}
-
-		public void OutThreadMsg()
-		{
-			GlobalConfig cfg = _jscfg.globalconfig;
-			string msg = "本次更新开始于" + updatetime.ToLongTimeString() + "结束于" + DateTime.Now.ToLongTimeString() + " 共耗时 " + DateTime.Now.Subtract(updatetime).TotalSeconds + " 秒，共更新了" + "条记录\r\n\r\n";
-			if (cfg.ErrMsg != "")
-				ErrorMsg += cfg.ErrMsg;
-			if (ErrorMsg == "")
-				ThreadShowMsg("已全部完成" + msg);
-			else
-				ThreadShowMsg("ErrorMsg:" + ErrorMsg + " Msg:" + msg);
-			MFile.AppendAllText("update.log", msg.Trim() + "ErrorMsg:" + ErrorMsg + "\r\n\r\n");
 		}
 		public void CompleteRun(){
             showappendfiletxt("已全部完成");
@@ -257,12 +214,12 @@ namespace JHStock
 		
 		private void ShowFormMonit(ExChangeStatusCheck exchangestatus, string type)
 		{
-//			this.Hide();
-//			if (f == null)
-//				f = new FormMonit(_stocks, exchangestatus, type);
-//			f.ShowDialog();
-//			f = null;
-//			this.Show();
+            this.Hide();
+            if (f == null)
+                f = new FormMonit(_stocks, exchangestatus, type,this.Tag);
+            f.ShowDialog();
+            f = null;
+            this.Show();
 		}
 		private void LoadCfg()
 		{
@@ -298,22 +255,125 @@ namespace JHStock
 		
 		private Button completebtn;
 		private Boolean isrunning;
-		private string ErrorMsg;
-		private bool bshowtime;
-		private DateTime updatetime;
 		
 		private List<string> items;
 		private List<string> itemsShow;
-		private DataTable dtsave;
 		private JHStock.JSConfig _jscfg;
 		private JHStock.Stocks _stocks;
 		private List<string> columntitles { get; set; }
 		private  ExChangeStatusCheck exchangestatus = new ExChangeStatusCheck();
 		public new tagstock[]  Tag;
+        private FormMonit f;
 	}
 	
 	public class DTNameType{
 		public string Name;
 		public Type type;
 	}
+    public class ExChangeStatusCheck
+    {
+        public ExChangeStatusCheck()
+        {
+            Init();
+        }
+        private void Init()
+        {
+            InLine = false;
+            ExChanging = false;
+            ExChangDay = false;
+            SinaLastestDate = XmlLatestDate = 0;
+        }
+        public bool StatusCheck(Stocks _stocks, ref string Msg)
+        {
+            Init();
+            if (_stocks.MacdData == null)
+            {
+                Msg = "无法载入MacdData";
+                return false;
+            }
+            //            if (!_stocks.CheckMacdSameToSHDate())
+            //            {
+            //                Msg = "Macd最新日期与上证数据日期不符，请确认更新盘后数据，并从新生成macdData 后重试，";  //无需测试
+            //                return false;
+            //            }
+            //            TestNet();
+            //            if (!InLine)
+            //                Msg = "目前处于脱机使用状态";
+            //            else
+            //            {
+            //                Msg = "在线";
+            //                if (SinaLastestDate == 0 || XmlLatestDate == 0)
+            //                {
+            //                    Msg = "网络获取障碍，无法获取正确的网络数据，请检查网络";
+            //                    return false;
+            //                }
+            //
+            //                if (SinaLastestDate == XmlLatestDate)
+            //                    ExChangDay = false;
+            //                else if (SinaLastestDate > XmlLatestDate) 
+            //                    ExChangDay = true;
+            //
+            //                if (_stocks.MacdLatestDay == SinaLastestDate || _stocks.MacdLatestDay== XmlLatestDate )
+            //                {
+            //                    if (ExChangDay)
+            //                    {
+            //                        _stocks.ListDate.Add(SinaLastestDate);////
+            //                    }
+            //                    Msg = "数据为最新数据";
+            //                    return true;
+            //                }
+            //                else
+            //                {
+            //                    Msg = "上证数据没有更新，请确认更新盘后数据，并从新生成macdData 后重试";
+            //                    return false;
+            //                }
+            //            }
+            return true;
+        }
+        public bool InLine { get; set; }
+        public bool ExChanging { get; set; }
+        public bool ExChangDay { get; set; }
+        public bool bError { get; set; }
+        public int XmlLatestDate { get; set; }
+        public int SinaLastestDate { get; set; }
+        private CWeb web = new CWeb();
+        private void TestNet()
+        {
+            try
+            {
+                InLine = false;
+                ExChanging = false;
+                string html = web.GetOKUrl("http://datapic.eastmoney.com/xml/rzrq/sh.xml");
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(html);
+                string newistday = doc.DocumentElement.ChildNodes[0].LastChild.InnerText;
+                System.DateTime dt = System.DateTime.Parse(newistday);
+                XmlLatestDate = dt.Year * 10000 + dt.Month * 100 + dt.Day;
+                //string prenewistday = doc.DocumentElement.ChildNodes[0].LastChild.PreviousSibling.InnerText;
+                //dt = System.DateTime.Parse(prenewistday);
+                //XmlPreLatestDate = dt.Year * 10000 + dt.Month * 100 + dt.Day;
+
+                html = web.GetOKUrl("http://hq.sinajs.cn/list=sh000001");
+                string[] ss = html.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                if (ss.Length < 30)
+                {
+                    bError = true;
+                    return;
+                }
+                dt = System.DateTime.Parse(ss[30] + " " + ss[31]);
+                SinaLastestDate = dt.Year * 10000 + dt.Month * 100 + dt.Day;
+                int time = dt.Hour * 100 + dt.Minute;
+
+                if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday
+                  && (time > 930 && time < 1500))
+                    ExChanging = true;
+                InLine = true;
+            }
+            catch
+            {
+                bError = true;
+            }
+            bError = false;
+        }
+    }
 }

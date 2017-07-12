@@ -21,14 +21,14 @@ namespace JHStock
             this.PYCode = PYTool.GetChineseSpell(name);
             this._gcfg = jscfg;
             this.Bmp = null;
-            this.InDicator = null;
+            //this.InDicator = null;
         }
         public int ID { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string NumCode { get; set; }
         public string PYCode { get; set; }
-        public InDicator InDicator{ get; set; }
+        //public void InDicator { get; set; } //InDicator 指针
         public Bitmap Bmp { get; set; }
         public GlobalConfig Gcfg { get { return _gcfg; } }
         public bool ExistKDfile()
