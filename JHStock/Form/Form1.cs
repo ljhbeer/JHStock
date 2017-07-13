@@ -75,9 +75,18 @@ namespace JHStock
 				comboBoxCol.Items.AddRange(names.ToArray());
 				comboBoxCol.SelectedIndex = names.FindIndex( r=>r.ToLower() == "stockcode");
 			}
-			itemsShow.Add("SH600221-海南航空(HNHK)");
-			listBox2.Items.Clear();
-			listBox2.Items.AddRange(itemsShow.ToArray());
+
+            string importtext = "600221";
+            if (File.Exists("select.txt"))
+                importtext = File.ReadAllText("select.txt").Trim();
+            List<string> find = items.FindAll(s => importtext.Contains(s.Substring(2,6)) );  //s.Contains(importtext.ToUpper())
+            if (find.Count > 0)
+            {
+                listBox1.Items.Clear();
+                listBox1.Items.AddRange(find.ToArray());
+                buttonAddNextlist.PerformClick();
+                listBox1.Items.Clear();
+            }          
 		}		
 		private void textBox1_TextChanged(object sender, EventArgs e)
 		{
@@ -217,7 +226,9 @@ namespace JHStock
             this.Hide();
             if (f == null)
                 f = new FormMonit(_stocks, exchangestatus, type,this.Tag);
+            f.DebugStocks = StocksByItemsShow();
             f.ShowDialog();
+
             f = null;
             this.Show();
 		}

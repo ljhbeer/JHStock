@@ -18,14 +18,17 @@ namespace JHStock
         private string type;
         private DataTable dt;
         private JHStock.Update.tagstock[] tags;
+        public List<Stock> DebugStocks;
+        private List<Stock> selectstock;
 
         public FormMonit(Stocks _stocks, ExChangeStatusCheck exchangestatus, string type, JHStock.Update.tagstock[] tags)
         {
             this._stocks = _stocks;
+            DebugStocks = this._stocks.stocks;
             this.exchangestatus = exchangestatus;
             this.type = type;
             this.tags = tags;
-            selectstockindex = new List<int>();
+            selectstock = new List<Stock>();
             InitializeComponent();
             InitMaDataTable();
         }        
@@ -58,12 +61,25 @@ namespace JHStock
         }
         private void buttonReCompute_Click(object sender, EventArgs e)
         {
-            selectstockindex.Clear();
-            foreach (Stock s in _stocks.stocks)
+            selectstock.Clear();
+            foreach (Stock s in DebugStocks)
             {
-                TestStock(s);
+                TestStock(s);                
             }
             ///show selectstock in the Table
+            ShowSelectedStocks();
+        }
+
+        private void ShowSelectedStocks()
+        {
+            dt.Rows.Clear();
+            foreach (Stock s in selectstock)
+            {
+                DataRow dr = dt.NewRow();
+                dr["名称"] = s.Name;
+                dr["代码"] = s.Code;
+                dt.Rows.Add(dr);
+            }
         }
         private StringBuilder DataTableToString(DataTable dtsave)
         {
@@ -91,7 +107,7 @@ namespace JHStock
         private void InitMaDataTable()
         {
             dt = new DataTable();
-            List<string> columntitles = new List<string>() { "名称", "代码", "日期", "上一状态持续天数", "状态", "持续日期", "均值", "杂项" };//,"杂项"
+            List<string> columntitles = new List<string>() { "名称", "代码", "日期" };//,"杂项"
             //columntitles = new List<string>() { "名称", "代码","杂项" };//,"杂项"
             for (int count = 0; count < columntitles.Count; count++)
             {
@@ -116,55 +132,42 @@ namespace JHStock
             dgv.DataSource = dt;
         }
   //List<KData> listclose = kd.Skip(0).Take(60).ToList();
-            //string str = kd.Select(r => r.date + "\t" + r.close + "\n").Aggregate((r1, r2) => r1 + r2)
-            //             +"\r\nma60\t"+ ma60.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2) 
-            //             +"\r\nma20\t"+  ma20.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-            //             +"\r\nma10\t"+  ma10.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-            //             +"\r\nma5\t"+  ma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
-            //MFile.WriteAllText( stock.Name+ stock.NumCode + ".txt", str);
-            //MFile.WriteAllText(stock.Name + stock.NumCode + ".txt", dma60.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2));
         public void TestStock(Stock s,int staticdaylenght = 200)
         {   
             tagstock t = tags[s.ID];
             if (t == null)
                 return;
             // if select  then selectstockindex.add 
+            selectstock.Add(s);
+            int[] kdclose = t.kd.Select(r => r.close).ToArray();
+            int[] kdvol = t.kd.Select(r => r.vol).ToArray();
+            List<double> ma60 = MA(0, 60, kdclose); //skip 60
+            List<double> ma20 = MA(40, 20, kdclose);
+            List<double> ma10 = MA(50, 10, kdclose);
+            List<double> ma5 = MA(55, 5, kdclose);
+            
+            List<double> vma10 = MA(50, 10, kdvol);
+            List<double> vma5 = MA(55, 5, kdvol);
 
-            KData[] kd = t.kd.ToArray();
-          
-            int skipday = kd.Length - staticdaylenght;
-            List<double> ma60 = MA(0, 60, kd);
-            List<double> ma20 = MA(40, 20, kd);
-            List<double> ma10 = MA(50, 10, kd);
-            List<double> ma5 = MA(55, 5, kd);
+            double now = vma5[0];
+            List<double> dvma5rate  = vma5.Select( r =>
+                { double ret = (r - now)/now; now = r; return ret; }).ToList();
 
-          
-            double pclose = ma60[0];
-            List<double> dma60 = ma60.Select(r =>
-            { double ret = r - pclose; pclose = r; return ret; }).ToList();
-            double hafavedev = StaticsTools.avedev(dma60) * .5;
-            List<int> intdma60 = dma60.Select(r => (int)(r / hafavedev)).ToList();
+            List<double> vdvma5rate = MA(0, 5, dvma5rate.ToArray());
+            List<int> intvdvma5rate = vdvma5rate.Select(r => (int)(r * 100 * 5)).ToList();
+            string str = "date\tclose\tvol\n"
+                         +t.kd.Select(r => r.date + "\t" + r.close +"\t"+r.vol+ "\n").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nma60\t" + ma60.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nma20\t" + ma20.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nma10\t" + ma10.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nma5\t" + ma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nvma10\t" + vma10.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
 
-            pclose = ma60[0];
-            List<double> logma60 = ma60.Select(r =>
-            { double ret = Math.Log10(r / pclose); pclose = r; return ret; }).ToList();
-            //MFile.WriteAllText(stock.Name + stock.NumCode + "log.txt", logma60.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2));
-            //MFile.WriteAllText(stock.Name + stock.NumCode + "ldv.txt", ldv.Select(r => r.index + "\t" + r.length + "\t" + r.value + "\r\n").Aggregate((r1, r2) => r1 + r2));
-            //MFile.WriteAllText(stock.Name + stock.NumCode + "lddv.txt", lddv.Select(r => r.index + "\t" + r.length + "\t" + r.value + "\r\n").Aggregate((r1, r2) => r1 + r2));             
-            //序列分段
-            //lddv = DivInforDouble.reduceAnalyse(lddv);
-            //MFile.WriteAllText(stock.Name + stock.NumCode + "rlddv.txt", lddv.Select(r => r.index + "\t" + r.length + "\t" + r.value + "\r\n").Aggregate((r1, r2) => r1 + r2));
-
-            //求序列最大和子序列
-            int b = 0, e = 0;
-            double maxsum = maxsublinear(logma60, out b, out e);
-            double maxzf = (Math.Pow(10, maxsum) - 1) * 100;
-            MFile.AppendAllText(Tools.TimeStringTools.NowDateMin() + "MonitMAIndicator最大涨幅和区间log.txt", s.Name + "\t" + s.Code + "\t" + maxzf + "\t " + (e - b) + "\t" + b + "\t " + e + "\t" + kd[60 + b].date + "\t" + kd[60 + e].date + "\t");
-
-            List<double> flogma60 = logma60.Select(r => -r).ToList();
-            double fmaxsum = maxsublinear(flogma60, out b, out e);
-            double fmaxzf = (1 - Math.Pow(10, -fmaxsum)) * 100;
-            //离今天的交易天数
+                         + "\r\ndvma5rate\t" + dvma5rate.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nvdvma5rate\t" + vdvma5rate.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nintvdvma5rate\t" + intvdvma5rate.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
+            MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
 
         }
         double maxsublinear(List<double> a, out int b, out int e)
@@ -202,20 +205,32 @@ namespace JHStock
             e = end;
             return maxSum;
         }
-        private List<double> MA(int skip, int daylength, KData[] kd)
+        
+        //type = 0: close  type = 1: vol type =  2: open type=3 high  type=4 low
+        private List<double> MA(int skip, int daylength, int[] listdata)
         {
             List<double> MA = new List<double>();
-            int sum = kd.Skip(skip).Take(daylength).Sum(r => r.close);
-            for (int i = skip + daylength; i < kd.Length; i++)
+            double sum = listdata.Skip(skip).Take(daylength).Sum();
+            for (int i = skip + daylength; i < listdata.Length; i++)
             {
                 double avg = sum * 1.0 / daylength;
                 MA.Add(avg);
-                sum += kd[i].close - kd[i - daylength].close;
+                sum += listdata[i] - listdata[i - daylength];
             }
-
             return MA;
         }
-        private List<int> selectstockindex;
+        private List<double> MA(int skip, int daylength, double[] listdata)
+        {
+            List<double> MA = new List<double>();
+            double sum = listdata.Skip(skip).Take(daylength).Sum();
+            for (int i = skip + daylength; i < listdata.Length; i++)
+            {
+                double avg = sum * 1.0 / daylength;
+                MA.Add(avg);
+                sum += listdata[i] - listdata[i - daylength];
+            }
+            return MA;
+        }
     }
 }
 #region runnet
