@@ -37,6 +37,7 @@
             this.buttonToTxt = new System.Windows.Forms.Button();
             this.checkBoxTable = new System.Windows.Forms.CheckBox();
             this.buttonReCompute = new System.Windows.Forms.Button();
+            this.checkBoxMonitdays = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -96,6 +97,7 @@
             this.flowLayoutPanel1.Controls.Add(this.buttonToTxt);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxTable);
             this.flowLayoutPanel1.Controls.Add(this.buttonReCompute);
+            this.flowLayoutPanel1.Controls.Add(this.checkBoxMonitdays);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(37, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -142,6 +144,16 @@
             this.buttonReCompute.UseVisualStyleBackColor = true;
             this.buttonReCompute.Click += new System.EventHandler(this.buttonReCompute_Click);
             // 
+            // checkBoxMonitdays
+            // 
+            this.checkBoxMonitdays.AutoSize = true;
+            this.checkBoxMonitdays.Location = new System.Drawing.Point(299, 3);
+            this.checkBoxMonitdays.Name = "checkBoxMonitdays";
+            this.checkBoxMonitdays.Size = new System.Drawing.Size(162, 16);
+            this.checkBoxMonitdays.TabIndex = 25;
+            this.checkBoxMonitdays.Text = "后续监测1天（默认两天）";
+            this.checkBoxMonitdays.UseVisualStyleBackColor = true;
+            // 
             // FormMonit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -170,5 +182,6 @@
         private System.Windows.Forms.Button buttonToTxt;
         private System.Windows.Forms.CheckBox checkBoxTable;
         private System.Windows.Forms.Button buttonReCompute;
+        private System.Windows.Forms.CheckBox checkBoxMonitdays;
     }
 }

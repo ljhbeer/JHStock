@@ -20,6 +20,7 @@ namespace JHStock
         private JHStock.Update.tagstock[] tags;
         public List<Stock> DebugStocks;
         private List<Stock> selectstock;
+        private List<string> savestockinfor; //与selectstock 同步
 
         public FormMonit(Stocks _stocks, ExChangeStatusCheck exchangestatus, string type, JHStock.Update.tagstock[] tags)
         {
@@ -29,6 +30,7 @@ namespace JHStock
             this.type = type;
             this.tags = tags;
             selectstock = new List<Stock>();
+            savestockinfor = new List<string>();
             InitializeComponent();
             InitMaDataTable();
         }        
@@ -62,6 +64,7 @@ namespace JHStock
         private void buttonReCompute_Click(object sender, EventArgs e)
         {
             selectstock.Clear();
+            savestockinfor.Clear();
             foreach (Stock s in DebugStocks)
             {
                 TestStock(s);                
@@ -73,12 +76,21 @@ namespace JHStock
         private void ShowSelectedStocks()
         {
             dt.Rows.Clear();
+            int i = 0;
             foreach (Stock s in selectstock)
             {
                 DataRow dr = dt.NewRow();
                 dr["名称"] = s.Name;
                 dr["代码"] = s.Code;
+                string[] ss = savestockinfor[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                if (ss.Length == 3)
+                {
+                    dr["持续天数"] = ss[0];
+                    dr["后续天数"] = ss[1];
+                    dr["后续天数的情况"] = ss[2];
+                }
                 dt.Rows.Add(dr);
+                i++;
             }
         }
         private StringBuilder DataTableToString(DataTable dtsave)
@@ -107,20 +119,18 @@ namespace JHStock
         private void InitMaDataTable()
         {
             dt = new DataTable();
-            List<string> columntitles = new List<string>() { "名称", "代码", "日期" };//,"杂项"
+            List<string> columntitles = new List<string>() { "名称", "代码", "日期", "持续天数" ,"后续天数","后续天数的情况" };//,"杂项"
             //columntitles = new List<string>() { "名称", "代码","杂项" };//,"杂项"
             for (int count = 0; count < columntitles.Count; count++)
             {
                 DataColumn dc = new DataColumn(columntitles[count]);
-                if ("代码名称状态杂项".Contains(columntitles[count]))
+                if ("代码名称状态杂项日期".Contains(columntitles[count]))
                 {
                     dc.DataType = typeof(string);
-                    //dc.MaxLength = 60;
                 }
-                else if ("日期上一状态持续天数持续日期".Contains(columntitles[count]))
+                else if ("上一状态持续天数后续天数".Contains(columntitles[count]))
                 {
                     dc.DataType = typeof(int);
-                    //dc.MaxLength = 20;
                 }
                 else
                 {
@@ -129,11 +139,73 @@ namespace JHStock
                 }
                 dt.Columns.Add(dc);
             }
-            dgv.DataSource = dt;
+            dgv.DataSource = dt; // 宽度应设置在 dgv 上
+
+            for (int i = 0; i < dgv.ColumnCount; i++)
+            {
+                if ("代码名称状态杂项日期".Contains( dgv.Columns[i].Name))
+                {
+                    dgv.Columns[i].Width = 60;
+                }
+                else if ("上一状态持续天数后续天数".Contains(dgv.Columns[i].Name))
+                {
+                    dgv.Columns[i].Width = 40;
+                }
+                else
+                {
+                    dgv.Columns[i].Width = 150;
+                    //dc.MaxLength = 30;
+                }
+            }
         }
-  //List<KData> listclose = kd.Skip(0).Take(60).ToList();
-        public void TestStock(Stock s,int staticdaylenght = 200)
+        //List<KData> listclose = kd.Skip(0).Take(60).ToList();
+        public void TestStock(Stock s, int staticdaylenght = 200)
         {   
+            tagstock t = tags[s.ID];
+            if (t == null)
+                return;
+            // if select  then selectstockindex.add 
+            //selectstock.Add(s);
+
+            double[] kdvol = t.kd.Select(r =>(double)( r.vol)).ToArray();
+            List<double> vma5 = MA(0, 5, kdvol);
+            double now = vma5[0];
+            List<double> dvma5rate  = vma5.Select( r =>
+                { double ret = (r - now)/now; now = r; return ret; }).ToList();
+            List<int> ma5L = dvma5rate.Select(r => (int)(r * 100 + (r > 0 ? 0.5 : -0.5))).ToList();
+            //List<double> vdvma5rate = MA(0, 5, dvma5rate.ToArray());
+            //List<int> intvdvma5rate = vdvma5rate.Select(r => (int)(r * 100 * 5 + (r > 0 ? 0.5 : -0.5))).ToList();
+            List<Point> lines=
+            HorizontalLines(ma5L, 18, 15, 12);  //firstbigbreak,secondbigbreak,thirdbigbreak
+            lines = MergeLines(lines,ma5L,24); //合并条件1. 两条线只差一点 2.该点数值在  24  以内  //以后再优化
+            if(lines.Count>0){
+                Point LastLine = lines[lines.Count - 1];
+                int epos = LastLine.X+LastLine.Y;
+                int undays = ma5L.Count - epos;
+
+
+                if(  ( !checkBoxMonitdays.Checked &&  undays < 5 && undays > 2 && Math.Abs(ma5L[epos + 1]) > 29 && Math.Abs(ma5L[epos + 2]) > 29)  //监视两天
+                   || (checkBoxMonitdays.Checked && undays < 5 && undays > 1 && Math.Abs(ma5L[epos + 1]) > 29) )//一天为监视
+                {
+                    selectstock.Add(s);
+                    // 持续天数  \t 后续天数  \t  后续天数的情况
+                    savestockinfor.Add( LastLine.Y +"\t"+ undays+"\t"+ string.Join(",",ma5L.Skip(epos).Take(undays)));
+                }
+            }
+            return;
+            //for debug
+            List<int> L = ma5L.Select(r => 0).ToList();
+            foreach (Point p in lines)
+                for (int i = 0; i < p.Y; i++)
+                    L[i + p.X] = 1;
+            string str = "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
+            MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
+        }
+
+        public void TestStock2(Stock s, int staticdaylenght = 200) // for Debug Test
+        {
             tagstock t = tags[s.ID];
             if (t == null)
                 return;
@@ -145,44 +217,30 @@ namespace JHStock
             List<double> ma20 = MA(40, 20, kdclose);
             List<double> ma10 = MA(50, 10, kdclose);
             List<double> ma5 = MA(55, 5, kdclose);
-            
+
             List<double> vma10 = MA(50, 10, kdvol);
             List<double> vma5 = MA(55, 5, kdvol);
 
             double now = vma5[0];
-            List<double> dvma5rate  = vma5.Select( r =>
-                { double ret = (r - now)/now; now = r; return ret; }).ToList();
-            List<int> ma5L = dvma5rate.Select(r => (int)(r * 100)).ToList();
+            List<double> dvma5rate = vma5.Select(r =>
+            { double ret = (r - now) / now; now = r; return ret; }).ToList();
+            List<int> ma5L = dvma5rate.Select(r => (int)(r * 100 + (r > 0 ? 0.5 : -0.5))).ToList();
 
 
             List<double> vdvma5rate = MA(0, 5, dvma5rate.ToArray());
-            List<int> intvdvma5rate = vdvma5rate.Select(r => (int)(r * 100 * 5)).ToList();
+            List<int> intvdvma5rate = vdvma5rate.Select(r => (int)(r * 100 * 5 + (r > 0 ? 0.5 : -0.5))).ToList();
 
-
-            List<Point> lines=
+            List<Point> lines =
             HorizontalLines(ma5L, 18, 15, 12);  //firstbigbreak,secondbigbreak,thirdbigbreak
-
+            lines = MergeLines(lines, ma5L, 24); //合并条件1. 两条线只差一点 2.该点数值在  24  以内  //以后再优化
+            
             //for debug
             List<int> L = ma5L.Select(r => 0).ToList();
             foreach (Point p in lines)
                 for (int i = 0; i < p.Y; i++)
                     L[i + p.X] = 1;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             string str = "date\tclose\tvol\n"
-                         +t.kd.Select(r => r.date + "\t" + r.close +"\t"+r.vol+ "\n").Aggregate((r1, r2) => r1 + r2)
+                         + t.kd.Select(r => r.date + "\t" + r.close + "\t" + r.vol + "\n").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nma60\t" + ma60.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nma20\t" + ma20.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nma10\t" + ma10.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
@@ -196,7 +254,27 @@ namespace JHStock
                          + "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
             MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
-
+        }
+        private List<Point> MergeLines(List<Point> lines, List<int> maL, int bigbreak)
+        {
+            if(lines.Count<2) return lines;;
+            List<Point> nlines = new List<Point>();
+            Point L = lines[0];
+            for (int i = 1; i < lines.Count; i++)
+            {
+                if (L.X + L.Y + 1 != lines[i].X || maL[lines[i].X - 1] > bigbreak)
+                {
+                    nlines.Add(L);
+                    L = lines[i];
+                }
+                else
+                {
+                    L.Y += 1 + lines[i].Y;
+                }
+            }
+            if (!nlines.Contains(L))
+                nlines.Add(L);
+            return nlines;
         }
 
         private List<Point> HorizontalLines(List<int> data, int firstbigbreak, int secondbigbreak, int thirdbigbreak)
