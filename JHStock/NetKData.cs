@@ -36,7 +36,7 @@ namespace JHStock
 
                 //debug 102
 				List<int> netexcept = shnetdate.Except(shdate).ToList();  // 需要Debug
-                netexcept = shnetdate;
+                netexcept = shnetdate.Skip(254- 84).Take(84).ToList(); //modified 254 to 84
 				bool bfromnet = true;
 				if(File.Exists( cfg.WorkPath +"data\\ExpPrice.dat")){
 					string txt = File.ReadAllText(cfg.WorkPath +"data\\ExpPrice.dat");

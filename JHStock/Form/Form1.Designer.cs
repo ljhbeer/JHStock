@@ -35,8 +35,6 @@
             this.buttonCheckData = new System.Windows.Forms.Button();
             this.checkBoxBeforeDate = new System.Windows.Forms.CheckBox();
             this.buttonMA = new System.Windows.Forms.Button();
-            this.buttonCreateMacd = new System.Windows.Forms.Button();
-            this.buttonMACD = new System.Windows.Forms.Button();
             this.textBoxShow = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.buttonClearNextList = new System.Windows.Forms.Button();
@@ -57,7 +55,6 @@
             this.textBox_backendday = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_backbeginday = new System.Windows.Forms.TextBox();
-            this.BTN_BACKMACD = new System.Windows.Forms.Button();
             this.dgv = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -110,8 +107,6 @@
             this.splitContainer1.Panel1.Controls.Add(this.buttonCheckData);
             this.splitContainer1.Panel1.Controls.Add(this.checkBoxBeforeDate);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMA);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonCreateMacd);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonMACD);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxShow);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxMdbPath);
@@ -146,33 +141,13 @@
             // 
             // buttonMA
             // 
-            this.buttonMA.Location = new System.Drawing.Point(405, 5);
+            this.buttonMA.Location = new System.Drawing.Point(267, 4);
             this.buttonMA.Name = "buttonMA";
             this.buttonMA.Size = new System.Drawing.Size(39, 19);
             this.buttonMA.TabIndex = 27;
             this.buttonMA.Text = "MA-M";
             this.buttonMA.UseVisualStyleBackColor = true;
             this.buttonMA.Click += new System.EventHandler(this.buttonMA_Click);
-            // 
-            // buttonCreateMacd
-            // 
-            this.buttonCreateMacd.Location = new System.Drawing.Point(267, 4);
-            this.buttonCreateMacd.Name = "buttonCreateMacd";
-            this.buttonCreateMacd.Size = new System.Drawing.Size(77, 19);
-            this.buttonCreateMacd.TabIndex = 26;
-            this.buttonCreateMacd.Text = "CreateMACD";
-            this.buttonCreateMacd.UseVisualStyleBackColor = true;
-            this.buttonCreateMacd.Click += new System.EventHandler(this.buttonCreateMacd_Click);
-            // 
-            // buttonMACD
-            // 
-            this.buttonMACD.Location = new System.Drawing.Point(346, 5);
-            this.buttonMACD.Name = "buttonMACD";
-            this.buttonMACD.Size = new System.Drawing.Size(53, 19);
-            this.buttonMACD.TabIndex = 25;
-            this.buttonMACD.Text = "MACD-M";
-            this.buttonMACD.UseVisualStyleBackColor = true;
-            this.buttonMACD.Click += new System.EventHandler(this.buttonMACD_Click);
             // 
             // textBoxShow
             // 
@@ -306,7 +281,6 @@
             this.groupBox1.Controls.Add(this.textBox_backendday);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBox_backbeginday);
-            this.groupBox1.Controls.Add(this.BTN_BACKMACD);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(312, 59);
@@ -378,16 +352,6 @@
             this.textBox_backbeginday.Size = new System.Drawing.Size(64, 21);
             this.textBox_backbeginday.TabIndex = 29;
             // 
-            // BTN_BACKMACD
-            // 
-            this.BTN_BACKMACD.Location = new System.Drawing.Point(6, 12);
-            this.BTN_BACKMACD.Name = "BTN_BACKMACD";
-            this.BTN_BACKMACD.Size = new System.Drawing.Size(67, 26);
-            this.BTN_BACKMACD.TabIndex = 0;
-            this.BTN_BACKMACD.Text = "MACD-Back";
-            this.BTN_BACKMACD.UseVisualStyleBackColor = true;
-            this.BTN_BACKMACD.Click += new System.EventHandler(this.BTN_BACKMACDClick);
-            // 
             // dgv
             // 
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -443,8 +407,6 @@
         private System.Windows.Forms.DataGridView dgv;
         private System.Windows.Forms.CheckBox checkBoxIDIndex;
         private System.Windows.Forms.TextBox textBoxShow;
-        private System.Windows.Forms.Button buttonMACD;
-        private System.Windows.Forms.Button buttonCreateMacd;
         private System.Windows.Forms.Button buttonMA;
         private System.Windows.Forms.CheckBox checkBoxBeforeDate;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -456,7 +418,6 @@
         private System.Windows.Forms.TextBox textBox_backendday;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_backbeginday;
-        private System.Windows.Forms.Button BTN_BACKMACD;
         private System.Windows.Forms.Button buttonClearNextList;
     }
 }

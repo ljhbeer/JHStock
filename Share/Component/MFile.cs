@@ -36,7 +36,7 @@ namespace Tools
 		public static void WriteAllText(string path, string contents)
 		{
 		 	checkPath(ref path);
-			File.WriteAllText(path,contents);
+			File.WriteAllText(path.Replace("*","xh"),contents);
 		}		
 		public static void AppendAllText(string path, string contents)
 		{
