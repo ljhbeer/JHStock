@@ -152,9 +152,35 @@ namespace JHStock
             double now = vma5[0];
             List<double> dvma5rate  = vma5.Select( r =>
                 { double ret = (r - now)/now; now = r; return ret; }).ToList();
+            List<int> ma5L = dvma5rate.Select(r => (int)(r * 100)).ToList();
+
 
             List<double> vdvma5rate = MA(0, 5, dvma5rate.ToArray());
             List<int> intvdvma5rate = vdvma5rate.Select(r => (int)(r * 100 * 5)).ToList();
+
+
+            List<Point> lines=
+            HorizontalLines(ma5L, 18, 15, 12);  //firstbigbreak,secondbigbreak,thirdbigbreak
+
+            //for debug
+            List<int> L = ma5L.Select(r => 0).ToList();
+            foreach (Point p in lines)
+                for (int i = 0; i < p.Y; i++)
+                    L[i + p.X] = 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             string str = "date\tclose\tvol\n"
                          +t.kd.Select(r => r.date + "\t" + r.close +"\t"+r.vol+ "\n").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nma60\t" + ma60.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
@@ -166,9 +192,71 @@ namespace JHStock
 
                          + "\r\ndvma5rate\t" + dvma5rate.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nvdvma5rate\t" + vdvma5rate.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-                         + "\r\nintvdvma5rate\t" + intvdvma5rate.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
+                         + "\r\nintvdvma5rate\t" + intvdvma5rate.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                         + "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
             MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
 
+        }
+
+        private List<Point> HorizontalLines(List<int> data, int firstbigbreak, int secondbigbreak, int thirdbigbreak)
+        {
+
+            Point line = new Point(0,0);
+            int fc = 0, sc = 0, tc = 0,lc=0;
+            List<Point> Lines =  new List<Point>(); // Size.X  StartPoint  Size.Y  lenght
+            List<int> absdata = data.Select(r => Math.Abs(r)).ToList();
+            if (absdata[0] <= firstbigbreak)
+                lc++;
+            for (int i = 0; i < absdata.Count; i++)
+            {               
+                if (absdata[i] > firstbigbreak)
+                    fc++;
+                else if (absdata[i] > secondbigbreak)
+                    sc++;
+                else if (absdata[i] > thirdbigbreak)
+                    tc++;
+
+                if (lc == 1 && i - line.X > 5)
+                {
+                    if (absdata[i - 5] > firstbigbreak)
+                    {
+                        if(fc>0) fc--;
+                    }
+                    else if (absdata[i - 5] > secondbigbreak)
+                    {
+                        if(sc>0) sc--;
+                    }
+                    else if (absdata[i - 5] > thirdbigbreak)
+                    {
+                        if(tc>0) tc--;
+                    }
+                }
+
+
+                if (fc == 1 || sc == 2 || tc == 3 || sc + tc==3 )  //bbreak = true; 
+                {
+                    fc = sc = tc = 0;
+                 
+                    if (lc == 1)  // lc == 2  //lineend //五天以上
+                    {
+                        lc = 0;
+                        line.Y = i - line.X;
+                        if (line.Y > 4)
+                            Lines.Add(line);
+                    }
+                }
+                else
+                {
+                    if (lc == 0) // line 未开始状态
+                    {
+                        lc++;
+                        line.X = i;
+                    }
+                }
+
+            }
+            return Lines;
         }
         double maxsublinear(List<double> a, out int b, out int e)
         {
