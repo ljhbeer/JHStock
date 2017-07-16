@@ -8,32 +8,97 @@ using System.Text;
 using System.Windows.Forms;
 using Tools;
 using JHStock.Update;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace JHStock
 {
     public partial class FormMonit : Form
     {
-        private Stocks _stocks;
-        private ExChangeStatusCheck exchangestatus;
-        private string type;
-        private DataTable dt;
-        private JHStock.Update.tagstock[] tags;
-        public List<Stock> DebugStocks;
-        private List<Stock> selectstock;
-        private List<string> savestockinfor; //与selectstock 同步
-
-        public FormMonit(Stocks _stocks, ExChangeStatusCheck exchangestatus, string type, JHStock.Update.tagstock[] tags)
+        public FormMonit( )
         {
-            this._stocks = _stocks;
-            DebugStocks = this._stocks.stocks;
-            this.exchangestatus = exchangestatus;
-            this.type = type;
-            this.tags = tags;
+            f = new Form1();
             selectstock = new List<Stock>();
             savestockinfor = new List<string>();
             InitializeComponent();
             InitMaDataTable();
-        }        
+            this.type = "MA";
+            Ready = false;
+                if (Init())
+                    Ready = true;
+        }
+        private void FormMonit_Load(object sender, EventArgs e)
+        {
+            if (Ready)
+                return;
+            this.Hide();
+            MessageBox.Show("显示form1");
+            this.Show();
+        }
+        private bool Init()
+        {
+            // init _jscfg and _stocks
+            string filename = "jsconfig.ini";
+            if (!(filename != "" && File.Exists(filename)))
+            {
+                MessageBox.Show("配置文件不存在，请检查后重置");
+                return false;
+            }
+
+            JSConfig jscfg = new JSConfig();
+            jscfg.Load(filename);
+            BaseConfig cfg = jscfg.baseconfig;
+            MFile.cfg = cfg;
+            if (!cfg.CheckWorkPath())
+                MessageBox.Show("工作目录不存在，请手工创建" + cfg.NowWorkPath());
+
+            if (!jscfg.globalconfig.InitStocks())
+            {
+                MessageBox.Show(_jscfg.globalconfig.ErrMsg); //退出
+                MessageBox.Show("配置文件不正确，请检查后重置");
+                return false;
+            }
+            this._jscfg = jscfg;
+            this._stocks = jscfg.globalconfig.Stocks;
+            
+            //init DebugStocks
+            string importtext = "600221";
+            if (File.Exists("select.txt"))
+                importtext = File.ReadAllText("select.txt").Trim();
+            List<Stock> find = _stocks.stocks.FindAll( r => importtext.Contains(r.Code.Substring(2,6))).ToList();
+            if (find.Count > 0)
+                DebugStocks = find;
+
+            //for Tag
+            if (File.Exists(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat"))
+            {
+                string txt = File.ReadAllText(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");
+                SaveTag sst = JsonConvert.DeserializeObject<SaveTag>(txt);
+                this.Tag = sst.Tag;
+                if (sst.now.Date == DateTime.Now.Date)  //for Debug
+                {
+                }
+            }
+
+            String Msg = "";
+            if (!exchangestatus.StatusCheck(_stocks, ref Msg))
+            {
+                MessageBox.Show(Msg);
+                return false;
+            }
+
+            return true;
+        }
+        private void LoadCfg()
+        {
+            string filename = "jsconfig.ini";
+            if (File.Exists(filename))
+            {
+                _jscfg.Load(filename);
+
+            }
+        }
+
         private void buttonAddToTXDBlock_Click(object sender, EventArgs e)
         {
             ((Button)sender).Enabled = false;
@@ -65,14 +130,16 @@ namespace JHStock
         {
             selectstock.Clear();
             savestockinfor.Clear();
-            foreach (Stock s in DebugStocks)
-            {
-                TestStock(s);                
-            }
-            ///show selectstock in the Table
+            if(checkBoxUserDefinitionStocks.Checked)
+              foreach (Stock s in DebugStocks)
+                TestStock(s);          
+            else
+              foreach (Stock s in _stocks.stocks)
+                TestStock(s);    
             ShowSelectedStocks();
         }
 
+        // Monit for Compute  and show
         private void ShowSelectedStocks()
         {
             dt.Rows.Clear();
@@ -92,29 +159,6 @@ namespace JHStock
                 dt.Rows.Add(dr);
                 i++;
             }
-        }
-        private StringBuilder DataTableToString(DataTable dtsave)
-        {
-            StringBuilder outstr = new StringBuilder();
-            foreach (DataColumn dc in dtsave.Columns)
-            {
-                outstr.Append(dc.ColumnName + ",");
-            }
-            outstr.Append("\r\n");
-            foreach (DataRow dr in dtsave.Rows)
-            {
-                foreach (DataColumn dc in dtsave.Columns)
-                {
-                    if (dc.DataType != typeof(Image))
-                        outstr.Append(dr[dc.ColumnName] + ",");
-                    else
-                        outstr.Append("image,");
-
-                }
-                outstr.Append("\r\n");
-            }
-            outstr = outstr.Replace(",\r\n", "\r\n");
-            return outstr;
         }
         private void InitMaDataTable()
         {
@@ -158,10 +202,33 @@ namespace JHStock
                 }
             }
         }
+        private StringBuilder DataTableToString(DataTable dtsave)
+        {
+            StringBuilder outstr = new StringBuilder();
+            foreach (DataColumn dc in dtsave.Columns)
+            {
+                outstr.Append(dc.ColumnName + ",");
+            }
+            outstr.Append("\r\n");
+            foreach (DataRow dr in dtsave.Rows)
+            {
+                foreach (DataColumn dc in dtsave.Columns)
+                {
+                    if (dc.DataType != typeof(Image))
+                        outstr.Append(dr[dc.ColumnName] + ",");
+                    else
+                        outstr.Append("image,");
+
+                }
+                outstr.Append("\r\n");
+            }
+            outstr = outstr.Replace(",\r\n", "\r\n");
+            return outstr;
+        }
         //List<KData> listclose = kd.Skip(0).Take(60).ToList();
         public void TestStock(Stock s, int staticdaylenght = 200)
         {   
-            tagstock t = tags[s.ID];
+            tagstock t = Tag[s.ID];
             if (t == null)
                 return;
             // if select  then selectstockindex.add 
@@ -203,10 +270,9 @@ namespace JHStock
                          + "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
             MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
         }
-
         public void TestStock2(Stock s, int staticdaylenght = 200) // for Debug Test
         {
-            tagstock t = tags[s.ID];
+            tagstock t = Tag[s.ID];
             if (t == null)
                 return;
             // if select  then selectstockindex.add 
@@ -276,7 +342,6 @@ namespace JHStock
                 nlines.Add(L);
             return nlines;
         }
-
         private List<Point> HorizontalLines(List<int> data, int firstbigbreak, int secondbigbreak, int thirdbigbreak)
         {
 
@@ -370,8 +435,7 @@ namespace JHStock
             b = lbegin;
             e = end;
             return maxSum;
-        }
-        
+        }        
         //type = 0: close  type = 1: vol type =  2: open type=3 high  type=4 low
         private List<double> MA(int skip, int daylength, int[] listdata)
         {
@@ -396,6 +460,25 @@ namespace JHStock
                 sum += listdata[i] - listdata[i - daylength];
             }
             return MA;
+        }
+        
+        private JHStock.JSConfig _jscfg;
+        private Stocks _stocks;
+        private ExChangeStatusCheck exchangestatus = new ExChangeStatusCheck();
+        private string type;
+        private DataTable dt;
+        private JHStock.Update.tagstock[] Tag;
+        public List<Stock> DebugStocks;
+        private List<Stock> selectstock;
+        private List<string> savestockinfor; //与selectstock 同步
+        private bool Ready;
+        Form1 f;
+
+        private void buttonConfig_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            f.ShowDialog();
+            this.Show();
         }
     }
 }

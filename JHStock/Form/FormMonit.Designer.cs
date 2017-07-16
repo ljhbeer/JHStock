@@ -38,6 +38,8 @@
             this.checkBoxTable = new System.Windows.Forms.CheckBox();
             this.buttonReCompute = new System.Windows.Forms.Button();
             this.checkBoxMonitdays = new System.Windows.Forms.CheckBox();
+            this.checkBoxUserDefinitionStocks = new System.Windows.Forms.CheckBox();
+            this.buttonConfig = new System.Windows.Forms.Button();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -51,30 +53,31 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Controls.Add(this.textBox2, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.textBox3, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.dgv, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.buttonConfig, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.dgv, 1, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(671, 473);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(749, 505);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // textBox2
             // 
             this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox2.Location = new System.Drawing.Point(37, 450);
+            this.textBox2.Location = new System.Drawing.Point(37, 482);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(611, 21);
+            this.textBox2.Size = new System.Drawing.Size(689, 21);
             this.textBox2.TabIndex = 0;
             // 
             // textBox3
             // 
             this.textBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox3.Location = new System.Drawing.Point(3, 450);
+            this.textBox3.Location = new System.Drawing.Point(3, 482);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(28, 21);
@@ -85,10 +88,10 @@
             // 
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv.Location = new System.Drawing.Point(37, 29);
+            this.dgv.Location = new System.Drawing.Point(37, 48);
             this.dgv.Name = "dgv";
             this.dgv.RowTemplate.Height = 23;
-            this.dgv.Size = new System.Drawing.Size(611, 415);
+            this.dgv.Size = new System.Drawing.Size(689, 428);
             this.dgv.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -98,10 +101,11 @@
             this.flowLayoutPanel1.Controls.Add(this.checkBoxTable);
             this.flowLayoutPanel1.Controls.Add(this.buttonReCompute);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxMonitdays);
+            this.flowLayoutPanel1.Controls.Add(this.checkBoxUserDefinitionStocks);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(37, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(611, 20);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(689, 39);
             this.flowLayoutPanel1.TabIndex = 15;
             // 
             // buttonAddToTXDBlock
@@ -138,7 +142,7 @@
             // 
             this.buttonReCompute.Location = new System.Drawing.Point(229, 3);
             this.buttonReCompute.Name = "buttonReCompute";
-            this.buttonReCompute.Size = new System.Drawing.Size(64, 18);
+            this.buttonReCompute.Size = new System.Drawing.Size(42, 18);
             this.buttonReCompute.TabIndex = 23;
             this.buttonReCompute.Text = "计算";
             this.buttonReCompute.UseVisualStyleBackColor = true;
@@ -147,21 +151,42 @@
             // checkBoxMonitdays
             // 
             this.checkBoxMonitdays.AutoSize = true;
-            this.checkBoxMonitdays.Location = new System.Drawing.Point(299, 3);
+            this.checkBoxMonitdays.Location = new System.Drawing.Point(277, 3);
             this.checkBoxMonitdays.Name = "checkBoxMonitdays";
             this.checkBoxMonitdays.Size = new System.Drawing.Size(162, 16);
             this.checkBoxMonitdays.TabIndex = 25;
             this.checkBoxMonitdays.Text = "后续监测1天（默认两天）";
             this.checkBoxMonitdays.UseVisualStyleBackColor = true;
             // 
+            // checkBoxUserDefinitionStocks
+            // 
+            this.checkBoxUserDefinitionStocks.AutoSize = true;
+            this.checkBoxUserDefinitionStocks.Location = new System.Drawing.Point(445, 3);
+            this.checkBoxUserDefinitionStocks.Name = "checkBoxUserDefinitionStocks";
+            this.checkBoxUserDefinitionStocks.Size = new System.Drawing.Size(108, 16);
+            this.checkBoxUserDefinitionStocks.TabIndex = 26;
+            this.checkBoxUserDefinitionStocks.Text = "自定义检测股票";
+            this.checkBoxUserDefinitionStocks.UseVisualStyleBackColor = true;
+            // 
+            // buttonConfig
+            // 
+            this.buttonConfig.Location = new System.Drawing.Point(3, 3);
+            this.buttonConfig.Name = "buttonConfig";
+            this.buttonConfig.Size = new System.Drawing.Size(28, 39);
+            this.buttonConfig.TabIndex = 23;
+            this.buttonConfig.Text = "配置";
+            this.buttonConfig.UseVisualStyleBackColor = true;
+            this.buttonConfig.Click += new System.EventHandler(this.buttonConfig_Click);
+            // 
             // FormMonit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(671, 473);
+            this.ClientSize = new System.Drawing.Size(749, 505);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "FormMonit";
             this.Text = "FormMonit";
+            this.Load += new System.EventHandler(this.FormMonit_Load);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
@@ -183,5 +208,7 @@
         private System.Windows.Forms.CheckBox checkBoxTable;
         private System.Windows.Forms.Button buttonReCompute;
         private System.Windows.Forms.CheckBox checkBoxMonitdays;
+        private System.Windows.Forms.CheckBox checkBoxUserDefinitionStocks;
+        private System.Windows.Forms.Button buttonConfig;
     }
 }

@@ -39,7 +39,8 @@ namespace JHStock
         }
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			InitDBAndStocks();			
+			InitDBAndStocks();
+            buttonMA.PerformClick();
 		}
 		private void buttonImportDB_Click(object sender, EventArgs e)
 		{
@@ -184,29 +185,8 @@ namespace JHStock
 		
 		private void buttonMA_Click(object sender, EventArgs e)
 		{
-			String Msg = "";
-			((Button)sender).Enabled = false;
-			_stocks.ReloadListDate();
-
-            //检测有无数据 
-            if (Tag == null)
-            {
-                if (File.Exists(_jscfg.baseconfig .WorkPath + "data\\ExpPrice.dat"))
-                {
-                    string txt = File.ReadAllText(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");
-                    SaveTag sst = JsonConvert.DeserializeObject<SaveTag>(txt);
-                    this.Tag = sst.Tag;
-                    if (sst.now.Date == DateTime.Now.Date)
-                    {
-                    }
-                }
-            }
-
-			if (exchangestatus.StatusCheck(_stocks, ref Msg))
-				ShowFormMonit(exchangestatus, "MA");
-			else
-				MessageBox.Show(Msg);
-			((Button)sender).Enabled = true;
+            //配置相关参数
+            this.Hide();
 		}
 		public void CompleteRun(){
             showappendfiletxt("已全部完成");
@@ -220,18 +200,7 @@ namespace JHStock
 		{
 			this.textBoxInfor.Text += file;
 		}
-		
-		private void ShowFormMonit(ExChangeStatusCheck exchangestatus, string type)
-		{
-            this.Hide();
-            if (f == null)
-                f = new FormMonit(_stocks, exchangestatus, type,this.Tag);
-            f.DebugStocks = StocksByItemsShow();
-            f.ShowDialog();
-
-            f = null;
-            this.Show();
-		}
+				
 		private void LoadCfg()
 		{
 			string filename = textBoxMdbPath.Text;
