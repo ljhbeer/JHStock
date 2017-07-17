@@ -15,6 +15,7 @@ namespace JHStock
         {
             this._jscfg = _jscfg; 
             this._stocks = _jscfg.globalconfig.Stocks;
+            _ssestock = new Stock(0, "SH000001", "上证指数", _jscfg.globalconfig);
             isrunning = false;
         }
         public bool HasKdata(int sID)
@@ -57,7 +58,7 @@ namespace JHStock
         {
             if(!isrunning){
 				isrunning = false;
-				NetKData nkd = new NetKData(_jscfg);
+				NetKData nkd = new NetKData(_jscfg, _ssestock);
                 nkd.ThreadShowMsg = ThreadShowMsg;
                 nkd.CompleteRun = ThreadCompleteRun;
 				System.Threading.Thread nonParameterThread = 
@@ -69,6 +70,7 @@ namespace JHStock
         private ExChangeStatusCheck exchangestatus = new ExChangeStatusCheck();
         private JSConfig _jscfg;
         private Stocks _stocks;
+        private Stock _ssestock;
         private tagstock[] _tagstocksdata;
         private  bool isrunning;
 
