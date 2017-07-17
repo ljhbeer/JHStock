@@ -20,6 +20,7 @@ namespace JHStock
             f = new Form1();
             selectstock = new List<Stock>();
             savestockinfor = new List<string>();
+            //_stockdata = new StockData();
             InitializeComponent();
             InitMaDataTable();
             this.type = "MA";
@@ -69,21 +70,11 @@ namespace JHStock
             if (find.Count > 0)
                 DebugStocks = find;
 
-            //for Tag
-            if (File.Exists(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat"))
+            //for _stockdata
+            _stockdata = new StocksData(_jscfg);
+            if (!_stockdata.LoadData(_jscfg))
             {
-                string txt = File.ReadAllText(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");
-                SaveTag sst = JsonConvert.DeserializeObject<SaveTag>(txt);
-                this.Tag = sst.Tag;
-                if (sst.now.Date == DateTime.Now.Date)  //for Debug
-                {
-                }
-            }
-
-            String Msg = "";
-            if (!exchangestatus.StatusCheck(_stocks, ref Msg))
-            {
-                MessageBox.Show(Msg);
+                MessageBox.Show("无法获取数据，请检查网络和本地数据");
                 return false;
             }
 
@@ -227,14 +218,10 @@ namespace JHStock
         }
         //List<KData> listclose = kd.Skip(0).Take(60).ToList();
         public void TestStock(Stock s, int staticdaylenght = 200)
-        {   
-            tagstock t = Tag[s.ID];
-            if (t == null)
+        {              
+            if (!_stockdata.HasKdata(s.ID))
                 return;
-            // if select  then selectstockindex.add 
-            //selectstock.Add(s);
-
-            double[] kdvol = t.kd.Select(r =>(double)( r.vol)).ToArray();
+            double[] kdvol = _stockdata.GetKD(s.ID).Select(r =>(double)( r.vol)).ToArray();
             List<double> vma5 = MA(0, 5, kdvol);
             double now = vma5[0];
             List<double> dvma5rate  = vma5.Select( r =>
@@ -272,13 +259,12 @@ namespace JHStock
         }
         public void TestStock2(Stock s, int staticdaylenght = 200) // for Debug Test
         {
-            tagstock t = Tag[s.ID];
-            if (t == null)
+            if (!_stockdata.HasKdata(s.ID))
                 return;
             // if select  then selectstockindex.add 
             selectstock.Add(s);
-            int[] kdclose = t.kd.Select(r => r.close).ToArray();
-            int[] kdvol = t.kd.Select(r => r.vol).ToArray();
+            int[] kdclose = _stockdata.GetKD(s.ID).Select(r => (r.close)).ToArray();
+            int[] kdvol = _stockdata.GetKD(s.ID).Select(r => (r.vol)).ToArray();
             List<double> ma60 = MA(0, 60, kdclose); //skip 60
             List<double> ma20 = MA(40, 20, kdclose);
             List<double> ma10 = MA(50, 10, kdclose);
@@ -306,7 +292,7 @@ namespace JHStock
                 for (int i = 0; i < p.Y; i++)
                     L[i + p.X] = 1;
             string str = "date\tclose\tvol\n"
-                         + t.kd.Select(r => r.date + "\t" + r.close + "\t" + r.vol + "\n").Aggregate((r1, r2) => r1 + r2)
+                         + _stockdata.GetKD(s.ID).Select(r => r.date + "\t" + r.close + "\t" + r.vol + "\n").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nma60\t" + ma60.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nma20\t" + ma20.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
                          + "\r\nma10\t" + ma10.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
@@ -462,17 +448,16 @@ namespace JHStock
             return MA;
         }
         
-        private JHStock.JSConfig _jscfg;
+        private JSConfig _jscfg;
         private Stocks _stocks;
-        private ExChangeStatusCheck exchangestatus = new ExChangeStatusCheck();
         private string type;
         private DataTable dt;
-        private JHStock.Update.tagstock[] Tag;
-        public List<Stock> DebugStocks;
+        private StocksData _stockdata;
         private List<Stock> selectstock;
         private List<string> savestockinfor; //与selectstock 同步
         private bool Ready;
         Form1 f;
+        public List<Stock> DebugStocks;
 
         private void buttonConfig_Click(object sender, EventArgs e)
         {
@@ -480,6 +465,40 @@ namespace JHStock
             f.ShowDialog();
             this.Show();
         }
+
+        private void buttonCheckData_Click(object sender, EventArgs e)
+        {
+            completebtn = (Button)sender;
+            completebtn.Enabled = false;
+            _stockdata.DownDataFromNet(ThreadShowMsg, ThreadCompleteRun);
+        }
+
+        private void ThreadShowMsg(string msg)
+        {
+            this.Invoke(new ShowDeleGate(showfiletxt), new object[] { msg });
+        }
+        private void ThreadAppendMsg(string msg)
+        {
+            Invoke(new ShowDeleGate(showappendfiletxt), new object[] { msg });
+        }
+        private void ThreadCompleteRun()
+        {
+            Invoke(new CompleteDeleGate(CompleteRun));
+        }
+        public void CompleteRun()
+        {
+            showappendfiletxt("已全部完成");
+            completebtn.Enabled = true;
+        }
+        public void showfiletxt(string file)
+        {
+            this.textBoxInfor.Text = file;
+        }
+        public void showappendfiletxt(string file)
+        {
+            this.textBoxInfor.Text += file;
+        }
+        private Button completebtn;
     }
 }
 #region runnet

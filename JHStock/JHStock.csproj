@@ -263,25 +263,26 @@
       <Link>Share\PostSubmitter.cs</Link>
       <DependentUpon>CWeb.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\Form1.cs">
+    <Compile Include="UserForm\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\Form1.Designer.cs">
+    <Compile Include="UserForm\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\FormMonit.cs">
+    <Compile Include="UserForm\FormMonit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\FormMonit.Designer.cs">
+    <Compile Include="UserForm\FormMonit.Designer.cs">
       <DependentUpon>FormMonit.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserForm\StockData.cs" />
     <Compile Include="NetKData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form\Form1.resx">
+    <EmbeddedResource Include="UserForm\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\FormMonit.resx">
+    <EmbeddedResource Include="UserForm\FormMonit.resx">
       <DependentUpon>FormMonit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

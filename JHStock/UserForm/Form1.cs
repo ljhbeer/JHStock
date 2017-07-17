@@ -32,7 +32,6 @@ namespace JHStock
             textBox_backgreendays.Text = "20";
             textBox_backnowdays.Text = "1";
 		}
-
         private int ToIntDate(DateTime dt)
         {
             return dt.Year * 10000 + dt.Month * 100 + dt.Day;
@@ -144,23 +143,7 @@ namespace JHStock
 				itemsShow.Clear();
 				listBox2.Items.Clear();
 			}
-		}
-		private void ButtonCheckDataClick(object sender, EventArgs e)
-		{
-			completebtn = (Button)sender;
-			completebtn.Enabled = false;
-			if(!isrunning){
-				isrunning = false;
-				NetKData nkd = new NetKData(_jscfg);
-                nkd.ThreadShowMsg = ThreadShowMsg;
-                nkd.CompleteRun = ThreadCompleteRun;
-				System.Threading.Thread nonParameterThread = 
-					new Thread( new ThreadStart( nkd.GetNetKData ));
-				nonParameterThread.Start();
-			}
-		} ///??
-		
-
+		}		
 		private void listBox1_KeyUp(object sender, KeyEventArgs e)
 		{
 			if (listBox1.SelectedIndex == -1) return;
@@ -181,26 +164,12 @@ namespace JHStock
 			if ("|bouns|Fin|NewFin|sinabouns|".Contains("|" + comboBoxCol.SelectedItem.ToString() + "|"))
 				sql = sql.Replace("[id]", "stockid");
 			dgv.DataSource =_stocks.Gcfg.db.query(sql).Tables[0];
-		}
-		
+		}		
 		private void buttonMA_Click(object sender, EventArgs e)
 		{
             //配置相关参数
             this.Hide();
 		}
-		public void CompleteRun(){
-            showappendfiletxt("已全部完成");
-            completebtn.Enabled = true;
-		}
-		public void showfiletxt(string file)
-		{
-			this.textBoxInfor.Text = file;
-		}
-		public void showappendfiletxt(string file)
-		{
-			this.textBoxInfor.Text += file;
-		}
-				
 		private void LoadCfg()
 		{
 			string filename = textBoxMdbPath.Text;
@@ -220,32 +189,13 @@ namespace JHStock
 			}
 			return ls;
 		}
-		private void ThreadShowMsg(string msg)
-		{
-			this.Invoke(new ShowDeleGate(showfiletxt), new object[] { msg });
-		}
-		private void ThreadAppendMsg(string msg)
-		{
-			Invoke(new ShowDeleGate(showappendfiletxt), new object[] { msg });
-		}
-		private void ThreadCompleteRun(){
-			Invoke(new CompleteDeleGate(CompleteRun));
-		}
-		
-		
-		private Button completebtn;
-		private Boolean isrunning;
-		
+
 		private List<string> items;
 		private List<string> itemsShow;
 		private JHStock.JSConfig _jscfg;
 		private JHStock.Stocks _stocks;
 		private List<string> columntitles { get; set; }
-		private  ExChangeStatusCheck exchangestatus = new ExChangeStatusCheck();
-		public new tagstock[]  Tag;
-        private FormMonit f;
-	}
-	
+	}	
 	public class DTNameType{
 		public string Name;
 		public Type type;

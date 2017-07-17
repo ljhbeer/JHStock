@@ -32,7 +32,6 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.buttonCheckData = new System.Windows.Forms.Button();
             this.checkBoxBeforeDate = new System.Windows.Forms.CheckBox();
             this.buttonMA = new System.Windows.Forms.Button();
             this.textBoxShow = new System.Windows.Forms.TextBox();
@@ -104,7 +103,6 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.buttonCheckData);
             this.splitContainer1.Panel1.Controls.Add(this.checkBoxBeforeDate);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMA);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxShow);
@@ -118,16 +116,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(730, 564);
             this.splitContainer1.SplitterDistance = 29;
             this.splitContainer1.TabIndex = 3;
-            // 
-            // buttonCheckData
-            // 
-            this.buttonCheckData.Location = new System.Drawing.Point(450, 3);
-            this.buttonCheckData.Name = "buttonCheckData";
-            this.buttonCheckData.Size = new System.Drawing.Size(97, 21);
-            this.buttonCheckData.TabIndex = 29;
-            this.buttonCheckData.Text = "检测并更新数据";
-            this.buttonCheckData.UseVisualStyleBackColor = true;
-            this.buttonCheckData.Click += new System.EventHandler(this.ButtonCheckDataClick);
             // 
             // checkBoxBeforeDate
             // 
@@ -389,36 +377,35 @@
 
         }
         private System.Windows.Forms.TextBox textBoxInfor;
-        private System.Windows.Forms.Button buttonCheckData;
 
         #endregion
 
         private System.Windows.Forms.Button buttonImportDB;
-        private System.Windows.Forms.TextBox textBoxMdbPath;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.ListBox listBox2;
-        private System.Windows.Forms.ComboBox comboBoxCol;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Button buttonAddNextlist;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.DataGridView dgv;
-        private System.Windows.Forms.CheckBox checkBoxIDIndex;
-        private System.Windows.Forms.TextBox textBoxShow;
-        private System.Windows.Forms.Button buttonMA;
-        private System.Windows.Forms.CheckBox checkBoxBeforeDate;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox_backnowdays;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox_backgreendays;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox_backendday;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox_backbeginday;
         private System.Windows.Forms.Button buttonClearNextList;
+        private System.Windows.Forms.Button buttonMA;
+        private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ComboBox comboBoxCol;
+        private System.Windows.Forms.CheckBox checkBoxIDIndex;
+        private System.Windows.Forms.CheckBox checkBoxBeforeDate;
+        private System.Windows.Forms.DataGridView dgv;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxShow;
+        private System.Windows.Forms.TextBox textBoxMdbPath;
+        private System.Windows.Forms.TextBox textBox_backnowdays;
+        private System.Windows.Forms.TextBox textBox_backgreendays;
+        private System.Windows.Forms.TextBox textBox_backendday;
+        private System.Windows.Forms.TextBox textBox_backbeginday;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label4;
     }
 }
 

@@ -29,9 +29,8 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBoxInfor = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
-            this.dgv = new System.Windows.Forms.DataGridView();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonAddToTXDBlock = new System.Windows.Forms.Button();
             this.buttonToTxt = new System.Windows.Forms.Button();
@@ -39,10 +38,12 @@
             this.buttonReCompute = new System.Windows.Forms.Button();
             this.checkBoxMonitdays = new System.Windows.Forms.CheckBox();
             this.checkBoxUserDefinitionStocks = new System.Windows.Forms.CheckBox();
+            this.buttonCheckData = new System.Windows.Forms.Button();
             this.buttonConfig = new System.Windows.Forms.Button();
+            this.dgv = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel2
@@ -51,7 +52,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 34F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 95.0376F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Controls.Add(this.textBox2, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.textBoxInfor, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.textBox3, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.buttonConfig, 0, 0);
@@ -66,13 +67,13 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(749, 505);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
-            // textBox2
+            // textBoxInfor
             // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox2.Location = new System.Drawing.Point(37, 482);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(689, 21);
-            this.textBox2.TabIndex = 0;
+            this.textBoxInfor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxInfor.Location = new System.Drawing.Point(37, 482);
+            this.textBoxInfor.Name = "textBoxInfor";
+            this.textBoxInfor.Size = new System.Drawing.Size(689, 21);
+            this.textBoxInfor.TabIndex = 0;
             // 
             // textBox3
             // 
@@ -84,16 +85,6 @@
             this.textBox3.TabIndex = 1;
             this.textBox3.Text = "状态";
             // 
-            // dgv
-            // 
-            this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv.Location = new System.Drawing.Point(37, 48);
-            this.dgv.Name = "dgv";
-            this.dgv.RowTemplate.Height = 23;
-            this.dgv.Size = new System.Drawing.Size(689, 428);
-            this.dgv.TabIndex = 2;
-            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.buttonAddToTXDBlock);
@@ -102,6 +93,7 @@
             this.flowLayoutPanel1.Controls.Add(this.buttonReCompute);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxMonitdays);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxUserDefinitionStocks);
+            this.flowLayoutPanel1.Controls.Add(this.buttonCheckData);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(37, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -168,6 +160,16 @@
             this.checkBoxUserDefinitionStocks.Text = "自定义检测股票";
             this.checkBoxUserDefinitionStocks.UseVisualStyleBackColor = true;
             // 
+            // buttonCheckData
+            // 
+            this.buttonCheckData.Location = new System.Drawing.Point(559, 3);
+            this.buttonCheckData.Name = "buttonCheckData";
+            this.buttonCheckData.Size = new System.Drawing.Size(38, 21);
+            this.buttonCheckData.TabIndex = 30;
+            this.buttonCheckData.Text = "更新";
+            this.buttonCheckData.UseVisualStyleBackColor = true;
+            this.buttonCheckData.Click += new System.EventHandler(this.buttonCheckData_Click);
+            // 
             // buttonConfig
             // 
             this.buttonConfig.Location = new System.Drawing.Point(3, 3);
@@ -177,6 +179,16 @@
             this.buttonConfig.Text = "配置";
             this.buttonConfig.UseVisualStyleBackColor = true;
             this.buttonConfig.Click += new System.EventHandler(this.buttonConfig_Click);
+            // 
+            // dgv
+            // 
+            this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv.Location = new System.Drawing.Point(37, 48);
+            this.dgv.Name = "dgv";
+            this.dgv.RowTemplate.Height = 23;
+            this.dgv.Size = new System.Drawing.Size(689, 428);
+            this.dgv.TabIndex = 2;
             // 
             // FormMonit
             // 
@@ -189,9 +201,9 @@
             this.Load += new System.EventHandler(this.FormMonit_Load);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -199,16 +211,17 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.DataGridView dgv;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.DataGridView dgv;
+        private System.Windows.Forms.TextBox textBoxInfor;
+        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button buttonAddToTXDBlock;
         private System.Windows.Forms.Button buttonToTxt;
-        private System.Windows.Forms.CheckBox checkBoxTable;
         private System.Windows.Forms.Button buttonReCompute;
+        private System.Windows.Forms.Button buttonConfig;
+        private System.Windows.Forms.Button buttonCheckData;
+        private System.Windows.Forms.CheckBox checkBoxTable;
         private System.Windows.Forms.CheckBox checkBoxMonitdays;
         private System.Windows.Forms.CheckBox checkBoxUserDefinitionStocks;
-        private System.Windows.Forms.Button buttonConfig;
     }
 }
