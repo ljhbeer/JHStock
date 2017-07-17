@@ -57,6 +57,7 @@ namespace JHStock
 			if(bshowtimeout)
 				MessageBox.Show ( "时间"+ts.TotalSeconds);
 	    }  	 
+
 	    public void DownLoadData(Stock s)
 	    {
 	    	string url = UrlTemplate.Replace("[stockcode]",s.Code.ToLower());
@@ -67,19 +68,19 @@ namespace JHStock
 				 Tag[s.ID].kd = qs.data[s.Code.ToLower()].day
 	        		.Select( r => {
 	        		 KData k = 	new KData();
-	        		 k.date =Convert.ToInt32( r[0].Replace("-",""));	
+	        		 k.date =Convert.ToInt32( r[0].ToString().Replace("-",""));	
 	        		 k.open = (int)(Convert.ToSingle(r[1])*100);
 	        		 k.close = (int)(Convert.ToSingle(r[2])*100);
 	        		 k.high= (int)(Convert.ToSingle(r[3])*100);
 	        		 k.low = (int)(Convert.ToSingle(r[4])*100);
-	        		 k.vol = (int)(Convert.ToSingle(r[4])*100);
+	        		 k.vol = (int)(Convert.ToSingle(r[5])*100);
 	        		 return k;
 	        		}).ToList();
 				 Tag[s.ID].value = 1;
-			}catch{
+			}catch(Exception e){
 	        	Tag[s.ID].txt = txt;
 	        	Tag[s.ID].value = -2;
-//				MFile.AppendAllText("UpdatePrice.log",s.ID + "  "+ Tag[s.ID].txt+"\r\n\r\n");
+                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + Tag[s.ID].txt+"\t"+e.Message + "\r\n\r\n");
 			}
 	    }      
 		private void UpdateItem(List<Stock> usstocks)
@@ -110,6 +111,8 @@ namespace JHStock
 			}
 			while(threadsum > 0 )
 				Thread.Sleep(10);
+            if(showmsg!=null)
+            showmsg("已完成：" + threadcompletesum + "");
 		}	
 			
 	    private Stocks _stocks;
@@ -126,8 +129,41 @@ namespace JHStock
 	    private string UrlTemplate;
 	    private ToolsCXml.BETag btyear = new ToolsCXml.BETag("[nflb\":#@#@-@#@#]");
 	    private ToolsCXml.BETag btcheck = new ToolsCXml.BETag("[:#@#@{-}@#@#}]");
-	    private string urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[daylength],bfq";
-		
+	    private static string urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[daylength],bfq";
+
+        public static tagstock DownLoadData(Stock s, int Daylength)
+        {
+            string UrlTemplate = urlt.Replace("[daylength]", Daylength.ToString());
+            string url = UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
+            StringBuilder strall = new StringBuilder();
+            string txt = CWeb.GetWebClient(url).Substring(10);
+            tagstock tag = new tagstock();
+            try
+            {
+                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
+                tag.kd = qs.data[s.Code.ToLower()].day
+                   .Select(r =>
+                   {
+                       KData k = new KData();
+                       k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
+                       k.open = (int)(Convert.ToSingle(r[1]) * 100);
+                       k.close = (int)(Convert.ToSingle(r[2]) * 100);
+                       k.high = (int)(Convert.ToSingle(r[3]) * 100);
+                       k.low = (int)(Convert.ToSingle(r[4]) * 100);
+                       k.vol = (int)(Convert.ToSingle(r[5]) * 100);
+                       return k;
+                   }).ToList();
+                tag.value = 1;
+                tag.index = s.ID;
+            }
+            catch (Exception e)
+            {
+                tag.txt = txt;
+                tag.value = -2;
+                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + tag.txt + "\t" + e.Message + "\r\n\r\n");
+            }
+            return tag;
+        }      		
 	}
 	public class ThreadUpdateStockQQDayly{
     	private Stock s;

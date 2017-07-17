@@ -323,10 +323,12 @@ namespace JHStock.Update
 			index = s.ID;
 			value = 0;			
 		}
+		public List<KData> kd{get;set;}
 	    public int index;
 		public int value;
-		public Stock s;	
-		public string txt;	
-		public List<KData> kd{get;set;}
+        [JsonIgnore]
+		public Stock s;    // for initlize
+        [JsonIgnore]
+		public string txt;	 // for out debug infor
 	}
 }

@@ -19,7 +19,7 @@ namespace JHStock
 			_stocks  = stocks;
 			_cfg = _stocks.Gcfg;
 			_exceptionfilename = TimeStringTools.NowDateMin() + "_UpdateException.log";
-			_XmlFileName = "";
+            //_XmlFileName = "";
 			RunsStocks = new List<Stock>();
 			MaxThreadSum = 1;
 			Tag = new tagstock[2000];	
@@ -115,6 +115,6 @@ namespace JHStock
 		private Stocks _stocks;
 		private GlobalConfig _cfg;
 		private string _exceptionfilename;
-		private string _XmlFileName;
+        //private string _XmlFileName;
 	}
 }
