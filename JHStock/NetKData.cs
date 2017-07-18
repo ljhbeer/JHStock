@@ -17,47 +17,27 @@ namespace JHStock
 {
 	public class NetKData
 	{
-		public NetKData( JSConfig jscfg)
-		{
-			this._jscfg = jscfg;
+        public NetKData(JSConfig _jscfg)
+        {
+            this._jscfg = _jscfg;
 			this._stocks = _jscfg.globalconfig.Stocks;
-		}
+			this.netsaveTag = null;
+			DaysCount = 0;
+            _ssestock = new Stock(0, "SH000001", "上证指数", _jscfg.globalconfig);
+        }
 		public void GetNetKData(){  //check and DownLoad
 			try{
-				BaseConfig cfg = _jscfg.baseconfig;
-				_stocks.ReloadListDate();
-				List<int> shdate = _stocks.ListDate;
-				List<int> shnetdate = _stocks.ShNetDate;
-				int cnt = shnetdate.Intersect(shdate).Count();
-				if(cnt == 0){
-					ErrorMsg = "无法核对完整数据，请更新数据后再运行本程序";
-					return;
-				}
-
-                //debug 102
-				List<int> netexcept = shnetdate.Except(shdate).ToList();  // 需要Debug
-                netexcept = shnetdate.Skip(254- 84).Take(84).ToList(); //modified 254 to 84
-				bool bfromnet = true;
-				if(File.Exists( cfg.WorkPath +"data\\ExpPrice.dat")){
-					string txt = File.ReadAllText(cfg.WorkPath +"data\\ExpPrice.dat");
-					SaveTag sst = JsonConvert.DeserializeObject<SaveTag>(txt);
-					if(sst.now.Date == DateTime.Now.Date){
-						bfromnet = false;
-						this.Tag = sst.Tag;
-					}
-				}
-				if(bfromnet){
-					GetDataFromNet(cnt,netexcept);
-					new SaveTag(DateTime.Now, Tag).Save(cfg.WorkPath+"data\\ExpPrice.dat");					
-					//OutThreadMsg();
-				}
-			}finally{
+        		int dayscount = DaysCount;
+        		if(dayscount < 1)
+        			return;
+				GetDataFromNet(dayscount);
+            }
+            finally{
                 CompleteRun();
 			}
-		}
-		
-		private void GetDataFromNet(int locallength, List<int> Netexcept){
-			ThreadUpdateStocksQQDayly qf = new ThreadUpdateStocksQQDayly(_stocks,Netexcept.Count);
+		}		
+		private void GetDataFromNet(int dayscount){
+			ThreadUpdateStocksQQDayly qf = new ThreadUpdateStocksQQDayly(_stocks,dayscount);
 			qf.MaxThreadSum = 50;
             if(ThreadShowMsg!=null)
 			qf.showmsg = new ShowDeleGate(ThreadShowMsg);
@@ -67,7 +47,10 @@ namespace JHStock
             //    _stocks.StockByIndex(4)
             //};
 			qf.DealStocks = _stocks.stocks;
-			this.Tag = qf.Tag;
+            // Add 上证指数
+            qf.DealStocks.Add(_ssestock);
+            qf.Tag[0].Init(_ssestock); 
+			netsaveTag = new SaveTag( DateTime.Now, qf.Tag);
 			updatetime = DateTime.Now;
 			qf.RunNetDownLoadData();
 		}
@@ -76,8 +59,12 @@ namespace JHStock
 		private Stocks _stocks;
 		private DateTime updatetime;
 		public string ErrorMsg;
-		public tagstock[] Tag;
+		public SaveTag netsaveTag;
 		public ShowDeleGate ThreadShowMsg;
-        public CompleteDeleGate CompleteRun; 
+        public CompleteDeleGate CompleteRun;
+		public int DaysCount{ get; set; }
+
+        //SSE 上证指数
+        private Stock _ssestock;
 	}
 }

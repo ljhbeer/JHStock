@@ -63,7 +63,10 @@ namespace Tools
             //循环处理 
             //Console.WriteLine(s.Code + s.Name);
         }
-        
+        public static int IntDate(DateTime dt)
+        {
+            return dt.Year * 10000 + dt.Month * 100 + dt.Day;
+        }
         
     }
 

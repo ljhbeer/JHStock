@@ -10,6 +10,7 @@ using Tools;
 using JHStock.Update;
 using System.IO;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace JHStock
 {
@@ -24,17 +25,29 @@ namespace JHStock
             InitializeComponent();
             InitMaDataTable();
             this.type = "MA";
-            Ready = false;
-                if (Init())
-                    Ready = true;
+            Ready = Init();
+            isinitdatarunning = false;
+            bCompute = false;
         }
         private void FormMonit_Load(object sender, EventArgs e)
         {
             if (Ready)
+            {
+                if (!isinitdatarunning)
+                {
+                    isinitdatarunning = true;                   
+                    System.Threading.Thread nonParameterThread =
+                        new Thread(new ThreadStart(InitData));
+                    nonParameterThread.Start();
+                }
                 return;
-            this.Hide();
-            MessageBox.Show("显示form1");
-            this.Show();
+            }
+            else
+            {
+                this.Hide();
+                MessageBox.Show("显示form1.从新配置");
+                this.Show();
+            }
         }
         private bool Init()
         {
@@ -61,24 +74,35 @@ namespace JHStock
             }
             this._jscfg = jscfg;
             this._stocks = jscfg.globalconfig.Stocks;
-            
+
             //init DebugStocks
             string importtext = "600221";
             if (File.Exists("select.txt"))
                 importtext = File.ReadAllText("select.txt").Trim();
-            List<Stock> find = _stocks.stocks.FindAll( r => importtext.Contains(r.Code.Substring(2,6))).ToList();
+            List<Stock> find = _stocks.stocks.FindAll(r => importtext.Contains(r.Code.Substring(2, 6))).ToList();
             if (find.Count > 0)
                 DebugStocks = find;
 
             //for _stockdata
             _stockdata = new StocksData(_jscfg);
-            if (!_stockdata.LoadData(_jscfg))
-            {
-                MessageBox.Show("无法获取数据，请检查网络和本地数据");
-                return false;
-            }
-
+            
             return true;
+        }
+        private void InitData() //采用线程控制运行
+        {
+            _stockdata.ThreadShowMsg = ThreadShowMsg;
+            initdataaction = _stockdata.InitData();
+            if (initdataaction.StartsWith("Quit"))
+            {
+                ThreadShowMsg ("数据错误：" + initdataaction);
+                MessageBox.Show("数据错误：" + initdataaction); // 无法获取数据，请检查网络 或从新设置
+                bCompute = false;
+                return;
+            }
+            if (initdataaction.StartsWith("OK"))
+                ThreadShowMsg("数据正常" + initdataaction);  //
+            bCompute = true;
+
         }
         private void LoadCfg()
         {
@@ -119,6 +143,7 @@ namespace JHStock
         }
         private void buttonReCompute_Click(object sender, EventArgs e)
         {
+            if (!bCompute) return;
             selectstock.Clear();
             savestockinfor.Clear();
             if(checkBoxUserDefinitionStocks.Checked)
@@ -456,6 +481,7 @@ namespace JHStock
         private List<Stock> selectstock;
         private List<string> savestockinfor; //与selectstock 同步
         private bool Ready;
+        private bool bCompute;
         Form1 f;
         public List<Stock> DebugStocks;
 
@@ -465,14 +491,18 @@ namespace JHStock
             f.ShowDialog();
             this.Show();
         }
-
-        private void buttonCheckData_Click(object sender, EventArgs e)
+        private void buttonCheckData_Click(object sender, EventArgs e) //逻辑入口
         {
-            completebtn = (Button)sender;
-            completebtn.Enabled = false;
-            _stockdata.DownDataFromNet(ThreadShowMsg, ThreadCompleteRun);
+            
+            
+            
+            
+            
+            
+            //completebtn = (Button)sender;
+            //completebtn.Enabled = false;
+            //_stockdata.DownDataFromNet(ThreadShowMsg, ThreadCompleteRun);
         }
-
         private void ThreadShowMsg(string msg)
         {
             this.Invoke(new ShowDeleGate(showfiletxt), new object[] { msg });
@@ -487,8 +517,7 @@ namespace JHStock
         }
         public void CompleteRun()
         {
-            showappendfiletxt("已全部完成");
-            completebtn.Enabled = true;
+            ;
         }
         public void showfiletxt(string file)
         {
@@ -499,6 +528,8 @@ namespace JHStock
             this.textBoxInfor.Text += file;
         }
         private Button completebtn;
+        private bool isinitdatarunning;
+        private string initdataaction;
     }
 }
 #region runnet

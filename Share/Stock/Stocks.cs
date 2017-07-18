@@ -26,7 +26,6 @@ namespace JHStock
             _listdata = null;
             //add new
             _cativeprices =null;
-            _netszdate = null;
         }
         public List<Stock> stocks { 
             get
@@ -202,18 +201,6 @@ namespace JHStock
         	}
         }
         private CActivePrices _cativeprices;
-        public List<int> ShNetDate{
-        	get{
-        		if(_netszdate==null){
-					string url = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_dayqfq&param=sh000001,day,,,254,qfq";
-					string txt = CWeb.GetWebClient(url).Substring(13);
-					QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
-					_netszdate=qs.data["sh000001"].day.Select(
-						r => Convert.ToInt32( r[0].ToString().Replace("-",""))).ToList();
-        		}
-        		return _netszdate;
-        	}
-        }
-        private List<int> _netszdate;
+       
     }
 }

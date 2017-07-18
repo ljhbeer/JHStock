@@ -295,11 +295,12 @@ namespace JHStock.Update
         private ThreadUpdateStocks tuss;
     }
 	public class SaveTag{
-		public SaveTag( DateTime now, tagstock[] Tag){
-			this.now = now;
+        public SaveTag(DateTime StoreDate, tagstock[] Tag)
+        {
+            this.StoreDate = StoreDate;
 			this.Tag = Tag;
 		}
-		public DateTime now{get;set;}
+		public DateTime StoreDate{get;set;}
 		public tagstock[] Tag{get;set;}		
 		public void Save(string path)
 		{

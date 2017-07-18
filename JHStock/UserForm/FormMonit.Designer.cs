@@ -168,6 +168,7 @@
             this.buttonCheckData.TabIndex = 30;
             this.buttonCheckData.Text = "更新";
             this.buttonCheckData.UseVisualStyleBackColor = true;
+            this.buttonCheckData.Visible = false;
             this.buttonCheckData.Click += new System.EventHandler(this.buttonCheckData_Click);
             // 
             // buttonConfig
