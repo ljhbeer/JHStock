@@ -174,14 +174,38 @@ namespace JHStock
                     dr["后续天数"] = ss[1];
                     dr["后续天数的情况"] = ss[2];
                 }
+                if (_stockdata.Netdate.Inline)
+                {
+                    try
+                    {
+                        string url = "http://image.sinajs.cn/newchart/daily/n/[stockcode].gif".Replace("[stockcode]", s.Code.ToLower());
+                        Bitmap bmp = GetBitmapFromUrl(url);                       
+                        dr["画图"] = new Bitmap(bmp, bmp.Width / 3, bmp.Height / 3);
+                        s.Bmp = bmp;
+                    }
+                    catch
+                    {
+                    }
+                }
                 dt.Rows.Add(dr);
                 i++;
             }
         }
+
+        private Bitmap GetBitmapFromUrl(string url)
+        {
+            //string url = string.Format(@"http://webservice.36wu.com/DimensionalCodeService.asmx/GetCodeImgByString?size={0}&content={1}", 5, 123456);
+            System.Net.WebRequest webreq = System.Net.WebRequest.Create(url);
+            System.Net.WebResponse webres = webreq.GetResponse();
+            using (System.IO.Stream stream = webres.GetResponseStream())
+            {
+                return (Bitmap) Image.FromStream(stream);
+            }            
+        }
         private void InitMaDataTable()
         {
             dt = new DataTable();
-            List<string> columntitles = new List<string>() { "名称", "代码", "日期", "持续天数" ,"后续天数","后续天数的情况" };//,"杂项"
+            List<string> columntitles = new List<string>() { "名称", "代码",  "持续天数" ,"后续天数","后续天数的情况","画图" };//   "日期",
             //columntitles = new List<string>() { "名称", "代码","杂项" };//,"杂项"
             for (int count = 0; count < columntitles.Count; count++)
             {
@@ -193,6 +217,10 @@ namespace JHStock
                 else if ("上一状态持续天数后续天数".Contains(columntitles[count]))
                 {
                     dc.DataType = typeof(int);
+                }
+                else if ("画图".Contains(columntitles[count]))
+                {
+                    dc.DataType = typeof(Image);
                 }
                 else
                 {
@@ -213,12 +241,17 @@ namespace JHStock
                 {
                     dgv.Columns[i].Width = 40;
                 }
+                else if ("画图".Contains(dgv.Columns[i].Name))
+                {
+                    dgv.Columns[i].Width = 240;
+                }
                 else
                 {
-                    dgv.Columns[i].Width = 150;
+                    dgv.Columns[i].Width = 120;
                     //dc.MaxLength = 30;
                 }
             }
+            dgv.RowTemplate.Height = 100;
         }
         private StringBuilder DataTableToString(DataTable dtsave)
         {
@@ -536,6 +569,20 @@ namespace JHStock
         //private Button completebtn;
         private bool isinitdatarunning;
         private string initdataaction;
+
+        private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1 && e.ColumnIndex != -1 && e.ColumnIndex == 5)
+            {
+                string numcode = dgv[1,e.RowIndex].Value.ToString().Substring(2,6);
+                Stock s = _stocks.StockByNumCode(numcode);
+                if (s != null && s.Bmp != null)
+                {//showImg
+                    FormPictureBox f = new FormPictureBox(s.Bmp);
+                    f.ShowDialog();
+                }
+            }
+        }
     }
 }
 #region runnet

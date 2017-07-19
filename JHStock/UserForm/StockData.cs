@@ -159,7 +159,7 @@ namespace JHStock
                    {
                        if(_netdate.Exchanging)
                             nkd.netsaveTag.Tag[i].kd = nkd.netsaveTag.Tag[i].kd.Take(mergedays).ToList();
-                       else if( mergedays == DaysLength)  //15:00后可以  更新所有数据
+                       else //if( mergedays == DaysLength)  //15:00后可以  更新所有数据                 //15:00 后要保留当天数据，因而要删除前一天
                            nkd.netsaveTag.Tag[i].kd = nkd.netsaveTag.Tag[i].kd.Skip(1).Take(mergedays).ToList();
 
                    }
@@ -221,6 +221,10 @@ namespace JHStock
         public KData[] activeKD; // 当前时间
         public ShowDeleGate ThreadShowMsg;
         public ActionDeleGate ActionMsg;
+        public NetDate Netdate
+        {
+            get { _netdate.Refresh(); return _netdate; }
+        }
     }
 	public class NetDate{
 		public NetDate(int DaysCount){
