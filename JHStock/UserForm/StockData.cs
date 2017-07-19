@@ -120,72 +120,28 @@ namespace JHStock
         }
         public void CompleteRun() //数据的处理合并
         {
+            string Msg="\r\n MergeData Error: ";
             int mergedays = nkd.netsaveTag.Tag[0].kd.Count - 1;
             if (_netdate.IncludeToday)
-            {
-                Msg+="\r\n MergeData Error: ";
-                if ( mergedays == DaysLength) //不合并  除去当天数据  保存
-                {
-                    for (int i = 0; i < 2000; i++)
-                    {
-                        if (nkd.netsaveTag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays + 1)
-                        { //合并kd 
+               for (int i = 0; i < 2000; i++)
+                   if (nkd.netsaveTag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays + 1)
                             nkd.netsaveTag.Tag[i].kd = nkd.netsaveTag.Tag[i].kd.Take(mergedays).ToList();
-                        }
-                        else if (nkd.netsaveTag.Tag[i].kd != null)
-                        {
+                    else if (nkd.netsaveTag.Tag[i].kd != null)
                             Msg += nkd.netsaveTag.Tag[i].s.Name + nkd.netsaveTag.Tag[i].s.Code;
-                        }
-
-                    }//合并完成
-                    // 保存
-                    _savetag = nkd.netsaveTag;
-                    _savetag.StoreDate = _netdate.NearestDate;
-			        _savetag.Save(_jscfg.baseconfig.WorkPath+"data\\ExpPrice.dat");	
-                }
-                else // 合并
-                {
-                    // 计算合并天数                    
-                    _savetag.StoreDate = DateTime.Now;
-                    for (int i = 0; i < 2000; i++)
-                    {
-                        if (_savetag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays+1)
-                        { //合并kd 
-                            _savetag.Tag[i].kd= _savetag.Tag[i].kd.Skip( mergedays).ToList();
-                            _savetag.Tag[i].kd.AddRange(nkd.netsaveTag.Tag[i].kd.Take( mergedays ).ToList());
-                        }
-                    }//合并完成
-                    // 保存
-
-                    _savetag.StoreDate = _netdate.NearestDate;
-			        _savetag.Save(_jscfg.baseconfig.WorkPath+"data\\ExpPrice.dat");	
-                }
-            }
+            mergedays = nkd.netsaveTag.Tag[0].kd.Count;
+            if (mergedays == DaysLength)
+                _savetag = nkd.netsaveTag;
             else
             {
-                if (mergedays == DaysLength)//直接存储
-                {
-                    _savetag = nkd.netsaveTag;
-                    _savetag.StoreDate = _netdate.NearestDate;
-                    _savetag.Save(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");	
-                }
-                else //合并后 保存
-                {
-                    _savetag.StoreDate = DateTime.Now;
-                    for (int i = 0; i < 2000; i++)
-                    {
-                        if (_savetag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays)
-                        { //合并kd 
-                            _savetag.Tag[i].kd = _savetag.Tag[i].kd.Skip(mergedays).ToList();
-                            _savetag.Tag[i].kd.AddRange(nkd.netsaveTag.Tag[i].kd);
-                        }
-                    }//合并完成
-                    // 保存
-
-                    _savetag.StoreDate = _netdate.NearestDate;
-                    _savetag.Save(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");	
-                }
+                for (int i = 0; i < 2000; i++)
+                    if (_savetag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays)
+                    { //合并kd 
+                        _savetag.Tag[i].kd = _savetag.Tag[i].kd.Skip(mergedays).ToList();
+                        _savetag.Tag[i].kd.AddRange( nkd.netsaveTag.Tag[i].kd);
+                    }
             }
+            _savetag.StoreDate = _netdate.NearestDate;
+            _savetag.Save(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");	
             isrunning = false;
         }
         
@@ -248,7 +204,7 @@ namespace JHStock
                 _netszdate = qs.data["sh000001"].day.Select(
                     r => Convert.ToInt32(r[0].ToString().Replace("-", ""))).ToList();
                 Inline = true;
-
+                IncludeToday = false;
                 if (_netszdate.Count  ==  dayscount + 1 )
                 {
                     IncludeToday = true;
