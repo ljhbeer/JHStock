@@ -11,6 +11,7 @@ using Tools;
 
 namespace JHStock
 {
+    public delegate void ActionDeleGate(string action);
 	public class StocksData
 	{
 		public StocksData(JSConfig _jscfg)
@@ -21,7 +22,7 @@ namespace JHStock
 			isrunning = false;
 			Msg = "";
             nkd = null;
-			_activeKData = new KData[2000];
+			activeKD = new KData[2000];
 			TempDaysCount = 0;
 			DaysLength = 84;	
 			_netdate = new NetDate(DaysLength);
@@ -39,7 +40,6 @@ namespace JHStock
 			return new List<KData>();
 		}
 		
-        /// 
         public string InitData() //必须等待完成
         {
             _netdate.Refresh();
@@ -52,6 +52,7 @@ namespace JHStock
             }
             else
             {
+                GetExChangeData();
                 if (!LoadLocalData()) //下载完整数据
                 {
                     DownLoadNetDataAndCheckSave(DaysLength); //由 DaysLength
@@ -77,8 +78,38 @@ namespace JHStock
                         return "OK:已下载并合并至最新数据，，当前数据日期为"+_savetag.StoreDate.ToShortDateString(); // +本地数据最新日期
                     }
                 }
+
+                //下载当天数据
             }
             return "error 逻辑错误，此处不应出现";
+        }
+        public void GetExChangeData()
+        {
+            if (_netdate.IncludeToday && _netdate.Exchanging)
+            {
+                ActionMsg("showexchangingtime-" + DateTime.Now.ToLongTimeString());
+                activeKD  = new KData[2000]; // struct 初始默认值为 000....
+                CActivePrices _activeprices = new CActivePrices(_jscfg.globalconfig.Stocks);
+                string html = _activeprices.ActivePriceFromNet();                
+                string[] item = html.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string str in item)
+                {
+                    Stock s = _stocks.StockByNumCode(str.Trim().Substring(2, 6));
+                    if (str.Contains(s.Name) && str.Contains("\t"))
+                    {
+                        ActivePrice ap = new ActivePrice(str);
+                        activeKD[s.ID].open = (int)(100* ap.o);
+                        activeKD[s.ID].close = (int)(100* ap.c);
+                        activeKD[s.ID].high = (int)(100* ap.h);
+                        activeKD[s.ID].low = (int)(100* ap.l);
+                        activeKD[s.ID].amount = (int)(100* ap.amount);
+                        activeKD[s.ID].vol = (int)(ap.vol);
+                        //activeKD[s.ID].date = (int)(100 * ap.d);
+                        activeKD[s.ID].reservation = 0;
+                        
+                    }
+                }
+            }
         }
         private bool LoadLocalData( )
 		{
@@ -175,22 +206,21 @@ namespace JHStock
 				}
 			}
 			return new List<int>();
-		}
-		
+		}		
 
 		private JSConfig _jscfg;
 		private Stocks _stocks;
 		private Stock _ssestock;
 		private SaveTag _savetag;
-		private KData[]    _activeKData; // 当前时间
 		private NetDate _netdate;
 		private int DaysLength;  		//特定长度 84
 		private int TempDaysCount;  // 临时记录长度
 		private bool isrunning;		
-		public  string Msg;
-
         private NetKData nkd;
-        public ShowDeleGate ThreadShowMsg;       
+		public  string Msg;
+        public KData[] activeKD; // 当前时间
+        public ShowDeleGate ThreadShowMsg;
+        public ActionDeleGate ActionMsg;
     }
 	public class NetDate{
 		public NetDate(int DaysCount){

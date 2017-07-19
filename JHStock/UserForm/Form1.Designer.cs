@@ -103,9 +103,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.checkBoxBeforeDate);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMA);
-            this.splitContainer1.Panel1.Controls.Add(this.textBoxShow);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxMdbPath);
             this.splitContainer1.Panel1.Controls.Add(this.buttonImportDB);
@@ -120,7 +118,7 @@
             // checkBoxBeforeDate
             // 
             this.checkBoxBeforeDate.AutoSize = true;
-            this.checkBoxBeforeDate.Location = new System.Drawing.Point(553, 6);
+            this.checkBoxBeforeDate.Location = new System.Drawing.Point(350, 12);
             this.checkBoxBeforeDate.Name = "checkBoxBeforeDate";
             this.checkBoxBeforeDate.Size = new System.Drawing.Size(84, 16);
             this.checkBoxBeforeDate.TabIndex = 28;
@@ -139,7 +137,7 @@
             // 
             // textBoxShow
             // 
-            this.textBoxShow.Location = new System.Drawing.Point(645, 4);
+            this.textBoxShow.Location = new System.Drawing.Point(440, 11);
             this.textBoxShow.Name = "textBoxShow";
             this.textBoxShow.ReadOnly = true;
             this.textBoxShow.Size = new System.Drawing.Size(74, 21);
@@ -164,7 +162,6 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.textBoxInfor);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Controls.Add(this.dgv);
             this.splitContainer2.Size = new System.Drawing.Size(730, 531);
@@ -218,6 +215,8 @@
             this.buttonApply.TabIndex = 22;
             this.buttonApply.Text = "Apply=None";
             this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Visible = false;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
             // buttonAddNextlist
             // 
@@ -254,13 +253,16 @@
             // 
             // textBoxInfor
             // 
-            this.textBoxInfor.Location = new System.Drawing.Point(352, 7);
+            this.textBoxInfor.Location = new System.Drawing.Point(350, 35);
             this.textBoxInfor.Name = "textBoxInfor";
-            this.textBoxInfor.Size = new System.Drawing.Size(174, 21);
+            this.textBoxInfor.Size = new System.Drawing.Size(165, 21);
             this.textBoxInfor.TabIndex = 30;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxBeforeDate);
+            this.groupBox1.Controls.Add(this.textBoxShow);
+            this.groupBox1.Controls.Add(this.textBoxInfor);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.textBox_backnowdays);
             this.groupBox1.Controls.Add(this.label5);
@@ -271,15 +273,16 @@
             this.groupBox1.Controls.Add(this.textBox_backbeginday);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(312, 59);
+            this.groupBox1.Size = new System.Drawing.Size(526, 59);
             this.groupBox1.TabIndex = 29;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "回测";
+            this.groupBox1.Visible = false;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(189, 37);
+            this.label4.Location = new System.Drawing.Point(128, 38);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 36;
@@ -287,7 +290,7 @@
             // 
             // textBox_backnowdays
             // 
-            this.textBox_backnowdays.Location = new System.Drawing.Point(242, 33);
+            this.textBox_backnowdays.Location = new System.Drawing.Point(181, 34);
             this.textBox_backnowdays.Name = "textBox_backnowdays";
             this.textBox_backnowdays.Size = new System.Drawing.Size(64, 21);
             this.textBox_backnowdays.TabIndex = 35;
@@ -295,7 +298,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(189, 14);
+            this.label5.Location = new System.Drawing.Point(128, 15);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 12);
             this.label5.TabIndex = 34;
@@ -303,7 +306,7 @@
             // 
             // textBox_backgreendays
             // 
-            this.textBox_backgreendays.Location = new System.Drawing.Point(242, 10);
+            this.textBox_backgreendays.Location = new System.Drawing.Point(181, 11);
             this.textBox_backgreendays.Name = "textBox_backgreendays";
             this.textBox_backgreendays.Size = new System.Drawing.Size(64, 21);
             this.textBox_backgreendays.TabIndex = 33;
@@ -311,7 +314,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(70, 36);
+            this.label3.Location = new System.Drawing.Point(9, 37);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 32;
@@ -319,7 +322,7 @@
             // 
             // textBox_backendday
             // 
-            this.textBox_backendday.Location = new System.Drawing.Point(123, 32);
+            this.textBox_backendday.Location = new System.Drawing.Point(62, 33);
             this.textBox_backendday.Name = "textBox_backendday";
             this.textBox_backendday.Size = new System.Drawing.Size(64, 21);
             this.textBox_backendday.TabIndex = 31;
@@ -327,7 +330,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(70, 13);
+            this.label2.Location = new System.Drawing.Point(9, 14);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 12);
             this.label2.TabIndex = 30;
@@ -335,7 +338,7 @@
             // 
             // textBox_backbeginday
             // 
-            this.textBox_backbeginday.Location = new System.Drawing.Point(123, 9);
+            this.textBox_backbeginday.Location = new System.Drawing.Point(62, 10);
             this.textBox_backbeginday.Name = "textBox_backbeginday";
             this.textBox_backbeginday.Size = new System.Drawing.Size(64, 21);
             this.textBox_backbeginday.TabIndex = 29;
@@ -367,7 +370,6 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);

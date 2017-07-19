@@ -168,6 +168,7 @@ namespace JHStock
 		private void buttonMA_Click(object sender, EventArgs e)
 		{
             //配置相关参数
+            
             this.Hide();
 		}
 		private void LoadCfg()
@@ -179,7 +180,7 @@ namespace JHStock
 				
 			}
 		}
-		private List<Stock> StocksByItemsShow()
+		public  List<Stock> StocksByItemsShow()
 		{
 			List<Stock> ls = new List<Stock>();
 			foreach (string str in itemsShow)
@@ -195,6 +196,11 @@ namespace JHStock
 		private JHStock.JSConfig _jscfg;
 		private JHStock.Stocks _stocks;
 		private List<string> columntitles { get; set; }
+
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+
+        }
 	}	
 	public class DTNameType{
 		public string Name;

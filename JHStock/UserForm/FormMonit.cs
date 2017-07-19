@@ -91,6 +91,7 @@ namespace JHStock
         private void InitData() //采用线程控制运行
         {
             _stockdata.ThreadShowMsg = ThreadShowMsg;
+            _stockdata.ActionMsg = ThreadActionMsg;
             initdataaction = _stockdata.InitData();
             if (initdataaction.StartsWith("Quit"))
             {
@@ -146,9 +147,10 @@ namespace JHStock
             if (!bCompute) return;
             selectstock.Clear();
             savestockinfor.Clear();
+
             if(checkBoxUserDefinitionStocks.Checked)
               foreach (Stock s in DebugStocks)
-                TestStock(s);          
+                TestStock(s,checkBoxDebugOutPut.Checked);          
             else
               foreach (Stock s in _stocks.stocks)
                 TestStock(s);    
@@ -242,7 +244,7 @@ namespace JHStock
             return outstr;
         }
         //List<KData> listclose = kd.Skip(0).Take(60).ToList();
-        public void TestStock(Stock s, int staticdaylenght = 200)
+        public void TestStock(Stock s,bool DebugOutPut = false, int staticdaylenght = 200)
         {              
             if (!_stockdata.HasKdata(s.ID))
                 return;
@@ -271,16 +273,17 @@ namespace JHStock
                     savestockinfor.Add( LastLine.Y +"\t"+ undays+"\t"+ string.Join(",",ma5L.Skip(epos).Take(undays)));
                 }
             }
-            return;
-            //for debug
-            List<int> L = ma5L.Select(r => 0).ToList();
-            foreach (Point p in lines)
-                for (int i = 0; i < p.Y; i++)
-                    L[i + p.X] = 1;
-            string str = "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-                         + "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-                         + "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
-            MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
+            if (DebugOutPut)
+            {
+                List<int> L = ma5L.Select(r => 0).ToList();
+                foreach (Point p in lines)
+                    for (int i = 0; i < p.Y; i++)
+                        L[i + p.X] = 1;
+                string str = "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                             + "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+                             + "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
+                MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
+            }
         }
         public void TestStock2(Stock s, int staticdaylenght = 200) // for Debug Test
         {
@@ -489,19 +492,22 @@ namespace JHStock
         {
             this.Hide();
             f.ShowDialog();
+            this.DebugStocks = f.StocksByItemsShow();
             this.Show();
         }
         private void buttonCheckData_Click(object sender, EventArgs e) //逻辑入口
         {
-            
-            
-            
-            
-            
-            
-            //completebtn = (Button)sender;
-            //completebtn.Enabled = false;
-            //_stockdata.DownDataFromNet(ThreadShowMsg, ThreadCompleteRun);
+            _stockdata.GetExChangeData();            
+        }
+        public void ThreadActionMsg(string msg)
+        {
+            Invoke(new ActionDeleGate(ActionMsg), new object[] { msg });
+        }
+        public void ActionMsg(string msg)
+        {
+            if (msg.StartsWith("showexchangingtime-"))
+                textBoxExchangeTime.Text = msg.Substring(19);
+
         }
         private void ThreadShowMsg(string msg)
         {
@@ -527,7 +533,7 @@ namespace JHStock
         {
             this.textBoxInfor.Text += file;
         }
-        private Button completebtn;
+        //private Button completebtn;
         private bool isinitdatarunning;
         private string initdataaction;
     }

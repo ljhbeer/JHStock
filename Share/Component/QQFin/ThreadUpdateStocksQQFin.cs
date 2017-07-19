@@ -10,8 +10,8 @@ using Newtonsoft.Json;
 using Tools;
 
 namespace JHStock.Update
-{
-	public delegate void ShowDeleGate(string file);
+{    
+    public delegate void ShowDeleGate(string file);
 	public delegate void CompleteDeleGate( );
 	public class ThreadUpdateStocksQQFin{
 		public ThreadUpdateStocksQQFin(Stocks stocks)
