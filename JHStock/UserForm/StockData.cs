@@ -59,14 +59,14 @@ namespace JHStock
                 }
                 else
                 {
-                    if (_savetag.Tag[0] == null || _savetag.Tag[0].kd == null || _savetag.Tag[0].kd.Count == 0)
+                    if (_savetag.Tag[0] == null || _savetag.Tag[0].kd == null || _savetag.Tag[0].kd.Count == 0)//本地数据为空 或者格式不对
                     {
                         DownLoadNetDataAndCheckSave(DaysLength); //由 DaysLength
                         return "OK: 已下载完整数据并替换，当前数据日期为"; // +本地数据最新日期
                     }
                     List<int> LocalListDate = _savetag.Tag[0].kd.Select(r => r.date).ToList();
                     int LocalNearestDate = LocalListDate.Max();
-                    int cnt = _netdate.ListHistoryDate.Where(r => r > LocalNearestDate).Count();                    
+                    int cnt = _netdate.ListHistoryDate.Where(r => r > LocalNearestDate).Count();                   
                     if (cnt == 0)
                     {
                         return "OK:本地数据已经最新，当前数据日期为"+_savetag.StoreDate.ToShortDateString(); // +本地数据最新日期
@@ -122,12 +122,18 @@ namespace JHStock
         {
             string Msg="\r\n MergeData Error: ";
             int mergedays = nkd.netsaveTag.Tag[0].kd.Count - 1;
-            if (_netdate.IncludeToday)
+            if (_netdate.IncludeToday )
                for (int i = 0; i < 2000; i++)
                    if (nkd.netsaveTag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays + 1)
+                   {
+                       if(_netdate.Exchanging)
                             nkd.netsaveTag.Tag[i].kd = nkd.netsaveTag.Tag[i].kd.Take(mergedays).ToList();
-                    else if (nkd.netsaveTag.Tag[i].kd != null)
-                            Msg += nkd.netsaveTag.Tag[i].s.Name + nkd.netsaveTag.Tag[i].s.Code;
+                       else if( mergedays == DaysLength)  //15:00后可以  更新所有数据
+                           nkd.netsaveTag.Tag[i].kd = nkd.netsaveTag.Tag[i].kd.Skip(1).Take(mergedays).ToList();
+
+                   }
+                   else if (nkd.netsaveTag.Tag[i].kd != null)
+                       Msg += nkd.netsaveTag.Tag[i].s.Name + nkd.netsaveTag.Tag[i].s.Code;
             mergedays = nkd.netsaveTag.Tag[0].kd.Count;
             if (mergedays == DaysLength)
                 _savetag = nkd.netsaveTag;
@@ -191,6 +197,7 @@ namespace JHStock
 			this.dayscount = DaysCount;			
 			Inline = false;
 			IncludeToday = false;
+            Exchanging = false;
             NearestDate = DateTime.Now;
 			int daylength=ListHistoryDate.Count;
 		}
@@ -205,11 +212,20 @@ namespace JHStock
                     r => Convert.ToInt32(r[0].ToString().Replace("-", ""))).ToList();
                 Inline = true;
                 IncludeToday = false;
+                Exchanging = false;
                 if (_netszdate.Count  ==  dayscount + 1 )
                 {
                     IncludeToday = true;
-                    _netszdate = _netszdate.Take(_netszdate.Count - 1).ToList();
+                    Exchanging = true;
+                    txt = txt.Substring(0, txt.IndexOf("market")>0?txt.IndexOf("market"):0 );
+                    if (txt.Contains("15:00:0"))
+                        Exchanging = false;
+                    if(Exchanging)
+                        _netszdate = _netszdate.Take(_netszdate.Count - 1).ToList();
+                    else
+                        _netszdate = _netszdate.Skip(1).Take(_netszdate.Count - 1).ToList(); // 交易日的 15:00后  也被加入历史
                 }
+
                 int nd = _netszdate.Max();
                 NearestDate = new DateTime(nd / 10000, nd / 100 % 100, nd % 100);
             }
@@ -222,6 +238,7 @@ namespace JHStock
         }
 		public bool Inline{get;set;}
 		public bool IncludeToday{get;set;}
+        public bool Exchanging {get;set;}
 		public List<int> ListHistoryDate{
         	get{
         		if(_netszdate==null){
