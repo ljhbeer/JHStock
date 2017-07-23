@@ -11,6 +11,7 @@ using JHStock.Update;
 using System.IO;
 using Newtonsoft.Json;
 using System.Threading;
+using JHStock.UserForm;
 
 namespace JHStock
 {
@@ -28,6 +29,7 @@ namespace JHStock
             Ready = Init();
             isinitdatarunning = false;
             bCompute = false;
+            InitColumn();
         }
         private void FormMonit_Load(object sender, EventArgs e)
         {
@@ -181,7 +183,11 @@ namespace JHStock
                         string url = "http://image.sinajs.cn/newchart/daily/n/[stockcode].gif".Replace("[stockcode]", s.Code.ToLower());
                         Bitmap bmp = GetBitmapFromUrl(url);                       
                         dr["画图"] = new Bitmap(bmp, bmp.Width / 3, bmp.Height / 3);
+
+                        Bitmap bmp2 =GetBitmapFromUrl( url.Replace("daily", "min"));
+                        dr["分时图"] = new Bitmap(bmp2, bmp.Width / 3, bmp.Height / 3);
                         s.Bmp = bmp;
+                        s.Tag = bmp2;
                     }
                     catch
                     {
@@ -205,7 +211,7 @@ namespace JHStock
         private void InitMaDataTable()
         {
             dt = new DataTable();
-            List<string> columntitles = new List<string>() { "名称", "代码",  "持续天数" ,"后续天数","后续天数的情况","画图" };//   "日期",
+            List<string> columntitles = new List<string>() { "名称", "代码",  "持续天数" ,"后续天数","后续天数的情况","画图","分时图" };//   "日期",
             //columntitles = new List<string>() { "名称", "代码","杂项" };//,"杂项"
             for (int count = 0; count < columntitles.Count; count++)
             {
@@ -218,7 +224,7 @@ namespace JHStock
                 {
                     dc.DataType = typeof(int);
                 }
-                else if ("画图".Contains(columntitles[count]))
+                else if ("画图分时图".Contains(columntitles[count]))
                 {
                     dc.DataType = typeof(Image);
                 }
@@ -241,9 +247,9 @@ namespace JHStock
                 {
                     dgv.Columns[i].Width = 40;
                 }
-                else if ("画图".Contains(dgv.Columns[i].Name))
+                else if ("画图分时图".Contains(dgv.Columns[i].Name))
                 {
-                    dgv.Columns[i].Width = 240;
+                    dgv.Columns[i].Width = 200;
                 }
                 else
                 {
@@ -569,19 +575,77 @@ namespace JHStock
         //private Button completebtn;
         private bool isinitdatarunning;
         private string initdataaction;
+        private List<string> columntitles;
 
         private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex != -1 && e.ColumnIndex != -1 && e.ColumnIndex == 5)
+            if (e.RowIndex != -1 && e.ColumnIndex != -1)
             {
-                string numcode = dgv[1,e.RowIndex].Value.ToString().Substring(2,6);
+                string numcode = dgv[1, e.RowIndex].Value.ToString().Substring(2, 6);
                 Stock s = _stocks.StockByNumCode(numcode);
                 if (s != null && s.Bmp != null)
                 {//showImg
-                    FormPictureBox f = new FormPictureBox(s.Bmp);
-                    f.ShowDialog();
+                    if (e.ColumnIndex == 5)
+                    {
+                        FormPictureBox f = new FormPictureBox(s.Bmp);
+                        f.ShowDialog();
+                    }
+                    else if (e.ColumnIndex == 6)
+                    {
+                        string type = s.Tag.GetType().ToString();
+                        FormPictureBox f = new FormPictureBox((Bitmap)s.Tag);
+                        f.ShowDialog();
+
+                    }
+                    else if (e.ColumnIndex == 1)
+                    {
+                        FormShow f = new FormShow(s,_jscfg,columntitles);
+                        f.ShowDialog();
+
+                    }
                 }
             }
+        }
+        private void InitColumn()
+        {
+            JSConfig cfg = _jscfg;
+            columntitles = cfg.outshowconfig.ColumnBaseTitles();
+            string[] djcws = new string[] { "mgsy", "jzcsyl", "zzcsyl" };
+            string[] cznls = new string[] { "mgsy", "zysr", "yylr", "jlr", "zzc" };
+            List<int> CZNL_Date = cfg.globalconfig.NFI.NFI[3].NCZNL.Select(r => r.bgrq.Year).ToList();
+            List<int> DJCW_Date = cfg.globalconfig.NFI.NFI[3].NDJCW.Select(r => r.bgrq.Year * 100 + r.bgrq.Month).ToList();
+            foreach (string s in cfg.outshowconfig.ColumnFinTitles())
+            {
+                int cnt = Convert.ToInt32(s.Substring(0, s.IndexOf("-")).Trim());
+                string it = s.Substring(s.LastIndexOf("-") + 1).Trim();
+                string[] its = it.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                if (s.Contains("-DJCW-"))
+                {
+                    cnt = cnt < 8 ? cnt : 8;
+                    foreach (string istr in its)
+                    {
+                        if (djcws.Contains(istr))
+                            for (int i = 0; i < cnt; i++)
+                            {
+                                columntitles.Add("D_" + DJCW_Date[i] + "_" + istr);
+                            }
+                    }
+                }
+                else if (s.Contains("-CZNL-"))
+                {
+                    cnt = cnt < 20 ? cnt : 20;
+                    foreach (string istr in its)
+                    {
+                        if (cznls.Contains(istr))
+                            for (int i = 0; i < cnt; i++)
+                            {
+                                columntitles.Add("C_" + CZNL_Date[i] + "_" + istr);
+                            }
+                    }
+                }
+
+            }
+           
         }
     }
 }

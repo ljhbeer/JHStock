@@ -31,6 +31,7 @@ namespace JHStock
         //public void InDicator { get; set; } //InDicator 指针
         public Bitmap Bmp { get; set; }
         public GlobalConfig Gcfg { get { return _gcfg; } }
+        public Object Tag { get; set; }
         public bool ExistKDfile()
         {
             return File.Exists(KDataFileName());
@@ -74,6 +75,7 @@ namespace JHStock
             return file;
         }
         private GlobalConfig _gcfg;
+
     }
     public class DQX
     {

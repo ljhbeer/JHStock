@@ -281,6 +281,12 @@
     <Compile Include="UserForm\FormPictureBox.Designer.cs">
       <DependentUpon>FormPictureBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserForm\FormShow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserForm\FormShow.Designer.cs">
+      <DependentUpon>FormShow.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserForm\StockData.cs" />
     <Compile Include="NetKData.cs" />
     <Compile Include="Program.cs" />
@@ -303,6 +309,9 @@
     </Compile>
     <EmbeddedResource Include="UserForm\FormPictureBox.resx">
       <DependentUpon>FormPictureBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserForm\FormShow.resx">
+      <DependentUpon>FormShow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
