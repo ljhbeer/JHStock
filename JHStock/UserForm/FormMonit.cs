@@ -87,7 +87,7 @@ namespace JHStock
 
             //for _stockdata
             _stockdata = new StocksData(_jscfg);
-            
+            _jscfg.globalconfig.StocksData = _stockdata;
             return true;
         }
         private void InitData() //采用线程控制运行

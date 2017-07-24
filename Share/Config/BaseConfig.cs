@@ -104,6 +104,7 @@ namespace JHStock
         public bool UpdateDebug{ get; set; } //For ThreadUpdateStocks.RunNetTime
         public bool Debug { get; set; } //没有 == statics.debug
         public string ErrMsg { get; set; }
+        public StocksData StocksData { get; set; }	
         public Stocks Stocks { get; set; }	
         public Db.ConnDb db { get; set; }
         public CWeb web { get; set; }
