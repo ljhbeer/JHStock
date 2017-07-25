@@ -37,6 +37,7 @@
         	this.checkBoxTable = new System.Windows.Forms.CheckBox();
         	this.buttonAddToTXDBlock = new System.Windows.Forms.Button();
         	this.groupBox3 = new System.Windows.Forms.GroupBox();
+        	this.buttonRefreshMin = new System.Windows.Forms.Button();
         	this.buttonSaveSelect = new System.Windows.Forms.Button();
         	this.checkBoxDebugOutPut = new System.Windows.Forms.CheckBox();
         	this.buttonReCompute = new System.Windows.Forms.Button();
@@ -51,7 +52,6 @@
         	this.checkBoxSHowCWFX = new System.Windows.Forms.CheckBox();
         	this.buttonConfig = new System.Windows.Forms.Button();
         	this.dgv = new System.Windows.Forms.DataGridView();
-        	this.buttonRefreshMin = new System.Windows.Forms.Button();
         	this.tableLayoutPanel2.SuspendLayout();
         	this.flowLayoutPanel1.SuspendLayout();
         	this.groupBox2.SuspendLayout();
@@ -166,6 +166,16 @@
         	this.groupBox3.Size = new System.Drawing.Size(264, 46);
         	this.groupBox3.TabIndex = 29;
         	this.groupBox3.TabStop = false;
+        	// 
+        	// buttonRefreshMin
+        	// 
+        	this.buttonRefreshMin.Location = new System.Drawing.Point(189, 28);
+        	this.buttonRefreshMin.Name = "buttonRefreshMin";
+        	this.buttonRefreshMin.Size = new System.Drawing.Size(73, 18);
+        	this.buttonRefreshMin.TabIndex = 29;
+        	this.buttonRefreshMin.Text = "刷新分时图";
+        	this.buttonRefreshMin.UseVisualStyleBackColor = true;
+        	this.buttonRefreshMin.Click += new System.EventHandler(this.ButtonRefreshMinClick);
         	// 
         	// buttonSaveSelect
         	// 
@@ -312,16 +322,6 @@
         	this.dgv.Size = new System.Drawing.Size(689, 416);
         	this.dgv.TabIndex = 2;
         	this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
-        	// 
-        	// buttonRefreshMin
-        	// 
-        	this.buttonRefreshMin.Location = new System.Drawing.Point(189, 28);
-        	this.buttonRefreshMin.Name = "buttonRefreshMin";
-        	this.buttonRefreshMin.Size = new System.Drawing.Size(73, 18);
-        	this.buttonRefreshMin.TabIndex = 29;
-        	this.buttonRefreshMin.Text = "刷新分时图";
-        	this.buttonRefreshMin.UseVisualStyleBackColor = true;
-        	this.buttonRefreshMin.Click += new System.EventHandler(this.ButtonRefreshMinClick);
         	// 
         	// FormMonit
         	// 

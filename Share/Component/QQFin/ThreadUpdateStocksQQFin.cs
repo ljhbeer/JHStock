@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Tools;
 
@@ -58,6 +58,9 @@ namespace JHStock.Update
 	        
 	        foreach (string itemname in UpdateItemNames)
 	        {
+	        	string r = "(?<="+itemname+"=\\[)[^=]*(?=])";
+	        	string alltxt = Regex.Match(allfiletxt,r).Value;
+	        		
 	            ToolsCXml.BETag btItem =  new ToolsCXml.BETag("[item\":#@#@-@#@#]".Replace("item",itemname.ToLower()));
 	            string ui = u.Replace("[itemname]", itemname).ToLower();
 	            string url = ui.Replace("[year]", nowyear);
@@ -65,14 +68,44 @@ namespace JHStock.Update
 	        
 	            yearstr = btyear.BEPos(yearstr).String.Replace("\"","");
 	            string[] years = yearstr.Split(',');
-	            StringBuilder stritem = new StringBuilder();
+//	            StringBuilder stritem = new StringBuilder();
+//	            foreach (string year in years)
+//	            {
+//	                url = ui.Replace("[year]", year);
+//	                string txt = CWeb.GetWebClient(url);
+//	                txt =  btItem.BEPos(txt).String	 ;               
+//	                stritem.Append( txt );
+//	            }
+	            
+	            StringBuilder stritem1 = new StringBuilder();
 	            foreach (string year in years)
 	            {
 	                url = ui.Replace("[year]", year);
 	                string txt = CWeb.GetWebClient(url);
-	                stritem.Append( btItem.BEPos(txt).String );
+	                txt =  btItem.BEPos(txt).String;
+					string[] items = txt.Split(new string[]{"},{","{","}"},StringSplitOptions.RemoveEmptyEntries);
+					bool bcontains = false;
+					foreach(string str in items)
+						if(alltxt.Contains(str))
+							bcontains = true;
+					if(bcontains){
+	                	txt = "";
+	                	foreach(string str in items)
+	                		if(!alltxt.Contains(str))
+	                			txt+="{"+str+"}";
+	                		else
+	                			break;
+	                	stritem1.Append(txt);
+	                	stritem1.Append(alltxt);
+	                	
+//	                	MFile.WriteAllText("merger.txt",stritem1.ToString().Replace("}{","},{").Replace("},{","},\r\n{"));
+//	                	MFile.WriteAllText("whole.txt" ,stritem.ToString().Replace("}{","},{").Replace("},{","},\r\n{"));
+	                	break;	                	
+	                }	                		                	
+	                stritem1.Append( txt );
 	            }
-	            strall.Append(itemname + "=[").Append(stritem).AppendLine("]");	
+	            
+	            strall.Append(itemname + "=[").Append(stritem1).AppendLine("]");	
 	        }
 	        MFile.WriteAllText(finfilepath, strall.Replace("}{","},{").ToString());
 	    }      

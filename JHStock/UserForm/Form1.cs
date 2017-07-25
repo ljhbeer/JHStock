@@ -31,6 +31,8 @@ namespace JHStock
             textBox_backbeginday.Text = ToIntDate(dt.AddYears(-1)).ToString();
             textBox_backgreendays.Text = "20";
             textBox_backnowdays.Text = "1";
+            _isrunning = false;
+            _ErrorMsg = "";
 		}
         private int ToIntDate(DateTime dt)
         {
@@ -201,6 +203,74 @@ namespace JHStock
         {
 
         }
+        
+        private void ButtonQQFinClick(object sender, EventArgs e)
+		{
+            Stocks _stocks =  _jscfg.globalconfig.Stocks;
+			if (_stocks == null || _stocks.stocks.Count == 0)
+				return;
+			if(_stocks.Gcfg.db == null) return;
+			if (!_isrunning)
+			{
+				_bshowtime = false;// checkBoxShowTimeOut.Checked;
+				_isrunning = true;
+				_completebtn = buttonQQFin;
+				_completebtn.Enabled = false;				
+				JHStock.Update.QQFin qff = new Update.QQFin(_stocks);
+				JHStock.Update.ThreadUpdateStocksQQFin qf = qff.tupdate;
+				qf.MaxThreadSum = 20;
+				qf.showmsg = new ShowDeleGate(ThreadShowMsg);
+                qf.CompleteRun = new CompleteDeleGate(ThreadCompleteRun);				
+                //qf.DealStocks.Add(_stocks.StockByIndex(2));
+                //qf.DealStocks.Add(_stocks.StockByIndex(3))
+                qf.DealStocks =_stocks.stocks;				
+				_updatetime = DateTime.Now;
+				System.Threading.Thread nonParameterThread = new Thread(qf.RunNetDownLoadData);
+				nonParameterThread.Start();
+			}
+		}
+        
+		private Boolean _bshowtime;
+		private Boolean _isrunning;
+		private Button _completebtn;
+		private DateTime _updatetime;
+		private string _ErrorMsg;
+		private void ThreadShowMsg(string msg)
+		{
+			this.Invoke(new ShowDeleGate(showfiletxt), new object[] { msg });
+		}
+		private void ThreadAppendMsg(string msg)
+		{
+			Invoke(new ShowDeleGate(showappendfiletxt), new object[] { msg });
+		}
+		private void ThreadCompleteRun()
+		{
+			Invoke(new CompleteDeleGate(CompleteRun));
+		}
+		public void CompleteRun()
+		{
+			_completebtn.Enabled = true;
+			_isrunning = false;
+			string msg = "本次更新开始于"+_updatetime.ToLongTimeString()+
+				"结束于"+DateTime.Now.ToLongTimeString()+" 共耗时 "+
+				DateTime.Now.Subtract(_updatetime).TotalSeconds+" 秒，共更新了"+
+				"条记录\r\n\r\n";
+			if(_jscfg.globalconfig.ErrMsg != "")
+                _ErrorMsg += _jscfg.globalconfig.ErrMsg;
+			if(_ErrorMsg=="")
+				showfiletxt("已全部完成"+msg);
+			else
+				showfiletxt("ErrorMsg:"+_ErrorMsg+" Msg:"+msg);
+			MFile.AppendAllText("update.log",msg.Trim()+"ErrorMsg:"+_ErrorMsg+"\r\n\r\n");
+		}
+		public void showfiletxt(string file)
+		{
+			this.textBoxInfor.Text = file;
+		}
+		public void showappendfiletxt(string file)
+		{
+			this.textBoxInfor.Text += file;
+		}
 	}	
 	public class DTNameType{
 		public string Name;
