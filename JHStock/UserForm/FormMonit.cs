@@ -12,6 +12,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Threading;
 using JHStock.UserForm;
+using System.Text.RegularExpressions;
 
 namespace JHStock
 {
@@ -175,6 +176,7 @@ namespace JHStock
                     dr["持续天数"] = ss[0];
                     dr["后续天数"] = ss[1];
                     dr["后续天数的情况"] = ss[2];
+                    dr["选择"] = false;
                 }
                 if (_stockdata.Netdate.Inline)
                 {
@@ -188,6 +190,8 @@ namespace JHStock
                         dr["分时图"] = new Bitmap(bmp2, bmp.Width / 3, bmp.Height / 3);
                         s.Bmp = bmp;
                         s.Tag = bmp2;
+
+                        dr["财务信息"] = GetCWXX(s);
                     }
                     catch
                     {
@@ -196,6 +200,37 @@ namespace JHStock
                 dt.Rows.Add(dr);
                 i++;
             }
+        }
+
+        private string GetCWXX(Stock s)
+        {
+            string html = "";
+            string header = "";
+            if (checkBoxShowHexinFromNet.Checked)
+            {
+                string urlt = "http://quote.eastmoney.com/[scode].html";
+                string url = urlt.Replace("[scode]", s.Code);
+                html = CWeb.GetWebClient(url);
+                string pattern = @"(?<=公司核心数据[^01]*)<div class=\""box-x1 mb10\"">[\S\s]*?(?=</table>)";
+                html = Regex.Match(html, pattern).Value;
+                html = Regex.Replace(html, "<[^<>]*>| ", "");
+                html = Regex.Replace(html, "(\r\n){2,}", "\n").Replace("\r\n", "   ").Replace("\n", "\r\n");
+                Match m = Regex.Match(html, "(市净率.*)\\r\\n[\\S\\s]*(ROE.* )");
+                if (m.Success)
+                {
+                    header = m.Groups[1].Value + "  " + m.Groups[2] + "\r\n\r\n";
+                }
+            }
+            if(checkBoxROE5years.Checked)
+            {
+                QQfinItem qf = new QQfinItem();
+                string _qqfinpath = _jscfg.baseconfig.WorkPath + "Data\\QQFin\\";
+                qf.LoadData( _qqfinpath+s.Code + ".txt");
+                List<string> years = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.bgrq.Year.ToString()).ToList();
+                List<string> ROEs = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.jzcsyljq ).ToList();
+                header += string.Join("   ", years)+"\r\n" + string.Join("  ", ROEs) + "\r\n\r\n";
+            }
+            return header + html;
         }
 
         private Bitmap GetBitmapFromUrl(string url)
@@ -211,7 +246,7 @@ namespace JHStock
         private void InitMaDataTable()
         {
             dt = new DataTable();
-            List<string> columntitles = new List<string>() { "名称", "代码",  "持续天数" ,"后续天数","后续天数的情况","画图","分时图" };//   "日期",
+            List<string> columntitles = new List<string>() { "名称", "代码",  "持续天数" ,"后续天数","后续天数的情况","画图","分时图","财务信息","选择" };//   "日期",
             //columntitles = new List<string>() { "名称", "代码","杂项" };//,"杂项"
             for (int count = 0; count < columntitles.Count; count++)
             {
@@ -227,6 +262,10 @@ namespace JHStock
                 else if ("画图分时图".Contains(columntitles[count]))
                 {
                     dc.DataType = typeof(Image);
+                }
+                else if ("选择".Contains(columntitles[count]))
+                {
+                    dc.DataType = typeof(Boolean);
                 }
                 else
                 {
@@ -248,6 +287,10 @@ namespace JHStock
                     dgv.Columns[i].Width = 40;
                 }
                 else if ("画图分时图".Contains(dgv.Columns[i].Name))
+                {
+                    dgv.Columns[i].Width = 200;
+                }
+                else if ("财务信息".Contains(dgv.Columns[i].Name))
                 {
                     dgv.Columns[i].Width = 200;
                 }
@@ -597,7 +640,7 @@ namespace JHStock
                         f.ShowDialog();
 
                     }
-                    else if (e.ColumnIndex == 1)
+                    else if (e.ColumnIndex == 1 && checkBoxSHowCWFX.Checked)
                     {
                         FormShow f = new FormShow(s,_jscfg,columntitles);
                         f.ShowDialog();
@@ -647,6 +690,18 @@ namespace JHStock
             }
            
         }
+
+        private void buttonSaveSelect_Click(object sender, EventArgs e)
+        {
+            List<DataRow> drs = new List<DataRow>();
+            foreach (DataRow dr in dt.Rows)
+                if (!(bool)dr["选择"])
+                    drs.Add(dr);
+            foreach (DataRow dr in drs)
+                dt.Rows.Remove(dr);          
+        }
+
+       
     }
 }
 #region runnet
