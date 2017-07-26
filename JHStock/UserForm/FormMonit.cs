@@ -20,7 +20,6 @@ namespace JHStock
 	{
 		public FormMonit( )
 		{
-			f = new Form1();
 			selectstock = new List<Stock>();
 			savestockinfor = new List<string>();
 			//_stockdata = new StockData();
@@ -32,6 +31,7 @@ namespace JHStock
 			bCompute = false;
 			_umi = new UpdateMonitInfors();
 			InitColumn();
+			f = new Form1(_jscfg);
 		}
 		private void FormMonit_Load(object sender, EventArgs e)
 		{

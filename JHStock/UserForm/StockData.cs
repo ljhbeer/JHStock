@@ -181,15 +181,10 @@ namespace JHStock
             _savetag.Save(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");	
             isrunning = false;
         }
-        
-		public void SaveData(){
-			///
-			throw new Exception();
-			//// 获取上证指数
-			tagstock ssetag = ThreadUpdateStocksQQDayly.DownLoadData(this._ssestock,TempDaysCount);
-                    ssetag.s = _ssestock;
-            _savetag.Tag[_ssestock.ID] = ssetag;
-			
+
+        public SaveTag SaveTag
+        {
+            get { return _savetag; }			
 		}
 		//init localdate
 		public List<int> SHLocalDate()

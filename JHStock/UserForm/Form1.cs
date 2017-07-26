@@ -17,11 +17,12 @@ namespace JHStock
 {
 	public partial class Form1 : Form
 	{
-		public Form1()
-		{
+        public Form1(JSConfig _jscfg)
+        {
 			InitializeComponent();
-			_stocks = null;
-			_jscfg = null;
+            this._jscfg = _jscfg;
+            _stocks = null;
+            //_jscfg = null;
 			items = new List<string>();
 			itemsShow = new List<string>();
 			columntitles = new List<string>();
@@ -33,7 +34,7 @@ namespace JHStock
             textBox_backnowdays.Text = "1";
             _isrunning = false;
             _ErrorMsg = "";
-		}
+        }
         private int ToIntDate(DateTime dt)
         {
             return dt.Year * 10000 + dt.Month * 100 + dt.Day;
@@ -48,31 +49,31 @@ namespace JHStock
 			InitDBAndStocks();
 		}
 		private void InitDBAndStocks(){
-			string filename = textBoxMdbPath.Text;
-			if(!( filename != "" && File.Exists(filename))){				
-				MessageBox.Show("配置文件不存在，请检查后重置");
-				return;
-			}
+            //string filename = textBoxMdbPath.Text;
+            //if(!( filename != "" && File.Exists(filename))){				
+            //    MessageBox.Show("配置文件不存在，请检查后重置");
+            //    return;
+            //}
 			
-			JSConfig jscfg = new JSConfig();
-			jscfg.Load(filename);
-			BaseConfig cfg = jscfg.baseconfig;
-			MFile.cfg = cfg;
-			if(!  cfg.CheckWorkPath())
-				MessageBox.Show("工作目录不存在，请手工创建"+cfg.NowWorkPath());
+            //JSConfig jscfg = new JSConfig();
+            //jscfg.Load(filename);
+            //BaseConfig cfg = jscfg.baseconfig;
+            //MFile.cfg = cfg;
+            //if(!  cfg.CheckWorkPath())
+            //    MessageBox.Show("工作目录不存在，请手工创建"+cfg.NowWorkPath());
 			
-			if (!jscfg.globalconfig.InitStocks( ))
-            {
-                MessageBox.Show(_jscfg.globalconfig.ErrMsg); //退出
-                MessageBox.Show("配置文件不正确，请检查后重置");
-                return;
-            }
-			this._jscfg = jscfg;
-			this._stocks = jscfg.globalconfig.Stocks;
+            //if (!jscfg.globalconfig.InitStocks( ))
+            //{
+            //    MessageBox.Show(_jscfg.globalconfig.ErrMsg); //退出
+            //    MessageBox.Show("配置文件不正确，请检查后重置");
+            //    return;
+            //}
+            //this._jscfg = jscfg;
+			this._stocks = _jscfg.globalconfig.Stocks;
 			items.AddRange(
 				_stocks.stocks.Select(
 					s=>s.Code + "-" + s.Name + "(" + s.PYCode + ")" ).ToArray() );
-			List<string> names = DataTableTools.ReadTableNames(jscfg.globalconfig.db);
+			List<string> names = DataTableTools.ReadTableNames(_jscfg.globalconfig.db);
 			if(names.Count>0){
 				comboBoxCol.Items.AddRange(names.ToArray());
 				comboBoxCol.SelectedIndex = names.FindIndex( r=>r.ToLower() == "stockcode");
@@ -201,7 +202,7 @@ namespace JHStock
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-
+           
         }
         
         private void ButtonQQFinClick(object sender, EventArgs e)
@@ -271,6 +272,24 @@ namespace JHStock
 		{
 			this.textBoxInfor.Text += file;
 		}
+
+        private void buttonSaveDataSelfTest_Click(object sender, EventArgs e)
+        {
+            //TODO:SaveDataSelfTest
+            SaveTag st = _jscfg.globalconfig.StocksData.SaveTag;
+            int newdate = st.Tag[0].kd[st.Tag[0].kd.Count - 1].date;
+            string outstr = "index\tCount\tbegindate\tenddate\thasdistinct\n"+
+            st.Tag.Where(r  => r.kd!=null && r.kd[r.kd.Count-1].date !=  newdate ).Select( r => {
+                if (r.kd.Count > 0)
+                {
+                    return r.index + "\t" + r.kd.Count + "\t" + r.kd[0].date + "\t" + r.kd[r.kd.Count - 1].date
+                        +"\t"+(r.kd.Count-r.kd.Select( r1=>r1.date).Distinct().Count());
+
+                }
+                return  "";
+               }).Aggregate((r1, r2) => r1 + "\r\n" + r2);
+            MFile.WriteAllText("selftest.txt", outstr);
+        }
 	}	
 	public class DTNameType{
 		public string Name;
