@@ -152,12 +152,16 @@ namespace JHStock
 			selectstock.Clear();
 			savestockinfor.Clear();
 
-			if(checkBoxUserDefinitionStocks.Checked)
+			if(checkBoxUserDefinitionStocks.Checked){
+				int days=0;
+				if(!(int.TryParse(textBoxdefineDays.Text,out days) && days>80))
+					days = 200; //TestStock中   ，int staticdaylenght = 200)
 				foreach (Stock s in DebugStocks)
-					TestStock(s,checkBoxDebugOutPut.Checked);
-				else
-					foreach (Stock s in _stocks.stocks)
-						TestStock(s);
+					TestStock(s,checkBoxDebugOutPut.Checked,days);
+			}else{
+				foreach (Stock s in _stocks.stocks)
+					TestStock(s);
+			}
 			ShowSelectedStocks();
 		}
 
@@ -291,6 +295,14 @@ namespace JHStock
 			if (!_stockdata.HasKdata(s.ID))
 				return;
 			double[] kdvol = _stockdata.GetKD(s.ID).Select(r =>(double)( r.vol)).ToArray();
+			if(staticdaylenght != 200 && staticdaylenght > kdvol.Length && _stockdata.Netdate.Inline){
+				// TODO: Complete TestStock
+				tagstock ts = ThreadUpdateStocksQQDayly.DownLoadData(s,staticdaylenght);
+				kdvol=
+				ts.kd.Select(r =>(double)( r.vol)).ToArray();
+			}
+			
+			
 			List<double> vma5 = MA(0, 5, kdvol);
 			double now = vma5[0];
 			List<double> dvma5rate  = vma5.Select( r =>
@@ -321,9 +333,15 @@ namespace JHStock
 				foreach (Point p in lines)
 					for (int i = 0; i < p.Y; i++)
 						L[i + p.X] = 1;
-				string str = "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-					+ "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-					+ "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
+				
+				int li=0; //数组长度需一致
+				List<List<string>> lls = vma5.Select( r=>{List<string> re = new List<string>{r.ToString(),ma5L[li].ToString(),L[li].ToString()}; li++; return re;} ).ToList();
+				
+				string str = "\r\nvma5\tma5L\tL\r\n"+lls.Select( r=> string.Join("\t",r)).Aggregate((r1, r2) => r1+"\r\n" + r2);
+				
+//				str+= "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+//					+ "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
+//					+ "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
 				MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
 			}
 		}

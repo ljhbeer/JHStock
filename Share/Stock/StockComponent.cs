@@ -51,8 +51,7 @@ namespace JHStock
             //public double MGWFPLR;
             //public double MGCASH;
             public Fin(int date, double mgjzc, double jzctbroe)
-            {
-                // TODO: Complete member initialization
+            {                
                 this.Date = date;
                 this.MGJZC = mgjzc;
                 this.JZCTBROE = jzctbroe;

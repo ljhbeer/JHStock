@@ -52,6 +52,7 @@
         	this.checkBoxSHowCWFX = new System.Windows.Forms.CheckBox();
         	this.buttonConfig = new System.Windows.Forms.Button();
         	this.dgv = new System.Windows.Forms.DataGridView();
+        	this.textBoxdefineDays = new System.Windows.Forms.TextBox();
         	this.tableLayoutPanel2.SuspendLayout();
         	this.flowLayoutPanel1.SuspendLayout();
         	this.groupBox2.SuspendLayout();
@@ -72,6 +73,7 @@
         	this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 1, 0);
         	this.tableLayoutPanel2.Controls.Add(this.buttonConfig, 0, 0);
         	this.tableLayoutPanel2.Controls.Add(this.dgv, 1, 1);
+        	this.tableLayoutPanel2.Controls.Add(this.textBoxdefineDays, 0, 1);
         	this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
         	this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
         	this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -190,7 +192,7 @@
         	// checkBoxDebugOutPut
         	// 
         	this.checkBoxDebugOutPut.AutoSize = true;
-        	this.checkBoxDebugOutPut.Location = new System.Drawing.Point(114, 10);
+        	this.checkBoxDebugOutPut.Location = new System.Drawing.Point(105, 10);
         	this.checkBoxDebugOutPut.Name = "checkBoxDebugOutPut";
         	this.checkBoxDebugOutPut.Size = new System.Drawing.Size(78, 16);
         	this.checkBoxDebugOutPut.TabIndex = 27;
@@ -323,6 +325,13 @@
         	this.dgv.TabIndex = 2;
         	this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
         	// 
+        	// textBoxdefineDays
+        	// 
+        	this.textBoxdefineDays.Location = new System.Drawing.Point(3, 60);
+        	this.textBoxdefineDays.Name = "textBoxdefineDays";
+        	this.textBoxdefineDays.Size = new System.Drawing.Size(28, 21);
+        	this.textBoxdefineDays.TabIndex = 24;
+        	// 
         	// FormMonit
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -346,6 +355,7 @@
         	((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
         	this.ResumeLayout(false);
         }
+        private System.Windows.Forms.TextBox textBoxdefineDays;
         private System.Windows.Forms.Button buttonRefreshMin;
 
         #endregion
