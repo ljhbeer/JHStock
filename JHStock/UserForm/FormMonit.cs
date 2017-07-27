@@ -671,7 +671,6 @@ namespace JHStock
 			}
 			
 		}
-
 		private void buttonSaveSelect_Click(object sender, EventArgs e)
 		{
 			List<DataRow> drs = new List<DataRow>();
@@ -681,14 +680,11 @@ namespace JHStock
 			foreach (DataRow dr in drs)
 				dt.Rows.Remove(dr);
 			_umi.remove(drs);
-		}
-
-		
-        
-        void ButtonRefreshMinClick(object sender, EventArgs e)
+		}        
+        private void ButtonRefreshMinClick(object sender, EventArgs e)
         {
         	_umi.run("min");
-        }
+        }        
 	}
 	public class UpdateMonitInfors{
 		public bool bshownet{get;set;}

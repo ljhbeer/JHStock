@@ -153,6 +153,20 @@ namespace JHStock
 			if (e.KeyCode == Keys.D)
 			{
 				listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+			}else if(e.KeyCode == Keys.P){
+				if (listBox1.SelectedIndex == -1) return;				
+				string numcode = listBox1.SelectedItem.ToString().Substring(2, 6);
+				
+				StocksData _stockdata = _jscfg.globalconfig.StocksData;
+				Stock s = _stocks.StockByNumCode(numcode);
+				if (s!=null && _stockdata.SaveTag.Tag[s.ID]!=null)
+				{
+					//TODO:   drawdaily in form1
+					KData[] kd = _stockdata.SaveTag.Tag[s.ID].kd.ToArray();
+					Bitmap bmp = DrawDaily(kd);
+					FormPictureBox f = new FormPictureBox(bmp);
+					f.ShowDialog();
+				}
 			}
 		}
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -289,6 +303,153 @@ namespace JHStock
                 return  "";
                }).Aggregate((r1, r2) => r1 + "\r\n" + r2);
             MFile.WriteAllText("selftest.txt", outstr);
+        }
+        public static void DrawBitmap(Bitmap bmp,List<Rectangle> ListItem,List<bool> isred,Brush brbackground){    		
+    		Pen pr = Pens.Red;
+    		Pen pc = Pens.Green;
+            Brush br = Brushes.Green;            
+    		using (Graphics g = Graphics.FromImage(bmp))
+            {                
+                for (int i = 0; i < ListItem.Count; i++)
+                { 
+                	g.FillRectangle(brbackground,ListItem[i]);           
+					
+                	if (isred[i] ){   
+                		if(ListItem[i].Width ==1)
+                			g.DrawLine(pr,ListItem[i].X,ListItem[i].Y,ListItem[i].Right,ListItem[i].Bottom);
+                		else
+							g.DrawRectangle(pr, ListItem[i]);     		
+                	}else{
+                		if(ListItem[i].Width ==1)
+                			g.DrawLine(pc,ListItem[i].X,ListItem[i].Y,ListItem[i].Right,ListItem[i].Bottom);
+                		else
+                    		g.FillRectangle(br, ListItem[i]);
+                	}
+                }
+            }
+    	}
+        public static void DrawBitmapPrice(Bitmap bmp,List<Rectangle> Lines,List<string> txts){
+        	Pen pr = Pens.Red;
+            Brush br = Brushes.Green;        
+            Font f = new Font( DefaultFont.Name,12);
+    		using (Graphics g = Graphics.FromImage(bmp))
+            {                
+                for (int i = 0; i < Lines.Count; i++)
+                {       
+                    //g.DrawRectangle(pr, Lines[i]);
+                    g.DrawLine(pr, Lines[i].X,Lines[i].Y,Lines[i].Right,Lines[i].Bottom);
+                    g.DrawString(txts[i],f,Brushes.Red,Lines[i].Right,Lines[i].Bottom);
+                }
+            }
+        }
+        public static bool DrawBitmap(KData[] kd,Bitmap bmp,Rectangle rect){
+        	//TODO: UnDraw Date
+        	if(bmp == null || kd==null || kd.Count()==0 || rect.X+rect.Width>bmp.Width || rect.Y + rect.Height>bmp.Height)
+        		return false;
+        	int startx = rect.X;
+        	int starty = rect.Y;
+        	int width = rect.Width;
+        	int height =rect.Height;
+        	
+        	int maxprice = kd.Max( r=> r.high);
+        	int minprice = kd.Min( r=> r.low);
+        	int pricemaxplusmin = maxprice  - minprice;
+        	double dx = width*1.0/kd.Count();
+        	double dy = height*1.0/pricemaxplusmin;
+        	int i=0;
+        	List<Rectangle> hlr = kd
+        		.Select( r=> {
+        		        	int x = (int)( i*dx +dx *0.5) + startx;
+        		        	int y = (int)((maxprice-r.high)*dy) + starty;
+        		        	int h =(int)( (r.high-r.low)*dy);
+        		        	h = h>0?h:1;        		        	
+        		        	Rectangle trect = new Rectangle(x,y,1,h );
+        		        	i++;
+        		        	return trect;
+        		        }).ToList();
+        	i=0;
+        	List<Rectangle> ocr = kd
+        		.Select( r=> {
+        		        	int x = (int)( i*dx + dx * 0.2) +startx;
+        		        	int y = (int)((maxprice- Math.Max(r.open,r.close))*dy) + starty;
+        		        	int h =(int)( (Math.Abs(r.open-r.close))*dy);
+        		        	    h = h>0?h:1;
+        		        	int w = (int)( dx*0.6 + 0.5) > 0 ? (int)( dx*0.6+0.5):1;
+        		        	Rectangle trect = new Rectangle(x,y,w,h );
+        		        	i++;
+        		        	return trect;
+        		        }).ToList();
+        	
+        	List<bool> lb = kd.Select( r => r.open<r.close).ToList();
+        	DrawBitmap(bmp,hlr.Concat(ocr).ToList(),lb.Concat(lb).ToList(),Brushes.Black); // DrawKLine
+        	//TODO: Drawprice
+        	List<Rectangle> Lines = new List<Rectangle>();
+        	List<string> pricetxt = new List<string>();
+        	for( i=0; i<11; i++){
+        		Lines.Add( new Rectangle( rect.X, rect.Y + (int)( rect.Height*i/10.0),rect.Width,1));
+        		pricetxt.Add( ((maxprice+ pricemaxplusmin*i/10.0)/100.0).ToString());
+        	}
+        	DrawBitmapPrice(bmp,Lines,pricetxt);
+        	return true;
+        }
+        public static bool DrawBitmapVol(KData[] kd,Bitmap bmp,Rectangle rect){
+        	//TODO: DrawVol
+        	if(bmp == null || kd==null || kd.Count()==0 || rect.X+rect.Width>bmp.Width || rect.Y + rect.Height>bmp.Height)
+        		return false;
+        	int startx = rect.X;
+        	int starty = rect.Y;
+        	int width = rect.Width;
+        	int height =rect.Height;
+        	
+        	int max = kd.Max( r=> r.vol);        	
+        	double dx = width*1.0/kd.Count();
+        	double dy = height*1.0/max;
+        	int i=0;
+        	List<Rectangle> hlr = kd
+        		.Select( r=> {
+        		        	int x = (int)( i*dx) + startx;
+        		        	int y = (int)((max-r.vol)*dy) + starty;
+        		        	int h =(int)( r.vol*dy);
+        		        	h = h>0?h:1;    
+        		        	int w = (int)(dx+0.5) >0 ? (int)(dx+0.5) :1;
+        		        	Rectangle trect = new Rectangle(x,y,w,h );
+        		        	i++;
+        		        	return trect;
+        		        }).ToList();
+        	i=0;
+        	
+        	
+        	List<bool> lb = kd.Select( r => r.open<r.close).ToList();
+        	DrawBitmap(bmp,hlr,lb,Brushes.Black); // DrawKLine
+        	
+        	//TODO: DrawVolTest
+        	List<Rectangle> Lines = new List<Rectangle>();
+        	List<string> pricetxt = new List<string>();
+        	for( i=0; i<4; i++){
+        		Lines.Add( new Rectangle( rect.X, rect.Y + (int)( rect.Height*i/4.0),rect.Width,1));
+        		pricetxt.Add( ((max*i/4.0)/100.0).ToString());
+        	}
+        	DrawBitmapPrice(bmp,Lines,pricetxt);
+        	return true;
+        }
+        public static Bitmap DrawDaily(KData[] kd){        	
+        	int width = 1200;
+        	int height = 800;
+        	Bitmap Bmp = new Bitmap(width,height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+        	Brush brback = Brushes.Black;
+    		Bitmap bmp = Bmp;
+    		using (Graphics g = Graphics.FromImage(bmp))
+            { 
+    			g.FillRectangle(brback, new Rectangle(0, 0, bmp.Width, bmp.Height));    			
+    		}
+    		
+        	DrawBitmap(kd,bmp,new Rectangle(20,20,920,620)); // Drawprice  
+        	DrawBitmapVol(kd,bmp,new Rectangle(20,620,920,160));//
+        	//Draw Txt  
+        	// 自动换行  URL
+        	// http://bbs.csdn.net/topics/391036711
+        	// http://www.cnblogs.com/dannyqiu/articles/2837515.html
+        	return Bmp;
         }
 	}	
 	public class DTNameType{
