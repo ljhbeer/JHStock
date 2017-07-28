@@ -266,7 +266,7 @@ namespace JHStock
 		{
 			_completebtn.Enabled = true;
 			_isrunning = false;
-			string msg = "本次更新开始于"+_updatetime.ToLongTimeString()+
+			string msg = "本次更新开始于"+_updatetime +
 				"结束于"+DateTime.Now.ToLongTimeString()+" 共耗时 "+
 				DateTime.Now.Subtract(_updatetime).TotalSeconds+" 秒，共更新了"+
 				"条记录\r\n\r\n";
@@ -292,12 +292,21 @@ namespace JHStock
             //TODO:SaveDataSelfTest
             SaveTag st = _jscfg.globalconfig.StocksData.SaveTag;
             int newdate = st.Tag[0].kd[st.Tag[0].kd.Count - 1].date;
+            
+            
             string outstr = "index\tCount\tbegindate\tenddate\thasdistinct\n"+
             st.Tag.Where(r  => r.kd!=null && r.kd[r.kd.Count-1].date !=  newdate ).Select( r => {
                 if (r.kd.Count > 0)
                 {
+                	var query = from p in r.kd
+                		group p by p.date into g                 		
+                		where g.Count() > 1
+                		select g;
+                	string mult = "\t";
+                	foreach(var qu in query)
+                		mult+= qu.Key + " "+qu.Count()+"\t";
                     return r.index + "\t" + r.kd.Count + "\t" + r.kd[0].date + "\t" + r.kd[r.kd.Count - 1].date
-                        +"\t"+(r.kd.Count-r.kd.Select( r1=>r1.date).Distinct().Count());
+                        +"\t"+(r.kd.Count-r.kd.Select( r1=>r1.date).Distinct().Count())+mult;
 
                 }
                 return  "";

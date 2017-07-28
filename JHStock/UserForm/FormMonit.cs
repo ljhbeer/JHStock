@@ -32,6 +32,8 @@ namespace JHStock
 			_umi = new UpdateMonitInfors();
 			InitColumn();
 			f = new Form1(_jscfg);
+			_stockslog = new StocksLog(_jscfg);
+			_formlog = new FormLog(_jscfg,_stockslog);
 		}
 		private void FormMonit_Load(object sender, EventArgs e)
 		{
@@ -600,7 +602,9 @@ namespace JHStock
 		
 		//for updatemonitinfors
 		public UpdateMonitInfors _umi;
-
+		public StocksLog _stockslog;
+		public FormLog _formlog;
+		
 		private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
 			if (e.RowIndex != -1 && e.ColumnIndex != -1)
@@ -685,6 +689,18 @@ namespace JHStock
         {
         	_umi.run("min");
         }        
+        
+        void ButtonSaveLogClick(object sender, EventArgs e)
+        {
+        	if(_umi.ls.Count==0) return;
+        	_stockslog.SaveLog(_umi);
+        	_stockslog.Save();
+        }
+        
+        void ButtonOpenDailyClick(object sender, EventArgs e)
+        {
+        	_formlog.Show();
+        }
 	}
 	public class UpdateMonitInfors{
 		public bool bshownet{get;set;}
@@ -729,6 +745,10 @@ namespace JHStock
 				foreach(UpdateMonitInfor u in ls){
 					u.RunMin();
 				}
+			}else if(type == "stocklog"){
+				foreach(UpdateMonitInfor u in ls){
+					u.RunStockLog();
+				}
 			}
 			while(true){
 				Thread.Sleep(100);
@@ -772,7 +792,23 @@ namespace JHStock
 			UpdataMin();
 			Interlocked.Decrement(ref ums.runcount);
 		}
+		public void RunStockLog()
+		{
+			Interlocked.Increment(ref ums.runcount);
+			UpdataStockLog();
+			Interlocked.Decrement(ref ums.runcount);
+		}
 		
+		private void UpdataStockLog()
+		{
+			try{
+				string url = "http://image.sinajs.cn/newchart/daily/n/[stockcode].gif".Replace("[stockcode]", s.Code.ToLower());
+				Bitmap bmp = GetBitmapFromUrl(url);
+				dr["画图"] = new Bitmap(bmp, bmp.Width / 3, bmp.Height / 3);
+				s.Bmp = bmp;
+			}catch {
+			}
+		}
 		private void UpdataMin()
 		{
 			try{
@@ -841,7 +877,8 @@ namespace JHStock
 		public DataRow DataRow()
 		{
 			return dr;
-		}
+		}	
+		
 		
 	}
 }

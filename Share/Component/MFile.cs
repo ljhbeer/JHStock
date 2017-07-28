@@ -41,7 +41,13 @@ namespace Tools
 		public static void AppendAllText(string path, string contents)
 		{
 		 	checkPath(ref path);
-			File.AppendAllText(path,contents);
+		 	lock(obj){
+			 	try{			 		
+					File.AppendAllText(path,contents);
+			 	}catch(Exception e){		 		
+			 		File.AppendAllText(cfg.WorkPath+"AppendAllText.Error.log",e.Message);
+			 	}
+		 	}		 	
 		}
 		private static void checkPath(ref string path)
 		{
@@ -60,5 +66,6 @@ namespace Tools
             return ".None";
         }       
 		public static BaseConfig cfg = null;
+		private static object obj  = new object();
 	}
 }

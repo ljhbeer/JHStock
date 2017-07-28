@@ -12,6 +12,7 @@ using Tools;
 namespace JHStock
 {
     public delegate void ActionDeleGate(string action);
+
 	public class StocksData
 	{
 		public StocksData(JSConfig _jscfg)
@@ -153,7 +154,8 @@ namespace JHStock
         {
             string Msg="\r\n MergeData Error: ";
             int mergedays = nkd.netsaveTag.Tag[0].kd.Count - 1;
-            if (_netdate.IncludeToday )
+            //处理 网上下载数据
+            if (_netdate.IncludeToday ) //交易日 
                for (int i = 0; i < 2000; i++)
                    if (nkd.netsaveTag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays + 1)
                    {
@@ -166,15 +168,29 @@ namespace JHStock
                    else if (nkd.netsaveTag.Tag[i].kd != null)
                        Msg += nkd.netsaveTag.Tag[i].s.Name + nkd.netsaveTag.Tag[i].s.Code;
             mergedays = nkd.netsaveTag.Tag[0].kd.Count;
+            
+            int beginday = nkd.netsaveTag.Tag[0].kd[0].date;
+            int endday = nkd.netsaveTag.Tag[0].kd[mergedays-1].date;
+            
             if (mergedays == DaysLength)
                 _savetag = nkd.netsaveTag;
             else
             {
+            	// 合并
                 for (int i = 0; i < 2000; i++)
                     if (_savetag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays)
                     { //合并kd 
-                        _savetag.Tag[i].kd = _savetag.Tag[i].kd.Skip(mergedays).ToList();
-                        _savetag.Tag[i].kd.AddRange( nkd.netsaveTag.Tag[i].kd);
+	                	if( nkd.netsaveTag.Tag[i].kd[0].date == beginday && nkd.netsaveTag.Tag[i].kd[mergedays-1].date == endday){
+	                        _savetag.Tag[i].kd = _savetag.Tag[i].kd.Skip(mergedays).ToList();
+	                        _savetag.Tag[i].kd.AddRange( nkd.netsaveTag.Tag[i].kd);
+                		}else{
+                			int maxlocalday = _savetag.Tag[i].kd.Max(r => r.date);
+                			KData[] kd = nkd.netsaveTag.Tag[i].kd.Where( r => r.date>maxlocalday).ToArray();
+                			if(kd.Length>0){
+                				_savetag.Tag[i].kd = _savetag.Tag[i].kd.Skip(kd.Length).ToList();
+                				_savetag.Tag[i].kd.AddRange( kd );
+                			}
+                		}
                     }
             }
             _savetag.StoreDate = _netdate.NearestDate;

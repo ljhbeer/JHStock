@@ -269,6 +269,10 @@
     <Compile Include="UserForm\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserForm\FormLog.cs" />
+    <Compile Include="UserForm\FormLog.Designer.cs">
+      <DependentUpon>FormLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserForm\FormMonit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -291,8 +295,12 @@
     <Compile Include="NetKData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserForm\StocksLog.cs" />
     <EmbeddedResource Include="UserForm\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserForm\FormLog.resx">
+      <DependentUpon>FormLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserForm\FormMonit.resx">
       <DependentUpon>FormMonit.cs</DependentUpon>
