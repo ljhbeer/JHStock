@@ -153,8 +153,11 @@ namespace JHStock
 			if (e.KeyCode == Keys.D)
 			{
 				listBox1.Items.RemoveAt(listBox1.SelectedIndex);
-			}else if(e.KeyCode == Keys.P){
-				if (listBox1.SelectedIndex == -1) return;				
+			}else if(e.KeyCode == Keys.P || e.KeyCode ==Keys.O){
+				if (listBox1.SelectedIndex == -1) return;
+                ColorStyle cs = ColorStyles.classic;
+                if (e.KeyCode == Keys.O)
+                    cs = ColorStyles.print;
 				string numcode = listBox1.SelectedItem.ToString().Substring(2, 6);
 				
 				StocksData _stockdata = _jscfg.globalconfig.StocksData;
@@ -163,7 +166,7 @@ namespace JHStock
 				{
 					//TODO:   drawdaily in form1
 					KData[] kd = _stockdata.SaveTag.Tag[s.ID].kd.ToArray();
-					Bitmap bmp = DrawDaily(kd);
+					Bitmap bmp = DrawDaily(kd,cs);
 					FormPictureBox f = new FormPictureBox(bmp);
 					f.ShowDialog();
 				}
@@ -311,47 +314,67 @@ namespace JHStock
                 }
                 return  "";
                }).Aggregate((r1, r2) => r1 + "\r\n" + r2);
+            List<tagstock> hasdistinctarray = 
+                st.Tag.Where(r => 
+                    {
+                        if (r.kd != null && r.kd[r.kd.Count - 1].date != newdate)
+                            return r.kd.Count > r.kd.Select(r1 => r1.date).Distinct().Count();    // 有重复
+                        return false;
+                    })  .ToList();        
+            if(hasdistinctarray.Count>0){
+            outstr+= "\r\n==========================================\r\n"+  hasdistinctarray
+                .Select(r =>
+                {
+                    if (r.kd.Count > 0)
+                    {
+                        var query = from p in r.kd
+                                    group p by p.date into g
+                                    where g.Count() > 1
+                                    select g;
+                        string mult = "\t";
+                        foreach (var qu in query)
+                            mult += qu.Key + " " + qu.Count() + "\t";
+                        return r.index + "\t" + r.kd.Count + "\t" + r.kd[0].date + "\t" + r.kd[r.kd.Count - 1].date
+                            + "\t" + (r.kd.Count - r.kd.Select(r1 => r1.date).Distinct().Count()) + mult;
+
+                    }
+                    return "";
+                }).Aggregate((r1, r2) => r1 + "\r\n" + r2);
+            }
             MFile.WriteAllText("selftest.txt", outstr);
         }
-        public static void DrawBitmap(Bitmap bmp,List<Rectangle> ListItem,List<bool> isred,Brush brbackground){    		
-    		Pen pr = Pens.Red;
-    		Pen pc = Pens.Green;
-            Brush br = Brushes.Green;            
+        public static void DrawBitmap(Bitmap bmp,List<Rectangle> ListItem,List<bool> isred,ColorStyle cs){  
     		using (Graphics g = Graphics.FromImage(bmp))
             {                
                 for (int i = 0; i < ListItem.Count; i++)
                 { 
-                	g.FillRectangle(brbackground,ListItem[i]);           
+                	g.FillRectangle(cs.backgroundbrush,ListItem[i]);           
 					
                 	if (isred[i] ){   
                 		if(ListItem[i].Width ==1)
-                			g.DrawLine(pr,ListItem[i].X,ListItem[i].Y,ListItem[i].Right,ListItem[i].Bottom);
+                			g.DrawLine(cs.klinerosepen,ListItem[i].X,ListItem[i].Y,ListItem[i].Right,ListItem[i].Bottom);
                 		else
-							g.DrawRectangle(pr, ListItem[i]);     		
+							g.DrawRectangle(cs.klinerosepen, ListItem[i]);     		
                 	}else{
                 		if(ListItem[i].Width ==1)
-                			g.DrawLine(pc,ListItem[i].X,ListItem[i].Y,ListItem[i].Right,ListItem[i].Bottom);
+                			g.DrawLine(cs.klinedeclinepen,ListItem[i].X,ListItem[i].Y,ListItem[i].Right,ListItem[i].Bottom);
                 		else
-                    		g.FillRectangle(br, ListItem[i]);
+                    		g.FillRectangle(cs.klinedeclinebush, ListItem[i]);
                 	}
                 }
             }
     	}
-        public static void DrawBitmapPrice(Bitmap bmp,List<Rectangle> Lines,List<string> txts){
-        	Pen pr = Pens.Red;
-            Brush br = Brushes.Green;        
-            Font f = new Font( DefaultFont.Name,12);
+        public static void DrawBitmapLinesAndPriceText(Bitmap bmp,List<Rectangle> Lines,List<string> txts,ColorStyle cs){        
     		using (Graphics g = Graphics.FromImage(bmp))
             {                
                 for (int i = 0; i < Lines.Count; i++)
                 {       
-                    //g.DrawRectangle(pr, Lines[i]);
-                    g.DrawLine(pr, Lines[i].X,Lines[i].Y,Lines[i].Right,Lines[i].Bottom);
-                    g.DrawString(txts[i],f,Brushes.Red,Lines[i].Right,Lines[i].Bottom);
+                    g.DrawLine(cs.textpricelinepen2, Lines[i].X,Lines[i].Y,Lines[i].Right,Lines[i].Bottom);
+                    g.DrawString(txts[i], cs.textfont, cs.textpricelinebrush, Lines[i].Right, Lines[i].Bottom);
                 }
             }
         }
-        public static bool DrawBitmap(KData[] kd,Bitmap bmp,Rectangle rect){
+        public static bool DrawBitmapPrice(KData[] kd,Bitmap bmp,Rectangle rect,ColorStyle cs){
         	//TODO: UnDraw Date
         	if(bmp == null || kd==null || kd.Count()==0 || rect.X+rect.Width>bmp.Width || rect.Y + rect.Height>bmp.Height)
         		return false;
@@ -390,7 +413,7 @@ namespace JHStock
         		        }).ToList();
         	
         	List<bool> lb = kd.Select( r => r.open<r.close).ToList();
-        	DrawBitmap(bmp,hlr.Concat(ocr).ToList(),lb.Concat(lb).ToList(),Brushes.Black); // DrawKLine
+        	DrawBitmap(bmp,hlr.Concat(ocr).ToList(),lb.Concat(lb).ToList(),cs); // DrawKLine
         	//TODO: Drawprice
         	List<Rectangle> Lines = new List<Rectangle>();
         	List<string> pricetxt = new List<string>();
@@ -398,10 +421,10 @@ namespace JHStock
         		Lines.Add( new Rectangle( rect.X, rect.Y + (int)( rect.Height*i/10.0),rect.Width,1));
         		pricetxt.Add( ((maxprice+ pricemaxplusmin*i/10.0)/100.0).ToString());
         	}
-        	DrawBitmapPrice(bmp,Lines,pricetxt);
+        	DrawBitmapLinesAndPriceText(bmp,Lines,pricetxt,cs);
         	return true;
         }
-        public static bool DrawBitmapVol(KData[] kd,Bitmap bmp,Rectangle rect){
+        public static bool DrawBitmapVol(KData[] kd,Bitmap bmp,Rectangle rect,ColorStyle cs){
         	//TODO: DrawVol
         	if(bmp == null || kd==null || kd.Count()==0 || rect.X+rect.Width>bmp.Width || rect.Y + rect.Height>bmp.Height)
         		return false;
@@ -429,7 +452,7 @@ namespace JHStock
         	
         	
         	List<bool> lb = kd.Select( r => r.open<r.close).ToList();
-        	DrawBitmap(bmp,hlr,lb,Brushes.Black); // DrawKLine
+        	DrawBitmap(bmp,hlr,lb,cs); // DrawKLine
         	
         	//TODO: DrawVolTest
         	List<Rectangle> Lines = new List<Rectangle>();
@@ -438,31 +461,108 @@ namespace JHStock
         		Lines.Add( new Rectangle( rect.X, rect.Y + (int)( rect.Height*i/4.0),rect.Width,1));
         		pricetxt.Add( ((max*i/4.0)/100.0).ToString());
         	}
-        	DrawBitmapPrice(bmp,Lines,pricetxt);
+        	DrawBitmapLinesAndPriceText(bmp,Lines,pricetxt,cs);
         	return true;
         }
-        public static Bitmap DrawDaily(KData[] kd){        	
+        private static bool DrawBitmapDate(KData[] kd, Bitmap bmp, Rectangle rect, ColorStyle cs)
+        {
+            if (bmp == null || kd == null || kd.Count() == 0 || rect.X + rect.Width > bmp.Width || rect.Y + rect.Height > bmp.Height)
+                return false;
+
+            List<int> years = kd.Select(r => r.date/10000).Distinct().ToList();
+            
+            var query = from p in kd
+                        group p by p.date/100 into g                           
+                        select g;
+            List<List<int>> monthcount = new List<List<int>>();
+            foreach (var qu in query)
+                monthcount.Add(new List<int>(){qu.Key,qu.Count()});
+            int count = monthcount.Sum(r => r[1]) - kd.Count();
+            //string str= count+"\r\n"+ monthcount.Select( r => r[0]+"\t"+r[1]).Aggregate((r1, r2) => r1 + "\r\n" + r2);
+            //MessageBox.Show(str);
+            if (years.Count == 0 || count == 0) return false;
+            var query1 = from p in monthcount
+                         group p by p[0] / 100 into g
+                         select(  x=> new {
+                             Key = g.Key,
+                             Cnt = g.Count(  s[1] )
+                         });
+
+            List<List<int>> yearcount = new List<List<int>>();
+            foreach (var qu in query)
+                yearcount.Add(new List<int>() { qu.Key, qu.Count() });
+            return true;
+        }
+
+
+        public static Bitmap DrawDaily(KData[] kd,ColorStyle cs){        	
         	int width = 1200;
-        	int height = 800;
-        	Bitmap Bmp = new Bitmap(width,height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-        	Brush brback = Brushes.Black;
-    		Bitmap bmp = Bmp;
-    		using (Graphics g = Graphics.FromImage(bmp))
+        	int height = 840;
+            Rectangle pricerect = new Rectangle(20,20,920,600);
+            Rectangle volrect = new Rectangle(20, 630, 920, 160);
+            Rectangle daterect = new Rectangle(20, 790, 920, 20);
+        	Bitmap bmp = new Bitmap(width,height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);        	
+    		using (Graphics g = Graphics.FromImage(bmp)) //drawground
             { 
-    			g.FillRectangle(brback, new Rectangle(0, 0, bmp.Width, bmp.Height));    			
+    			g.FillRectangle(cs.backgroundbrush, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                g.DrawRectangle(cs.textpricelinepen, pricerect);
+                g.DrawRectangle(cs.textpricelinepen, volrect);
+                g.DrawRectangle(cs.textpricelinepen, daterect);
     		}
     		
-        	DrawBitmap(kd,bmp,new Rectangle(20,20,920,620)); // Drawprice  
-        	DrawBitmapVol(kd,bmp,new Rectangle(20,620,920,160));//
+        	DrawBitmapPrice(kd,bmp,pricerect,cs); // Drawprice  
+        	DrawBitmapVol(kd,bmp,volrect,cs);//
+            DrawBitmapDate(kd, bmp, daterect, cs);
         	//Draw Txt  
         	// 自动换行  URL
         	// http://bbs.csdn.net/topics/391036711
         	// http://www.cnblogs.com/dannyqiu/articles/2837515.html
-        	return Bmp;
+        	return bmp;
         }
 	}	
 	public class DTNameType{
 		public string Name;
 		public Type type;
-	}    
+	}
+    public class ColorStyle
+    {
+        public ColorStyle( Color background,Color klinerose,Color klinedecline,Color textprice,Color textlable,Font defaultfont=null)
+        {
+            backgroundbrush = new SolidBrush(background);
+            backgroundpen = new Pen(background);
+            klinedeclinebush = new SolidBrush(klinedecline);
+            klinedeclinepen = new Pen(klinedecline);
+            klinerosebrush = new SolidBrush(klinerose);
+            klinerosepen = new Pen(klinerose);
+            textpricelinepen = new Pen(textprice);
+            textpricelinepen2 = new Pen(textprice);
+            textpricelinepen2.DashStyle = System.Drawing.Drawing2D.DashStyle.Custom;
+            textpricelinepen2.DashPattern = new float[] { 1f, 1f };
+
+            textpricelinebrush = new SolidBrush(textprice);
+            textlablepen = new Pen(textlable);
+            textlablebrush = new SolidBrush(textlable);
+            if(defaultfont==null) 
+                textfont = new Font("宋体", 12);
+            else
+                textfont = defaultfont;
+        }
+        public Brush backgroundbrush;
+        public Pen backgroundpen;
+        public Brush klinerosebrush;
+        public Pen klinerosepen;
+        public Brush klinedeclinebush;
+        public Pen klinedeclinepen;
+        public Brush textpricelinebrush;
+        public Pen textpricelinepen;
+        public Pen textpricelinepen2; //绘制虚线
+        public Brush textlablebrush;
+        public Pen textlablepen;
+        public Font textfont; 
+    }
+    public class ColorStyles
+    {
+        public static ColorStyle classic = new ColorStyle(Color.Black, Color.Red, Color.Green, Color.Red, Color.White);
+        public static ColorStyle print = new ColorStyle(Color.White, Color.Black, Color.Gray, Color.Black, Color.Gray);
+    }
 }

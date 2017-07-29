@@ -30,6 +30,26 @@ namespace JHStock.UserForm
 			InitMaDataTable();
 			_umi = new UpdateMonitInfors();
 		}
+        private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+            e.Cancel = true;
+
+        }
+
+        // 重写OnClosing使点击关闭按键时窗体能够缩进托盘
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+
+            //this.ShowInTaskbar = false;
+
+            //this.WindowState = FormWindowState.Minimized;
+
+            e.Cancel = true;
+            this.Hide();
+
+        } 
 		private void Init(){
 			 _tn = new TreeNode();
              _tn.Text = "入手日期";
@@ -89,8 +109,8 @@ namespace JHStock.UserForm
                     List<TreeNode> ltn = new List<TreeNode>();
                     foreach (DateTime  dr in days)
                     {
-                    	string s=Regex.Replace(dr.ToShortDateString(),"\\D","");
-                    	TreeNode tt = new TreeNode(s);
+                        int date = dr.Year * 10000 + dr.Month * 100 + dr.Day;                    	
+                    	TreeNode tt = new TreeNode(date.ToString());
                     	tt.Tag = dr;
                         ltn.Add(tt);
                     }
@@ -110,8 +130,7 @@ namespace JHStock.UserForm
 			List<DailyStocks> ds = _stockslog._dailystocks.Where( r => r.Date.ToShortDateString() == day.ToShortDateString()).ToList();
 			if(ds.Count>0){
 				dt.Rows.Clear();		
-				_umi.Clear();
-				int i = 0;
+				_umi.Clear();			
 				_umi.b5years = false;
 				_umi.bshownet = false;				
 				foreach (DailyStock d in ds[0]._stocks)

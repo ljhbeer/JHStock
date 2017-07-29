@@ -269,7 +269,9 @@
     <Compile Include="UserForm\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserForm\FormLog.cs" />
+    <Compile Include="UserForm\FormLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UserForm\FormLog.Designer.cs">
       <DependentUpon>FormLog.cs</DependentUpon>
     </Compile>
