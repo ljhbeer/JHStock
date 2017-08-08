@@ -877,9 +877,38 @@ namespace JHStock
 		public DataRow DataRow()
 		{
 			return dr;
-		}	
-		
-		
+		}
+
+        public static string GetCWXXS(Stock s)
+        {
+            string html = "";
+            string header = "";
+            if (true)//bShowHexinFromNet
+            {
+                string urlt = "http://quote.eastmoney.com/[scode].html";
+                string url = urlt.Replace("[scode]", s.Code);
+                html = CWeb.GetWebClient(url);
+                string pattern = @"(?<=公司核心数据[^01]*)<div class=\""box-x1 mb10\"">[\S\s]*?(?=</table>)";
+                html = Regex.Match(html, pattern).Value;
+                html = Regex.Replace(html, "<[^<>]*>| ", "");
+                html = Regex.Replace(html, "(\r\n){2,}", "\n").Replace("\r\n", "   ").Replace("\n", "\r\n");
+                Match m = Regex.Match(html, "(市净率.*)\\r\\n[\\S\\s]*(ROE.* )");
+                if (m.Success)
+                {
+                    header = m.Groups[1].Value + "  " + m.Groups[2] + "\r\n\r\n";
+                }
+            }
+            if (true) //bBoxROE5years
+            {
+                QQfinItem qf = new QQfinItem();
+                string _qqfinpath = s.Gcfg.Baseconfig.WorkPath + "Data\\QQFin\\";
+                qf.LoadData(_qqfinpath + s.Code + ".txt");
+                List<string> years = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.bgrq.Year.ToString()).ToList();
+                List<string> ROEs = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.jzcsyljq).ToList();
+                header += string.Join("   ", years) + "\r\n" + string.Join("  ", ROEs) + "\r\n\r\n";
+            }
+            return header + html;
+        }
 	}
 }
 #region runnet
