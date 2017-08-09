@@ -36,9 +36,9 @@
             this.tabbrows = new System.Windows.Forms.TabPage();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.textBoxtitle = new System.Windows.Forms.TextBox();
             this.buttonSaveLog = new System.Windows.Forms.Button();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabwrite.SuspendLayout();
@@ -83,6 +83,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(842, 668);
             this.tabControl1.TabIndex = 3;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabwrite
             // 
@@ -136,6 +137,17 @@
             this.panel1.Size = new System.Drawing.Size(852, 22);
             this.panel1.TabIndex = 5;
             // 
+            // buttonSave
+            // 
+            this.buttonSave.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonSave.Location = new System.Drawing.Point(92, 0);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(54, 22);
+            this.buttonSave.TabIndex = 6;
+            this.buttonSave.Text = "保存";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
             // textBoxtitle
             // 
             this.textBoxtitle.Location = new System.Drawing.Point(152, 3);
@@ -154,17 +166,6 @@
             this.buttonSaveLog.Text = "保存当前日志";
             this.buttonSaveLog.UseVisualStyleBackColor = true;
             this.buttonSaveLog.Click += new System.EventHandler(this.buttonSaveLog_Click);
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.Dock = System.Windows.Forms.DockStyle.Left;
-            this.buttonSave.Location = new System.Drawing.Point(92, 0);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(54, 22);
-            this.buttonSave.TabIndex = 6;
-            this.buttonSave.Text = "保存";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // FormCustomLog
             // 

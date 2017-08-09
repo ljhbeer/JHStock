@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace JHStock
 {
@@ -158,8 +160,58 @@ namespace JHStock
             e.Cancel = true;
             this.Hide();
         }
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab.Text == "浏览")
+            {
+                string txt = textBox1.Text;
+                MatchCollection  mc = Regex.Matches(txt, "(?<=\\[img src=\")[a-z0-9_-]*(?=\"\\])");
+                List<string> imgnames = new List<string>();
+                int cnt = 0;
+                foreach (Match m in mc)
+                {
+                    imgnames.Add(m.Value);
+                    txt = txt.Replace( "[img src=\""+m.Value+"\"]","[img"+cnt+"]");
+                    cnt++;
+                }
+                txt = System.Web.HttpUtility.HtmlEncode(txt);
+                txt = txt.Replace("\r\n", "<br>\r\n").Replace(" ", "&nbsp;").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                //string imgtemp = "<img height=600 width=800 src=\"[src]\" alt=\"[alt]\">";
+                string imgtemp = "<img  src=\"[src]\" >";
+                imgtemp = imgtemp.Replace("[alt]", "");
+
+                string imgpath = "file:///" + _jscfg.baseconfig.WorkPath + "Data\\imgs\\";
+                for (int i = 0; i < cnt; i++)
+                {
+                    txt = txt.Replace("[img" + i + "]", imgtemp.Replace("[src]",imgpath.Replace("\\","/") + imgnames[i] + ".jpg"));
+                }
+                CreateImgs(imgnames);
+                string htmltemplate = "<html>\r\n<head>[head]</head>\r\n<body>\r\n[body]</body>\r\n</html>";
+                string meta = @"<meta http-equiv=""content-type"" content=""text/html;charset=utf-8"">";
+                htmltemplate = htmltemplate.Replace("[head]", meta);
+                string html = htmltemplate.Replace("[body]", txt);
+                File.WriteAllText("tempshow.html", html);
+                webBrowser1.DocumentText = html;
+            }
+        }
+        private void CreateImgs(List<string> imgnames)
+        {
+            string path = _jscfg.baseconfig.WorkPath + "Data\\imgs\\";
+            foreach (string imgname in imgnames)
+            {
+                string filename = path+ imgname+".jpg";
+                if(File.Exists(filename)) continue;
+                string para = imgname.Replace("_", ",");
+                string numcode = imgname.Substring(2, 6);
+                Stock s = _jscfg.globalconfig.Stocks.StockByNumCode(numcode);
+                string url = urlt.Replace("[para]", para);
+                StockDraw.DrawDaily(url,filename,s);
+            }
+        }
+
         private TreeNode _tn;	
 		private JSConfig _jscfg;
 		private StocksCustomLog _stockscustomlog;
+        private static string urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[para]";
     }
 }

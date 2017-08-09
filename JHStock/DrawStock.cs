@@ -265,6 +265,27 @@ namespace JHStock
             }
 
         }
+
+        public static void DrawDaily(string url, string imgname, Stock s) 
+        {
+            // if (_stockdata.Netdate.Inline)
+            //TODO: DrawDaily by url
+            KData[] kd = ThreadUpdateStocksQQDayly.DownLoadData(url, s);
+            ColorStyle cs = ColorStyles.classic;
+            Bitmap bmp = DrawDaily(kd, s.Name + s.NumCode,cs);
+            if (kd != null && kd.Length != 0)
+            {
+                bmp = DrawDaily(kd, s.Name + s.Code + "(日线" + kd[0].date + "-" + kd[kd.Length - 1].date + ")", cs);
+                string baseinfor = "";
+                try
+                {
+                     baseinfor = UpdateMonitInfor.GetCWXXS(s);
+                }
+                catch { }
+                DrawBaseInformation(s, baseinfor, bmp, cs);
+            }
+            bmp.Save(imgname);
+        }
     }
     public class ColorStyle
     {

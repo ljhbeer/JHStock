@@ -58,6 +58,62 @@ namespace JHStock
 				MessageBox.Show ( "时间"+ts.TotalSeconds);
 	    }  	 
 
+        public static KData[] DownLoadData(String url,Stock s)
+        {
+            try
+            {
+                string txt = CWeb.GetWebClient(url).Substring(10);
+                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
+                KData[] kd  = qs.data[s.Code.ToLower()].day
+                   .Select(r =>
+                   {
+                       KData k = new KData();
+                       k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
+                       k.open = (int)(Convert.ToSingle(r[1]) * 100);
+                       k.close = (int)(Convert.ToSingle(r[2]) * 100);
+                       k.high = (int)(Convert.ToSingle(r[3]) * 100);
+                       k.low = (int)(Convert.ToSingle(r[4]) * 100);
+                       k.vol = (int)(Convert.ToSingle(r[5]) * 100);
+                       return k;
+                   }).ToArray();
+                return kd;
+            }
+            catch { }
+            return null;
+        }
+        public static tagstock DownLoadData(Stock s, int Daylength)
+        {
+            string UrlTemplate = urlt.Replace("[daylength]", Daylength.ToString());
+            string url = UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
+            StringBuilder strall = new StringBuilder();
+            string txt = CWeb.GetWebClient(url).Substring(10);
+            tagstock tag = new tagstock();
+            try
+            {
+                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
+                tag.kd = qs.data[s.Code.ToLower()].day
+                   .Select(r =>
+                   {
+                       KData k = new KData();
+                       k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
+                       k.open = (int)(Convert.ToSingle(r[1]) * 100);
+                       k.close = (int)(Convert.ToSingle(r[2]) * 100);
+                       k.high = (int)(Convert.ToSingle(r[3]) * 100);
+                       k.low = (int)(Convert.ToSingle(r[4]) * 100);
+                       k.vol = (int)(Convert.ToSingle(r[5]) * 100);
+                       return k;
+                   }).ToList();
+                tag.value = 1;
+                tag.index = s.ID;
+            }
+            catch (Exception e)
+            {
+                tag.txt = txt;
+                tag.value = -2;
+                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + tag.txt + "\t" + e.Message + "\r\n\r\n");
+            }
+            return tag;
+        }      		
 	    public void DownLoadData(Stock s)
 	    {
 	    	string url = UrlTemplate.Replace("[stockcode]",s.Code.ToLower());
@@ -82,7 +138,7 @@ namespace JHStock
 	        	Tag[s.ID].value = -2;
                 MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + Tag[s.ID].txt+"\t"+e.Message + "\r\n\r\n");
 			}
-	    }      
+	    }
 		private void UpdateItem(List<Stock> usstocks)
 		{
 			threadsum = 0;
@@ -131,39 +187,6 @@ namespace JHStock
 	    private ToolsCXml.BETag btcheck = new ToolsCXml.BETag("[:#@#@{-}@#@#}]");
 	    private static string urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[daylength],bfq";
 
-        public static tagstock DownLoadData(Stock s, int Daylength)
-        {
-            string UrlTemplate = urlt.Replace("[daylength]", Daylength.ToString());
-            string url = UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
-            StringBuilder strall = new StringBuilder();
-            string txt = CWeb.GetWebClient(url).Substring(10);
-            tagstock tag = new tagstock();
-            try
-            {
-                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
-                tag.kd = qs.data[s.Code.ToLower()].day
-                   .Select(r =>
-                   {
-                       KData k = new KData();
-                       k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
-                       k.open = (int)(Convert.ToSingle(r[1]) * 100);
-                       k.close = (int)(Convert.ToSingle(r[2]) * 100);
-                       k.high = (int)(Convert.ToSingle(r[3]) * 100);
-                       k.low = (int)(Convert.ToSingle(r[4]) * 100);
-                       k.vol = (int)(Convert.ToSingle(r[5]) * 100);
-                       return k;
-                   }).ToList();
-                tag.value = 1;
-                tag.index = s.ID;
-            }
-            catch (Exception e)
-            {
-                tag.txt = txt;
-                tag.value = -2;
-                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + tag.txt + "\t" + e.Message + "\r\n\r\n");
-            }
-            return tag;
-        }      		
 	}
 	public class ThreadUpdateStockQQDayly{
     	private Stock s;
