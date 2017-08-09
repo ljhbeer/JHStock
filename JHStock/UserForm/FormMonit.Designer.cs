@@ -57,6 +57,7 @@
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonSaveLog = new System.Windows.Forms.Button();
             this.ButtonOpenDaily = new System.Windows.Forms.Button();
+            this.buttonCustomLog = new System.Windows.Forms.Button();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -352,6 +353,7 @@
             // 
             this.flowLayoutPanel3.Controls.Add(this.buttonSaveLog);
             this.flowLayoutPanel3.Controls.Add(this.ButtonOpenDaily);
+            this.flowLayoutPanel3.Controls.Add(this.buttonCustomLog);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 60);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
@@ -377,6 +379,16 @@
             this.ButtonOpenDaily.Text = "打开日志";
             this.ButtonOpenDaily.UseVisualStyleBackColor = true;
             this.ButtonOpenDaily.Click += new System.EventHandler(this.ButtonOpenDailyClick);
+            // 
+            // buttonCustomLog
+            // 
+            this.buttonCustomLog.Location = new System.Drawing.Point(3, 81);
+            this.buttonCustomLog.Name = "buttonCustomLog";
+            this.buttonCustomLog.Size = new System.Drawing.Size(43, 33);
+            this.buttonCustomLog.TabIndex = 2;
+            this.buttonCustomLog.Text = "编辑日志";
+            this.buttonCustomLog.UseVisualStyleBackColor = true;
+            this.buttonCustomLog.Click += new System.EventHandler(this.buttonCustomLog_Click);
             // 
             // FormMonit
             // 
@@ -437,5 +449,6 @@
         private System.Windows.Forms.CheckBox checkBoxShowHexinFromNet;
         private System.Windows.Forms.CheckBox checkBoxROE5years;
         private System.Windows.Forms.Button buttonSaveSelect;
+        private System.Windows.Forms.Button buttonCustomLog;
     }
 }

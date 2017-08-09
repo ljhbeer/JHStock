@@ -18,14 +18,12 @@ namespace JHStock.UserForm
 	{
 		private Stock _s;
 		private JSConfig _jscfg;
-		private List<string> columntitles;
 		private string _qqfinpath;
-		public FormShow(Stock s, JSConfig _jscfg, List<string> columntitles)
+		public FormShow(Stock s, JSConfig _jscfg)
 		{
 			InitializeComponent();
 			this._s = s;
 			this._jscfg = _jscfg;
-			this.columntitles = columntitles;
 			_qqfinpath = _jscfg.baseconfig.WorkPath +"Data\\QQFin\\";
 			Init();
 		}

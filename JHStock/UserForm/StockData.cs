@@ -82,7 +82,7 @@ namespace JHStock
 
                 //下载当天数据
             }
-            return "error 逻辑错误，此处不应出现";
+            //return "error 逻辑错误，此处不应出现";
         }
         public void GetExChangeData()
         {

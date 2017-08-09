@@ -29,10 +29,10 @@ namespace JHStock
 				Tag[s.ID].Init(s);
 		}
 		
-		public void RunNetTime(bool bUpdateAllBounsAndTopten = false ) //
+		public void RunNetTime(bool bUpdateAllBounsAndTopten = false ) //unuse
 		{
 			DateTime dt1 = System.DateTime.Now;
-		    while(true){
+		    if(true){
 				#region hexin				
 					List<Stock> stocks = _stocks.stocks;
 					InitTag(stocks);

@@ -26,29 +26,17 @@ namespace JHStock.UserForm
 			this._jscfg = _jscfg;
 			this._stockslog = _stockslog;
 			// TODO: Fromlog
-			Init();
 			InitMaDataTable();
 			_umi = new UpdateMonitInfors();
 		}
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
             e.Cancel = true;
-
         }
-
-        // 重写OnClosing使点击关闭按键时窗体能够缩进托盘
-
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-
-            //this.ShowInTaskbar = false;
-
-            //this.WindowState = FormWindowState.Minimized;
-
             e.Cancel = true;
             this.Hide();
-
         } 
 		private void Init(){
 			 _tn = new TreeNode();
@@ -217,11 +205,7 @@ namespace JHStock.UserForm
 			}
 			dgv.RowTemplate.Height = 100;
 		}
-		private TreeNode _tn;		
-		private DataTable dt;
-		public UpdateMonitInfors _umi;
-		
-		void DgvCellContentClick(object sender, DataGridViewCellEventArgs e)		
+		private void DgvCellContentClick(object sender, DataGridViewCellEventArgs e)		
 		{
 			if (e.RowIndex != -1 && e.ColumnIndex != -1)
 			{
@@ -237,5 +221,9 @@ namespace JHStock.UserForm
 				}
 			}
 		}
+
+		private TreeNode _tn;		
+		private DataTable dt;
+		public UpdateMonitInfors _umi;		
 	}
 }
