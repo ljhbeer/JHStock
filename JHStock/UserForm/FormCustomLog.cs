@@ -165,47 +165,49 @@ namespace JHStock
             if (tabControl1.SelectedTab.Text == "浏览")
             {
                 string txt = textBox1.Text;
-                MatchCollection  mc = Regex.Matches(txt, "(?<=\\[img src=\")[a-z0-9_-]*(?=\"\\])");
+                MatchCollection mc = Regex.Matches(txt, "(?<=\\[img src=\")[a-z0-9_-]*(?=\"\\])");
                 List<string> imgnames = new List<string>();
                 int cnt = 0;
                 foreach (Match m in mc)
                 {
                     imgnames.Add(m.Value);
-                    txt = txt.Replace( "[img src=\""+m.Value+"\"]","[img"+cnt+"]");
+                    txt = txt.Replace("[img src=\"" + m.Value + "\"]", "[img" + cnt + "]");
                     cnt++;
                 }
-                txt = System.Web.HttpUtility.HtmlEncode(txt);
-                txt = txt.Replace("\r\n", "<br>\r\n").Replace(" ", "&nbsp;").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                //string imgtemp = "<img height=600 width=800 src=\"[src]\" alt=\"[alt]\">";
-                string imgtemp = "<img  src=\"[src]\" >";
-                imgtemp = imgtemp.Replace("[alt]", "");
-
-                string imgpath = "file:///" + _jscfg.baseconfig.WorkPath + "Data\\imgs\\";
-                for (int i = 0; i < cnt; i++)
+                richTextBox1.Text = txt;
+                try
                 {
-                    txt = txt.Replace("[img" + i + "]", imgtemp.Replace("[src]",imgpath.Replace("\\","/") + imgnames[i] + ".jpg"));
+                    CreateImgs(imgnames);
+
+                    string imgpath = "E:\\Project\\Source\\stock\\Data\\imgs\\";
+                    for (int i = 0; i < cnt; i++)
+                    {
+                        Image img = Image.FromFile(imgpath + imgnames[i] + ".jpg");
+                        Bitmap bmp = new Bitmap(img, img.Width * 8 / 10, img.Height * 8 / 10);
+                        Clipboard.SetDataObject(bmp);
+                        int pos = txt.IndexOf("[img" + i + "]");
+                        if (pos > 0)
+                            richTextBox1.Select(pos, 0);
+                        richTextBox1.Paste(DataFormats.GetFormat(DataFormats.Bitmap));
+                    }
                 }
-                CreateImgs(imgnames);
-                string htmltemplate = "<html>\r\n<head>[head]</head>\r\n<body>\r\n[body]</body>\r\n</html>";
-                string meta = @"<meta http-equiv=""content-type"" content=""text/html;charset=utf-8"">";
-                htmltemplate = htmltemplate.Replace("[head]", meta);
-                string html = htmltemplate.Replace("[body]", txt);
-                File.WriteAllText("tempshow.html", html);
-                webBrowser1.DocumentText = html;
+                catch { }
             }
         }
         private void CreateImgs(List<string> imgnames)
         {
             string path = _jscfg.baseconfig.WorkPath + "Data\\imgs\\";
+            ColorStyle cs = ColorStyles.classic;
+            if (checkBoxColorstylePrint.Checked) cs = ColorStyles.print;
             foreach (string imgname in imgnames)
             {
                 string filename = path+ imgname+".jpg";
-                if(File.Exists(filename)) continue;
+                if(!checkBoxImgreDraw.Checked && File.Exists(filename) ) continue;
                 string para = imgname.Replace("_", ",");
                 string numcode = imgname.Substring(2, 6);
                 Stock s = _jscfg.globalconfig.Stocks.StockByNumCode(numcode);
                 string url = urlt.Replace("[para]", para);
-                StockDraw.DrawDaily(url,filename,s);
+                StockDraw.DrawDaily(url,filename,s,cs);
             }
         }
 

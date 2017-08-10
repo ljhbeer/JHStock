@@ -280,10 +280,12 @@ namespace JHStock
         }
         private void ButtonOpenDailyClick(object sender, EventArgs e)
         {
+            //this.WindowState = FormWindowState.Minimized;//最小化
             _formlog.Show();
         }
         private void buttonCustomLog_Click(object sender, EventArgs e)
         {
+            //this.WindowState = FormWindowState.Minimized;//最小化
             _formcustomlog.Show();
         }
         private void buttonConfig_Click(object sender, EventArgs e)

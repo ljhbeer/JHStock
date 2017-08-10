@@ -266,12 +266,12 @@ namespace JHStock
 
         }
 
-        public static void DrawDaily(string url, string imgname, Stock s) 
+        public static void DrawDaily(string url, string imgname, Stock s, ColorStyle cs ) 
         {
             // if (_stockdata.Netdate.Inline)
             //TODO: DrawDaily by url
             KData[] kd = ThreadUpdateStocksQQDayly.DownLoadData(url, s);
-            ColorStyle cs = ColorStyles.classic;
+          
             Bitmap bmp = DrawDaily(kd, s.Name + s.NumCode,cs);
             if (kd != null && kd.Length != 0)
             {
