@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.IO;
+using JHStock.UserForm;
 
 namespace JHStock
 {
@@ -21,6 +22,7 @@ namespace JHStock
 			Init();
         }
 		private void Init(){
+            _items = new List<string>();
 			 _tn = new TreeNode();
              _tn.Text = "入手日期";
              TreeNode[] vt = new TreeNode[2];
@@ -192,6 +194,28 @@ namespace JHStock
                     }
                 }
                 catch { }
+                AddImgsToListBox(imgnames);
+            }
+        }
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex == -1 ) return;
+            string path = _jscfg.baseconfig.WorkPath + "Data\\imgs\\";
+            string imgname = listBox1.SelectedItem.ToString();
+            string filename = path + imgname + ".jpg";
+            if (!File.Exists(filename)) return;
+
+            Bitmap src =(Bitmap) Bitmap.FromFile(filename);
+            FormShowPicture f = new FormShowPicture(src);
+            f.ShowDialog();  
+        }
+        private void AddImgsToListBox(List<string> imgnames)
+        {
+            string[] a = imgnames.Where(r => !_items.Contains(r)).ToArray();
+            if (a.Length > 0)
+            {
+                _items.AddRange(a);
+                listBox1.Items.AddRange(a);
             }
         }
         private void CreateImgs(List<string> imgnames)
@@ -214,6 +238,8 @@ namespace JHStock
         private TreeNode _tn;	
 		private JSConfig _jscfg;
 		private StocksCustomLog _stockscustomlog;
+        private List<string> _items;
         private static string urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[para]";
+
     }
 }
