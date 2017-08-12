@@ -27,6 +27,7 @@ namespace JHStock.UserForm
 			this._stockslog = _stockslog;
 			// TODO: Fromlog
 			InitMaDataTable();
+            Init();
 			_umi = new UpdateMonitInfors();
 		}
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)

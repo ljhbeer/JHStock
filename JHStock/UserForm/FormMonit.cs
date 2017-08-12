@@ -781,7 +781,7 @@ namespace JHStock
 				string urlt = "http://quote.eastmoney.com/[scode].html";
 				string url = urlt.Replace("[scode]", s.Code);
 				html = CWeb.GetWebClient(url);
-				string pattern = @"(?<=公司核心数据[^01]*)<div class=\""box-x1 mb10\"">[\S\s]*?(?=</table>)";
+				string pattern = @"(?<=公司核心数据[^-]*)<div class=\""box-x1 mb10\"">[\S\s]*?(?=</table>)";
 				html = Regex.Match(html, pattern).Value;
 				html = Regex.Replace(html, "<[^<>]*>| ", "");
 				html = Regex.Replace(html, "(\r\n){2,}", "\n").Replace("\r\n", "   ").Replace("\n", "\r\n");

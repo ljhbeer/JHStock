@@ -10,6 +10,28 @@ namespace JHStock
     {
         public static JHStock.JSConfig Jscfg;
 
+        public static void DrawDaily(string url, string imgname, Stock s, ColorStyle cs ,Size size) 
+        {
+            // if (_stockdata.Netdate.Inline)
+            //TODO: DrawDaily by url
+            KData[] kd = ThreadUpdateStocksQQDayly.DownLoadData(url, s);
+          
+            Bitmap bmp = DrawDaily(kd, s.Name + s.NumCode,size,cs); //size(1200,840)
+            if (kd != null && kd.Length != 0)
+            {
+                bmp = DrawDaily(kd, s.Name + s.Code + "(日线" + kd[0].date + "-" + kd[kd.Length - 1].date + ")",bmp.Size, cs);
+                string baseinfor = "";
+                try
+                {
+                     baseinfor = UpdateMonitInfor.GetCWXXS(s);
+                }
+                catch { }
+
+                Rectangle rectinformation = new Rectangle((int)(bmp.Width * 0.75 + 80), 20, (int)(bmp.Width * 0.25 - 90), bmp.Height - 40); //informationrect
+                DrawBaseInformation(s, baseinfor, bmp,rectinformation, cs);
+            }
+            bmp.Save(imgname);
+        }
         public static Bitmap DrawDailyLocal(Stock s, ColorStyle cs)
         {
             Bitmap bmp = new Bitmap(1200, 840);
@@ -21,7 +43,7 @@ namespace JHStock
                 KData[] kd = _stockdata.SaveTag.Tag[s.ID].kd.ToArray();
                 if (kd != null && kd.Length != 0)
                 {
-                    bmp=DrawDaily(kd, s.Name + s.Code + "(日线" + kd[0].date + "-" + kd[kd.Length - 1].date + ")", cs);
+                    bmp=DrawDaily(kd, s.Name + s.Code + "(日线" + kd[0].date + "-" + kd[kd.Length - 1].date + ")",bmp.Size, cs);
                     string baseinfor = "";
                     try
                     {
@@ -29,18 +51,22 @@ namespace JHStock
                             baseinfor = UpdateMonitInfor.GetCWXXS(s);
                     }
                     catch{ }
-                    DrawBaseInformation(s, baseinfor, bmp, cs);
+                    Rectangle rectinformation = new Rectangle((int)(bmp.Width * 0.75 + 80), 20, (int)(bmp.Width * 0.25 - 90), bmp.Height - 40); //informationrect
+                    DrawBaseInformation(s, baseinfor, bmp,rectinformation, cs);
                 }
             }
             return bmp;
         }
-        public static Bitmap DrawDaily(KData[] kd, string namecode, ColorStyle cs)
+        public static Bitmap DrawDaily(KData[] kd, string namecode,Size size, ColorStyle cs) //标准划分
         {
-            int width = 1200;
-            int height = 840;
-            Rectangle pricerect = new Rectangle(20, 20, 920, 600);
-            Rectangle volrect = new Rectangle(20, 630, 920, 160);
-            Rectangle daterect = new Rectangle(20, 790, 920, 25);
+            int width = size.Width;
+            int height = size.Height;
+            Rectangle r = new Rectangle(0, 0, width, height);
+            Rectangle ir = new Rectangle(20, 20, width - 40, height - 40);
+           
+            Rectangle pricerect = new Rectangle(ir.Location,new Size( (int)( ir.Width*0.75), (int)(ir.Height*0.75)) );
+            Rectangle volrect = new Rectangle(ir.X, pricerect.Bottom + 10, pricerect.Width, (int)(ir.Height * 0.25 - 35));//new Rectangle(20, 630, 920, 160);
+            Rectangle daterect =new Rectangle(ir.X, volrect.Bottom , pricerect.Width, 25);// new Rectangle(20, 790, 920, 25);
             Bitmap bmp = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             using (Graphics g = Graphics.FromImage(bmp)) //drawground
             {
@@ -57,6 +83,7 @@ namespace JHStock
 
             return bmp;
         }
+
         private static void DrawBitmap(Bitmap bmp, List<Rectangle> ListItem, List<bool> isred, ColorStyle cs)
         {
             using (Graphics g = Graphics.FromImage(bmp))
@@ -251,11 +278,10 @@ namespace JHStock
             }
             return monthcount;
         }
-        private static void DrawBaseInformation(Stock s, string baseinfor, Bitmap bmp, ColorStyle cs)
+        private static void DrawBaseInformation(Stock s, string baseinfor, Bitmap bmp, Rectangle rect, ColorStyle cs)
         {
             int width = bmp.Width;
-            int height = bmp.Height;
-            Rectangle rect = new Rectangle(1000, 20, 198, 800); //informationrect
+            int height = bmp.Height;           
             Rectangle rectinfor = new Rectangle(rect.X, rect.Y + 30, rect.Width, rect.Height - 30);
             using (Graphics g = Graphics.FromImage(bmp)) //drawground
             {
@@ -264,27 +290,6 @@ namespace JHStock
                 g.DrawString(baseinfor, cs.textfont2, cs.textlablebrush, rectinfor);
             }
 
-        }
-
-        public static void DrawDaily(string url, string imgname, Stock s, ColorStyle cs ) 
-        {
-            // if (_stockdata.Netdate.Inline)
-            //TODO: DrawDaily by url
-            KData[] kd = ThreadUpdateStocksQQDayly.DownLoadData(url, s);
-          
-            Bitmap bmp = DrawDaily(kd, s.Name + s.NumCode,cs);
-            if (kd != null && kd.Length != 0)
-            {
-                bmp = DrawDaily(kd, s.Name + s.Code + "(日线" + kd[0].date + "-" + kd[kd.Length - 1].date + ")", cs);
-                string baseinfor = "";
-                try
-                {
-                     baseinfor = UpdateMonitInfor.GetCWXXS(s);
-                }
-                catch { }
-                DrawBaseInformation(s, baseinfor, bmp, cs);
-            }
-            bmp.Save(imgname);
         }
     }
     public class ColorStyle

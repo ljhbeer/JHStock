@@ -1,3 +1,1 @@
-//debug 102  in NetKData.cs line 39
-				List<int> netexcept = shnetdate.Except(shdate).ToList();  // 需要Debug
-                netexcept = shnetdate;
+﻿在 FormCustomLog.ListBox1中 需要按住 Ctr建 点击图片名称 才会弹出 图片操作窗口

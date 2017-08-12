@@ -200,6 +200,8 @@ namespace JHStock
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex == -1 ) return;
+            if ((Control.ModifierKeys & Keys.Control) != Keys.Control) return;
+
             string path = _jscfg.baseconfig.WorkPath + "Data\\imgs\\";
             string imgname = listBox1.SelectedItem.ToString();
             string filename = path + imgname + ".jpg";
@@ -231,7 +233,7 @@ namespace JHStock
                 string numcode = imgname.Substring(2, 6);
                 Stock s = _jscfg.globalconfig.Stocks.StockByNumCode(numcode);
                 string url = urlt.Replace("[para]", para);
-                StockDraw.DrawDaily(url,filename,s,cs);
+                StockDraw.DrawDaily(url,filename,s,cs,new Size(600,420));
             }
         }
 
