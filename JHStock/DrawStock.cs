@@ -27,7 +27,7 @@ namespace JHStock
                 }
                 catch { }
 
-                Rectangle rectinformation = new Rectangle((int)(bmp.Width * 0.75 + 80), 20, (int)(bmp.Width * 0.25 - 90), bmp.Height - 40); //informationrect
+                Rectangle rectinformation = new Rectangle((int)(bmp.Width * 0.70 + 16), 20, (int)(bmp.Width * 0.30 - 20), bmp.Height - 40); //informationrect
                 DrawBaseInformation(s, baseinfor, bmp,rectinformation, cs);
             }
             bmp.Save(imgname);
@@ -51,7 +51,7 @@ namespace JHStock
                             baseinfor = UpdateMonitInfor.GetCWXXS(s);
                     }
                     catch{ }
-                    Rectangle rectinformation = new Rectangle((int)(bmp.Width * 0.75 + 80), 20, (int)(bmp.Width * 0.25 - 90), bmp.Height - 40); //informationrect
+                    Rectangle rectinformation = new Rectangle((int)(bmp.Width * 0.70 + 16), 20, (int)(bmp.Width * 0.30 - 20), bmp.Height - 40); //informationrect
                     DrawBaseInformation(s, baseinfor, bmp,rectinformation, cs);
                 }
             }
@@ -64,8 +64,8 @@ namespace JHStock
             Rectangle r = new Rectangle(0, 0, width, height);
             Rectangle ir = new Rectangle(20, 20, width - 40, height - 40);
            
-            Rectangle pricerect = new Rectangle(ir.Location,new Size( (int)( ir.Width*0.75), (int)(ir.Height*0.75)) );
-            Rectangle volrect = new Rectangle(ir.X, pricerect.Bottom + 10, pricerect.Width, (int)(ir.Height * 0.25 - 35));//new Rectangle(20, 630, 920, 160);
+            Rectangle pricerect = new Rectangle(ir.Location,new Size( (int)( ir.Width*0.70), (int)(ir.Height*0.70)) );
+            Rectangle volrect = new Rectangle(ir.X, pricerect.Bottom + 10, pricerect.Width, (int)(ir.Height * 0.30 - 35));//new Rectangle(20, 630, 920, 160);
             Rectangle daterect =new Rectangle(ir.X, volrect.Bottom , pricerect.Width, 25);// new Rectangle(20, 790, 920, 25);
             Bitmap bmp = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             using (Graphics g = Graphics.FromImage(bmp)) //drawground
@@ -116,7 +116,7 @@ namespace JHStock
                 for (int i = 0; i < Lines.Count; i++)
                 {
                     g.DrawLine(cs.textpricelinepen2, Lines[i].X, Lines[i].Y, Lines[i].Right, Lines[i].Bottom);
-                    g.DrawString(txts[i], cs.textfont, cs.textpricelinebrush, Lines[i].Right, Lines[i].Bottom);
+                    g.DrawString(txts[i], cs.textfont2, cs.textpricelinebrush, Lines[i].Right, Lines[i].Top-7);
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace JHStock
             for (i = 0; i < 11; i++)
             {
                 Lines.Add(new Rectangle(rect.X, rect.Y + (int)(rect.Height * i / 10.0), rect.Width, 1));
-                pricetxt.Add(((maxprice - pricemaxplusmin * i / 10.0) / 100.0).ToString());
+                pricetxt.Add(((maxprice - pricemaxplusmin * i / 10.0) / 100.0).ToString("0.00"));
             }
             DrawBitmapLinesAndPriceText(bmp, Lines, pricetxt, cs);
             // DrawKLine
@@ -186,6 +186,16 @@ namespace JHStock
             int height = rect.Height;
 
             int max = kd.Max(r => r.vol);
+            int min = kd.Min(r => r.vol);
+            int max10_e = (int)( Math.Log10(max));
+            //int min10_e = (int)( Math.Log10(min));
+            //int e_10 = max10_e - 2;
+            //if (min10_e > e_10)
+            //    e_10++;
+            //if (min10_e > e_10)
+            //    e_10++;
+            double pow_10 =  Math.Pow(10,max10_e);
+
             double dx = width * 1.0 / kd.Count();
             double dy = height * 1.0 / max;
             int i = 0;
@@ -209,9 +219,14 @@ namespace JHStock
             for (i = 0; i < 4; i++)
             {
                 Lines.Add(new Rectangle(rect.X, rect.Y + (int)(rect.Height * i / 4.0), rect.Width, 1));
-                pricetxt.Add(((max * i / 4.0) / 100.0).ToString());
+                pricetxt.Add(((max -  max * i / 4.0) /pow_10).ToString("0.00"));
             }
+            Lines.Add(new Rectangle(rect.X, rect.Bottom, rect.Width, 1));
+            pricetxt.Add("x10^" + max10_e);
+            
             DrawBitmapLinesAndPriceText(bmp, Lines, pricetxt, cs);
+            // 
+            //pricetxt.Add("x" + pow_10.ToString("0"));
             // DrawKLine
             List<bool> redgreen = kd.Select(r => r.open < r.close).ToList();
             DrawBitmap(bmp, hlr, redgreen, cs);
