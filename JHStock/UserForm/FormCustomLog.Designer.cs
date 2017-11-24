@@ -89,10 +89,10 @@
             // tabwrite
             // 
             this.tabwrite.Controls.Add(this.textBox1);
-            this.tabwrite.Location = new System.Drawing.Point(4, 21);
+            this.tabwrite.Location = new System.Drawing.Point(4, 22);
             this.tabwrite.Name = "tabwrite";
             this.tabwrite.Padding = new System.Windows.Forms.Padding(3);
-            this.tabwrite.Size = new System.Drawing.Size(881, 643);
+            this.tabwrite.Size = new System.Drawing.Size(881, 642);
             this.tabwrite.TabIndex = 0;
             this.tabwrite.Text = "编辑";
             this.tabwrite.UseVisualStyleBackColor = true;
@@ -104,16 +104,16 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(875, 637);
+            this.textBox1.Size = new System.Drawing.Size(875, 636);
             this.textBox1.TabIndex = 0;
             // 
             // tabbrows
             // 
             this.tabbrows.Controls.Add(this.richTextBox1);
-            this.tabbrows.Location = new System.Drawing.Point(4, 21);
+            this.tabbrows.Location = new System.Drawing.Point(4, 22);
             this.tabbrows.Name = "tabbrows";
             this.tabbrows.Padding = new System.Windows.Forms.Padding(3);
-            this.tabbrows.Size = new System.Drawing.Size(881, 643);
+            this.tabbrows.Size = new System.Drawing.Size(881, 642);
             this.tabbrows.TabIndex = 1;
             this.tabbrows.Text = "浏览";
             this.tabbrows.UseVisualStyleBackColor = true;

@@ -160,10 +160,15 @@ namespace JHStock
                 else if ("画图分时图".Contains(dgv.Columns[i].Name))
                 {
                     dgv.Columns[i].Width = 200;
+                    dgv.Columns[i].CellTemplate.Style.BackColor = Color.Black;
                 }
                 else if ("财务信息".Contains(dgv.Columns[i].Name))
                 {
                     dgv.Columns[i].Width = 200;
+                }
+                else if ("选择".Contains(dgv.Columns[i].Name))
+                {
+                    dgv.Columns[i].CellTemplate.Style.BackColor = Color.Gray;
                 }
                 else
                 {
@@ -270,7 +275,9 @@ namespace JHStock
         }
         private void ButtonRefreshMinClick(object sender, EventArgs e)
         {
+            //dgv.Columns["分时图"].CellTemplate.Style.BackColor = Color.Black;
             _umi.run("min");
+            //dgv.Invalidate();
         }
         private void ButtonSaveLogClick(object sender, EventArgs e)
         {

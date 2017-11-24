@@ -316,6 +316,8 @@
             this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv.Location = new System.Drawing.Point(55, 60);
             this.dgv.Name = "dgv";
+            this.dgv.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.Black;
+            this.dgv.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.White;
             this.dgv.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgv.RowTemplate.Height = 23;
             this.dgv.Size = new System.Drawing.Size(699, 416);

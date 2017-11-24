@@ -34,12 +34,12 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.textBoxShow = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelmain = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelmain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -55,7 +55,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.699739F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95.30026F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1272, 766);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1272, 750);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // flowLayoutPanel1
@@ -67,7 +67,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1266, 30);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1266, 29);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // buttonback
@@ -115,12 +115,21 @@
             this.textBoxShow.Size = new System.Drawing.Size(504, 21);
             this.textBoxShow.TabIndex = 7;
             // 
+            // panelmain
+            // 
+            this.panelmain.Controls.Add(this.pictureBox1);
+            this.panelmain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelmain.Location = new System.Drawing.Point(3, 38);
+            this.panelmain.Name = "panelmain";
+            this.panelmain.Size = new System.Drawing.Size(1266, 709);
+            this.panelmain.TabIndex = 11;
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1266, 724);
+            this.pictureBox1.Size = new System.Drawing.Size(1266, 709);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
@@ -128,20 +137,11 @@
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
-            // panelmain
-            // 
-            this.panelmain.Controls.Add(this.pictureBox1);
-            this.panelmain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelmain.Location = new System.Drawing.Point(3, 39);
-            this.panelmain.Name = "panelmain";
-            this.panelmain.Size = new System.Drawing.Size(1266, 724);
-            this.panelmain.TabIndex = 11;
-            // 
             // FormShowPicture
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1272, 766);
+            this.ClientSize = new System.Drawing.Size(1272, 750);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FormShowPicture";
             this.Text = "Form2";
@@ -149,8 +149,8 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelmain.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
