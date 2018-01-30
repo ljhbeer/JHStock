@@ -233,7 +233,7 @@ namespace JHStock
                 string numcode = imgname.Substring(2, 6);
                 Stock s = _jscfg.globalconfig.Stocks.StockByNumCode(numcode);
                 string url = urlt.Replace("[para]", para);
-                StockDraw.DrawDaily(url,filename,s,cs,new Size(600,420));
+                StockDraw.DrawDaily(url,filename,s,cs,new Size(720,420));
             }
         }
 
