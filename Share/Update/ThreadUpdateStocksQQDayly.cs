@@ -93,6 +93,7 @@ namespace JHStock
             if (txt.IndexOf("=") != -1)
                 txt = txt.Substring(txt.IndexOf("=")+1);
             txt = txt.Replace( datetype, "day");
+            txt = txt.Replace("qfqday", "day");
             return txt;
         }
         public static tagstock DownLoadData(Stock s, int Daylength)

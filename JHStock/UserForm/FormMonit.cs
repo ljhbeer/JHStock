@@ -305,7 +305,7 @@ namespace JHStock
         private void buttonConfig_Click(object sender, EventArgs e)
         {
             this.Hide();
-            f.ShowDialog();
+            f.Show();
             this.DebugStocks = f.StocksByItemsShow();
             this.Show();
         }
