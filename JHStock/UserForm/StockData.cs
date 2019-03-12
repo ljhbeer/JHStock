@@ -25,8 +25,9 @@ namespace JHStock
             nkd = null;
 			activeKD = new KData[2000];
 			TempDaysCount = 0;
-			DaysLength = 84;	
-			_netdate = new NetDate(DaysLength);
+			DaysLength = 84;
+            _netdate = new NetDate(DaysLength, _jscfg.KdataType);
+            _locatepricedata = "data\\"+_jscfg.KdataType+"_ExpPrice.dat";
 		}
 		public bool HasKdata(int sID)
 		{
@@ -115,11 +116,11 @@ namespace JHStock
         private bool LoadLocalData( )
 		{
 			Msg="";
-			if(!File.Exists(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat")){
+			if(!File.Exists(_jscfg.baseconfig.WorkPath + _locatepricedata)){
 				Msg = "本地记录不存在";
 				return false;
 			}
-			string txt = File.ReadAllText(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");
+			string txt = File.ReadAllText(_jscfg.baseconfig.WorkPath + _locatepricedata);
 			_savetag = JsonConvert.DeserializeObject<SaveTag>(txt);
 			if(_savetag.Tag.Count()!=2000){
 				Msg = "本地数据记录有误，或者格式不对，请从新下载生成";
@@ -194,7 +195,7 @@ namespace JHStock
                     }
             }
             _savetag.StoreDate = _netdate.NearestDate;
-            _savetag.Save(_jscfg.baseconfig.WorkPath + "data\\ExpPrice.dat");	
+            _savetag.Save(_jscfg.baseconfig.WorkPath + _locatepricedata);	
             isrunning = false;
         }
 
@@ -206,8 +207,8 @@ namespace JHStock
 		public List<int> SHLocalDate()
 		{
 			BaseConfig cfg = _jscfg.baseconfig;
-			if (File.Exists(cfg.WorkPath + "data\\ExpPrice.dat")) {
-				string txt = File.ReadAllText(cfg.WorkPath + "data\\ExpPrice.dat");
+			if (File.Exists(cfg.WorkPath + _locatepricedata)) {
+				string txt = File.ReadAllText(cfg.WorkPath + _locatepricedata);
 				int bpos = txt.IndexOf("\"Tag\":[");
 				int epos = txt.IndexOf("}]}");
 				if (bpos != -1 && epos != -1 && epos > bpos) {
@@ -232,19 +233,24 @@ namespace JHStock
         public KData[] activeKD; // 当前时间
         public ShowDeleGate ThreadShowMsg;
         public ActionDeleGate ActionMsg;
+        private string _locatepricedata;
         public NetDate Netdate
         {
             get { _netdate.Refresh(); return _netdate; }
         }
     }
 	public class NetDate{
-		public NetDate(int DaysCount){
+		public NetDate(int DaysCount,string urltype="dayly"){
 			this.dayscount = DaysCount;			
 			Inline = false;
 			IncludeToday = false;
             Exchanging = false;
             NearestDate = DateTime.Now;
-			int daylength=ListHistoryDate.Count;
+            int daylength = ListHistoryDate.Count;
+            if (urltype == "weekly")
+                urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_weekqfq&param=[stockcode],week,,,[dayscount],qfq";
+            if (urltype == "monthly")
+                urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_monthqfq&param=[stockcode],month,,,[dayscount],qfq";
 		}
         public void Refresh()
         {

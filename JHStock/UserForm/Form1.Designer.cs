@@ -46,6 +46,8 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonMAMonth = new System.Windows.Forms.Button();
+            this.buttonMAWeek = new System.Windows.Forms.Button();
             this.checkBoxBeforeDate = new System.Windows.Forms.CheckBox();
             this.textBoxShow = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -132,9 +134,9 @@
             // 
             // buttonQQFin
             // 
-            this.buttonQQFin.Location = new System.Drawing.Point(314, 2);
+            this.buttonQQFin.Location = new System.Drawing.Point(336, 2);
             this.buttonQQFin.Name = "buttonQQFin";
-            this.buttonQQFin.Size = new System.Drawing.Size(71, 25);
+            this.buttonQQFin.Size = new System.Drawing.Size(58, 25);
             this.buttonQQFin.TabIndex = 43;
             this.buttonQQFin.Text = "更新QQFin";
             this.buttonQQFin.UseVisualStyleBackColor = true;
@@ -144,9 +146,9 @@
             // 
             this.buttonMA.Location = new System.Drawing.Point(267, 4);
             this.buttonMA.Name = "buttonMA";
-            this.buttonMA.Size = new System.Drawing.Size(39, 19);
+            this.buttonMA.Size = new System.Drawing.Size(63, 20);
             this.buttonMA.TabIndex = 27;
-            this.buttonMA.Text = "MA-M";
+            this.buttonMA.Text = "MA-MDay";
             this.buttonMA.UseVisualStyleBackColor = true;
             this.buttonMA.Click += new System.EventHandler(this.buttonMA_Click);
             // 
@@ -177,7 +179,9 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.buttonMAMonth);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer2.Panel2.Controls.Add(this.buttonMAWeek);
             this.splitContainer2.Panel2.Controls.Add(this.dgv);
             this.splitContainer2.Size = new System.Drawing.Size(730, 531);
             this.splitContainer2.SplitterDistance = 197;
@@ -278,7 +282,7 @@
             this.groupBox1.Controls.Add(this.textBox_backendday);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBox_backbeginday);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Location = new System.Drawing.Point(0, 31);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(526, 59);
             this.groupBox1.TabIndex = 29;
@@ -286,10 +290,30 @@
             this.groupBox1.Text = "回测";
             this.groupBox1.Visible = false;
             // 
+            // buttonMAMonth
+            // 
+            this.buttonMAMonth.Location = new System.Drawing.Point(76, 0);
+            this.buttonMAMonth.Name = "buttonMAMonth";
+            this.buttonMAMonth.Size = new System.Drawing.Size(70, 22);
+            this.buttonMAMonth.TabIndex = 38;
+            this.buttonMAMonth.Text = "MA-MMonth";
+            this.buttonMAMonth.UseVisualStyleBackColor = true;
+            this.buttonMAMonth.Click += new System.EventHandler(this.buttonMAMonth_Click);
+            // 
+            // buttonMAWeek
+            // 
+            this.buttonMAWeek.Location = new System.Drawing.Point(0, 0);
+            this.buttonMAWeek.Name = "buttonMAWeek";
+            this.buttonMAWeek.Size = new System.Drawing.Size(70, 24);
+            this.buttonMAWeek.TabIndex = 37;
+            this.buttonMAWeek.Text = "MA-MWeek";
+            this.buttonMAWeek.UseVisualStyleBackColor = true;
+            this.buttonMAWeek.Click += new System.EventHandler(this.buttonMAWeek_Click);
+            // 
             // checkBoxBeforeDate
             // 
             this.checkBoxBeforeDate.AutoSize = true;
-            this.checkBoxBeforeDate.Location = new System.Drawing.Point(350, 12);
+            this.checkBoxBeforeDate.Location = new System.Drawing.Point(251, 10);
             this.checkBoxBeforeDate.Name = "checkBoxBeforeDate";
             this.checkBoxBeforeDate.Size = new System.Drawing.Size(84, 16);
             this.checkBoxBeforeDate.TabIndex = 28;
@@ -298,7 +322,7 @@
             // 
             // textBoxShow
             // 
-            this.textBoxShow.Location = new System.Drawing.Point(440, 11);
+            this.textBoxShow.Location = new System.Drawing.Point(258, 28);
             this.textBoxShow.Name = "textBoxShow";
             this.textBoxShow.ReadOnly = true;
             this.textBoxShow.Size = new System.Drawing.Size(74, 21);
@@ -371,11 +395,11 @@
             // dgv
             // 
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv.Location = new System.Drawing.Point(0, 68);
+            this.dgv.Location = new System.Drawing.Point(0, 91);
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
             this.dgv.RowTemplate.Height = 23;
-            this.dgv.Size = new System.Drawing.Size(529, 463);
+            this.dgv.Size = new System.Drawing.Size(529, 440);
             this.dgv.TabIndex = 1;
             // 
             // Form1
@@ -435,6 +459,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonSaveDataSelfTest;
+        private System.Windows.Forms.Button buttonMAMonth;
+        private System.Windows.Forms.Button buttonMAWeek;
     }
 }
 

@@ -15,6 +15,7 @@ namespace JHStock
     {   
         public JSConfig()
         {
+            KdataType = "dayly";
         	baseconfig = new BaseConfig();
         	updatexmlpathconfig = new UpdateXmlPathConfig();
         	outshowconfig = new OutShowConfig();
@@ -57,5 +58,7 @@ namespace JHStock
         public GlobalConfig globalconfig {get;set;}
         [JsonIgnore]
         private string filename;
+        [JsonIgnore]
+        public string KdataType { get; set; }  //dayly,weekly, monthly
     }    
 }

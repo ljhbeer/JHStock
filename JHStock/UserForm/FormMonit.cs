@@ -18,8 +18,11 @@ namespace JHStock
 {
 	public partial class FormMonit : Form
 	{
-		public FormMonit( )
+		public FormMonit(string kdatatype = "dayly", Form1 ff =null )
 		{
+            _kdatatype = kdatatype;
+            if (_kdatatype != "weekly" && _kdatatype != "monthly")
+                _kdatatype = "dayly";
 			selectstock = new List<Stock>();
 			savestockinfor = new List<string>();
 			//_stockdata = new StockData();
@@ -31,7 +34,10 @@ namespace JHStock
 			bCompute = false;
 			_umi = new UpdateMonitInfors();
             //InitColumn();
-			f = new Form1(_jscfg);
+            if (ff == null)
+                f = new Form1(_jscfg);
+            else
+                f = ff;
 			_stockslog = new StocksLog(_jscfg);
             _stockscustomlog = new StocksCustomLog(_jscfg);
 			_formlog = new FormLog(_jscfg,_stockslog);
@@ -70,6 +76,7 @@ namespace JHStock
 
 			JSConfig jscfg = new JSConfig();
 			jscfg.Load(filename);
+            jscfg.KdataType = _kdatatype;
 			BaseConfig cfg = jscfg.baseconfig;
 			MFile.cfg = cfg;
 			if (!cfg.CheckWorkPath())
@@ -622,8 +629,14 @@ namespace JHStock
 		public FormLog _formlog;
         public FormCustomLog _formcustomlog;
         //for Debug Out
-		public List<Stock> DebugStocks;		
-	}
+		public List<Stock> DebugStocks;
+        private string _kdatatype;
+
+        internal void InitShowConfig()
+        {
+            throw new NotImplementedException();
+        }
+    }
 	public class UpdateMonitInfors{
 		public UpdateMonitInfors(){
 			isruning = false;

@@ -188,6 +188,26 @@ namespace JHStock
             
             this.Hide();
 		}
+
+        private void buttonMAWeek_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            if (_fw == null)
+                _fw = new FormMonit("weekly",this);
+            _fw.InitShowConfig();
+            _fw.Show();
+            this.Show();
+        }
+
+        private void buttonMAMonth_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            if (_fm == null)
+                _fm = new FormMonit("monthly",this);
+            _fm.InitShowConfig();
+            _fm.Show();
+            this.Show();
+        }
 		private void LoadCfg()
 		{
 			string filename = textBoxMdbPath.Text;
@@ -249,6 +269,8 @@ namespace JHStock
 		private Button _completebtn;
 		private DateTime _updatetime;
 		private string _ErrorMsg;
+        private FormMonit _fw;
+        private FormMonit _fm;
 		private void ThreadShowMsg(string msg)
 		{
 			this.Invoke(new ShowDeleGate(showfiletxt), new object[] { msg });
@@ -339,6 +361,7 @@ namespace JHStock
             }
             MFile.WriteAllText("selftest.txt", outstr);
         }
+
         
 
 	}	
