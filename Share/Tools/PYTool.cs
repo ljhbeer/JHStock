@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Tools
 {
@@ -32,10 +33,6 @@ namespace Tools
                 int area = (short)arrCN[0];
                 int pos = (short)arrCN[1];
                 int code = (area << 8) + pos;
-                int[] areacode = { 45217,45253,45761,46318,46826,    47010,47297,47614,48119,48119,
-                                 49062,49324,49896,50371,50614,    50622,50906,51387,51446,52218,
-                                 52698,52698,52698,52980,53689,54481
-                               };
                 for (int i = 0; i < 26; i++)
                 {
                     int max = 55290;
@@ -45,10 +42,12 @@ namespace Tools
                         return Encoding.Default.GetString(new byte[] { (byte)(65 + i) });
                     }
                 }
+                //return  PYTool.GetChineseSpell(cnChar);
                 return "*";
             }
             else
                 return cnChar;
-        }    
+        }
+        public static List<int> areacode = new List<int>(){ 45217,45253,45761,46318,46826,47010,47297,47614,48119,48119,49062,49324,49896,50371,50614,50622,50906,51387,51446,52218, 52698,52698,52698,52980,53689,54481};
     }    
 }

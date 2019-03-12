@@ -10,6 +10,11 @@ namespace Tools
     {
         public BitmapTools()
         {
+            bitcount = null;
+            InitBitCount();
+        }
+        private static void InitBitCount()
+        {
             bitcount = new int[256];
             for (int i = 0; i < 256; i++)
             {
@@ -195,7 +200,7 @@ namespace Tools
                         }
                         ptr += data.Stride - data.Width;
                     }
-    
+
                 }
                 else if (bmp.PixelFormat == PixelFormat.Format24bppRgb)
                 {
@@ -213,17 +218,18 @@ namespace Tools
                 }
                 else if (bmp.PixelFormat == PixelFormat.Format32bppArgb)
                 {
+                    long[] lrv = new long[r.Size.Width];
                     for (int i = 0; i < data.Height; i++)
                     {
                         for (int j = 0; j < data.Width; j++)
                         { // write the logic implementation here 
-                            rv[j] += ptr[0] + ptr[1] + ptr[2];
+                            lrv[j] += ptr[1]; // int[] rv = new int[r.Size.Width];
                             ptr += 4;
                         }
                         ptr += data.Stride - data.Width * 4;
                     }
                     for (int i = 0; i < rv.Length; i++)
-                        rv[i] /= 255;
+                        rv[i] =(int)( lrv[i] / 255);
                 }
             }
             bmp.UnlockBits(data);
@@ -268,7 +274,7 @@ namespace Tools
                         }
                         ptr += data.Stride - data.Width;
                     }
-    
+
                 }
                 else if (bmp.PixelFormat == PixelFormat.Format24bppRgb)
                 {
@@ -286,74 +292,36 @@ namespace Tools
                 }
                 else if (bmp.PixelFormat == PixelFormat.Format32bppArgb)
                 {
+                    long[] lrv = new long[r.Size.Width];
                     for (int i = 0; i < data.Height; i++)
                     {
                         for (int j = 0; j < data.Width; j++)
                         { // write the logic implementation here 
-                            rv[i] += ptr[0] + ptr[1] + ptr[2];  // rv[i] += ptr[1];
+                            lrv[i] += ptr[1];  // rv[i] += ptr[1];
                             ptr += 4;
                         }
                         ptr += data.Stride - data.Width * 4;
                     }
                     for (int i = 0; i < rv.Length; i++)
-                        rv[i] /= 255;
+                        rv[i] = (int)(lrv[i] / 255);
+                        //rv[i] /= 255;
                 }
             }
             bmp.UnlockBits(data);
             return rv;
         }
+        public static int[] CountXPixsum(Bitmap bmp, Rectangle r)
+        {
+            return CountImgXBlackCnt(bmp, r);
+        }
+        public static int[] CountYPixsum(Bitmap bmp, Rectangle r)
+        {
+            return CountImgYBlackCnt(bmp, r);
+        }
         public static int CountRectBlackcnt(Bitmap bmp, Rectangle r)
         {
-            int cnt = 0;
-            BitmapData data = bmp.LockBits(r, ImageLockMode.ReadWrite, bmp.PixelFormat);
-            unsafe
-            {
-                byte* ptr = (byte*)(data.Scan0);
-                byte* ptr0 = ptr;
-                if (bmp.PixelFormat == PixelFormat.Format1bppIndexed)
-                {
-                    for (int i = 0; i < data.Height; i++)
-                    {
-                        for (int j = 0; j < data.Width; )
-                        {
-                            Byte flag = 0x80;
-                            for (int k = 0; k < 8 && j < data.Width; k++, j++)
-                            {
-                                if ((*ptr & flag) > 0) cnt++;
-                                flag /= 2;
-                            }
-                            ptr++;
-                        }
-                        ptr += data.Stride - (data.Width + 7) / 8;
-                    }
-                }
-                else if (bmp.PixelFormat == PixelFormat.Format24bppRgb)
-                {
-                    for (int i = 0; i < data.Height; i++)
-                    {
-                        for (int j = 0; j < data.Width; j++)
-                        {
-                            cnt += ptr[0];
-                            ptr += 3;
-                        }
-                        ptr += data.Stride - data.Width * 3;
-                    }
-                }
-                else if (bmp.PixelFormat == PixelFormat.Format32bppArgb)
-                {
-                    for (int i = 0; i < data.Height; i++)
-                    {
-                        for (int j = 0; j < data.Width; j++)
-                        {
-                            cnt += ptr[1];
-                            ptr += 4;
-                        }
-                        ptr += data.Stride - data.Width * 4;
-                    }
-                }
-            }
-            bmp.UnlockBits(data);
-            return r.Width * r.Height - cnt;
+            int[] xcnt = CountImgXBlackCnt(bmp, r);
+            return r.Width * r.Height - xcnt.Sum();
         }
         private static List<int> GetEdgePos(int[] va, ref List<int> black)
         {
@@ -410,7 +378,7 @@ namespace Tools
                 }
             }
         }
-        private static List<int> SectionCount(int[] cnt, int min, int max, int minlen)// [0: startpos  1:length]
+        public static List<int> SectionCount(int[] cnt, int min, int max, int minlen)// [0: startpos  1:length]
         {
             int len = 0;
             int spos = 0;
@@ -568,7 +536,7 @@ namespace Tools
                 cnt[i] = xcnt[i] - xcnt[i - 2];
             }
             cnt[0] = cnt[1] = 0;
-    
+
             int[] maxpos, minpos, flag;
             maxpos = new int[xcnt.Length / 20];
             minpos = new int[xcnt.Length / 20];
@@ -578,7 +546,7 @@ namespace Tools
                 maxpos[i] = Max(cnt, i * 20, 20);
                 minpos[i] = Min(cnt, i * 20, 20);
             }
-    
+
             var queryResults = from n in maxpos select n;
             int maxavg = (int)queryResults.Average() + 1;
             queryResults = from n in minpos select n;
@@ -586,7 +554,7 @@ namespace Tools
             // if(debug&2 && option&1) std::printf("X-maxavg:%d  minavg:%d\n",maxavg,minavg);
             if (maxavg < 5) maxavg = 5;
             if (minavg > -5) minavg = -5;
-    
+
             for (int x = 2; x < xcnt.Length - 1; x++)
             {
                 if ((cnt[x] > maxavg || cnt[x + 1] > maxavg)
@@ -677,12 +645,12 @@ namespace Tools
                 for (int i = 0; i < r.Width; i++) vcnt.Add(blackcnt[i + r.X, r.Y]);
             }
             else { value = -1; return false; }
-    
+
             int max = vcnt.Max();
             int sum = vcnt.Sum();
             int cnt = vcnt.Count(n => n > 50);
             int maxpos = vcnt.FindIndex(n => n == max);
-    
+
             value = maxpos;
             if (cnt == 1)
             {
@@ -699,7 +667,7 @@ namespace Tools
             value = -1;
             return false;
         }
-        private static int GetstatisticGamma(Bitmap bmp, int pergamma, Rectangle r)
+        public static int GetstatisticGamma(Bitmap bmp, int pergamma, Rectangle r)
         {
             int[] colorcnt = new int[256];
             int sum = 0;
@@ -729,7 +697,7 @@ namespace Tools
             }
             return 0;
         }
-        private static void GammaImg(Bitmap gdt, Bitmap src, int gamma, Rectangle r)
+        public static void GammaImg(Bitmap gdt, Bitmap src, int gamma, Rectangle r)
         {
             BitmapData datagdt = gdt.LockBits(r, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
             BitmapData databmp = src.LockBits(r, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
