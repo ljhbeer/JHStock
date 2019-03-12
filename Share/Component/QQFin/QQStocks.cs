@@ -19,13 +19,20 @@ namespace JHStock.Update
 			try{
 			string url = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_dayqfq&param=sh000001,day,,,[daylength],qfq"
 				.Replace("[daylength]",daylength.ToString());
-			string txt = CWeb.GetWebClient(url).Substring(13);
+            string txt = CWeb.GetWebClient(url);
+            txt = CutJsonStringHead(txt);
 			QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
 			return qs.data["sh000001"].day.Select( r => Convert.ToInt32(   r[0].ToString().Replace("-",""))).ToList();
 			}catch{
 				return new List<int>();
 			}
 		}
+        public static string CutJsonStringHead(String txt)
+        {
+            if (txt.IndexOf("=") != -1)
+                txt = txt.Substring(txt.IndexOf("=") + 1);
+            return txt;
+        }
 	}	
 	public class  QQStockDetail{
 		public List<List<object>> day {get; set;}

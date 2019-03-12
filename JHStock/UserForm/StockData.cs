@@ -246,19 +246,23 @@ namespace JHStock
 			IncludeToday = false;
             Exchanging = false;
             NearestDate = DateTime.Now;
-            int daylength = ListHistoryDate.Count;
             if (urltype == "weekly")
                 urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_weekqfq&param=[stockcode],week,,,[dayscount],qfq";
             if (urltype == "monthly")
                 urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_monthqfq&param=[stockcode],month,,,[dayscount],qfq";
+            daytpye = urltype.Replace("ly", "");
+            int daylength = ListHistoryDate.Count;
+
 		}
         public void Refresh()
         {
+            string txt="";
             try
             {
                 string url = urlt.Replace("[stockcode]", "sh000001").Replace("[dayscount]", dayscount.ToString());
-                string txt = CWeb.GetWebClient(url).Substring(13);
-                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
+                txt = CWeb.GetWebClient(url).Substring(10 + daytpye.Length);
+                txt = txt.Replace(daytpye, "day");
+                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);               
                 _netszdate = qs.data["sh000001"].day.Select(
                     r => Convert.ToInt32(r[0].ToString().Replace("-", ""))).ToList();
                 Inline = true;
@@ -280,7 +284,7 @@ namespace JHStock
                 int nd = _netszdate.Max();
                 NearestDate = new DateTime(nd / 10000, nd / 100 % 100, nd % 100);
             }
-            catch
+            catch(Exception emsg)
             {
                 Inline = false;
                 IncludeToday = false;
@@ -309,5 +313,6 @@ namespace JHStock
         private List<int> _netszdate;
         private int dayscount;
         private string urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_dayqfq&param=[stockcode],day,,,[dayscount],qfq";
+        private string daytpye;
 	}
 }

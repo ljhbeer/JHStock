@@ -634,7 +634,7 @@ namespace JHStock
 
         internal void InitShowConfig()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 	public class UpdateMonitInfors{

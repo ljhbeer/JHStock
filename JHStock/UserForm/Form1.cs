@@ -195,7 +195,7 @@ namespace JHStock
             if (_fw == null)
                 _fw = new FormMonit("weekly",this);
             _fw.InitShowConfig();
-            _fw.Show();
+            _fw.ShowDialog();
             this.Show();
         }
 
@@ -205,7 +205,7 @@ namespace JHStock
             if (_fm == null)
                 _fm = new FormMonit("monthly",this);
             _fm.InitShowConfig();
-            _fm.Show();
+            _fm.ShowDialog();
             this.Show();
         }
 		private void LoadCfg()

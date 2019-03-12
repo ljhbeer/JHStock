@@ -37,7 +37,7 @@ namespace JHStock
 			}
 		}		
 		private void GetDataFromNet(int dayscount){
-			ThreadUpdateStocksQQDayly qf = new ThreadUpdateStocksQQDayly(_stocks,dayscount);
+			ThreadUpdateStocksQQDayly qf = new ThreadUpdateStocksQQDayly(_stocks,dayscount,_jscfg.KdataType);
 			qf.MaxThreadSum = 50;
             if(ThreadShowMsg!=null)
 			qf.showmsg = new ShowDeleGate(ThreadShowMsg);

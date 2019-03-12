@@ -13,7 +13,7 @@ using ToolsCXml;
 namespace JHStock
 {
 	public class ThreadUpdateStocksQQDayly{
-		public ThreadUpdateStocksQQDayly(Stocks stocks,int Daylength)
+		public ThreadUpdateStocksQQDayly(Stocks stocks,int Daylength,string datetype="dayly")
 	    {
 	        bshowtimeout = false;
 	        _stocks = stocks;
@@ -26,7 +26,13 @@ namespace JHStock
 	            Tag[i] = new tagstock();
 	        foreach (Stock s in _stocks.stocks)
 	            Tag[s.ID].Init(s);
-	        UrlTemplate = urlt.Replace("[daylength]",Daylength.ToString());
+
+            if (datetype == "weekly")
+                urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_weekqfq&param=[stockcode],week,,,[dayscount],qfq";
+            if (datetype == "monthly")
+                urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_monthqfq&param=[stockcode],month,,,[dayscount],qfq";
+            _datetpye = datetype.Replace("ly", "");
+	        UrlTemplate = urlt.Replace("[dayscount]",Daylength.ToString());
 	        showmsg=null;
 	    }
 		public void RunNetDownLoadData()
@@ -62,7 +68,8 @@ namespace JHStock
         {
             try
             {
-                string txt = CWeb.GetWebClient(url).Substring(10);
+                string txt = CWeb.GetWebClient(url);
+                txt = CutJsonStringHead(txt);
                 QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
                 KData[] kd  = qs.data[s.Code.ToLower()].day
                    .Select(r =>
@@ -81,12 +88,20 @@ namespace JHStock
             catch { }
             return null;
         }
+        public static string CutJsonStringHead(String txt ,string datetype="day")
+        {
+            if (txt.IndexOf("=") != -1)
+                txt = txt.Substring(txt.IndexOf("=")+1);
+            txt = txt.Replace( datetype, "day");
+            return txt;
+        }
         public static tagstock DownLoadData(Stock s, int Daylength)
         {
             string UrlTemplate = urlt.Replace("[daylength]", Daylength.ToString());
             string url = UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
             StringBuilder strall = new StringBuilder();
-            string txt = CWeb.GetWebClient(url).Substring(10);
+            string txt = CWeb.GetWebClient(url);
+            txt = CutJsonStringHead(txt,_datetpye);
             tagstock tag = new tagstock();
             try
             {
@@ -118,7 +133,8 @@ namespace JHStock
 	    {
 	    	string url = UrlTemplate.Replace("[stockcode]",s.Code.ToLower());
 	        StringBuilder strall = new StringBuilder();
-	        string txt = CWeb.GetWebClient(url).Substring(10);
+            string txt = CWeb.GetWebClient(url);
+            txt = CutJsonStringHead(txt,_datetpye);
 			try{
 				 QQStocks qs = JsonConvert.DeserializeObject<QQStocks>( txt);
 				 Tag[s.ID].kd = qs.data[s.Code.ToLower()].day
@@ -185,7 +201,8 @@ namespace JHStock
 	    private string UrlTemplate;
 	    private ToolsCXml.BETag btyear = new ToolsCXml.BETag("[nflb\":#@#@-@#@#]");
 	    private ToolsCXml.BETag btcheck = new ToolsCXml.BETag("[:#@#@{-}@#@#}]");
-	    private static string urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[daylength],bfq";
+	    private static string urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[dayscount],bfq";
+        private static string _datetpye;
 
 	}
 	public class ThreadUpdateStockQQDayly{
