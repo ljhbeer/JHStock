@@ -30,7 +30,7 @@ namespace JHStock
         		int dayscount = DaysCount;
         		if(dayscount < 1)
         			return;
-				GetDataFromNet(dayscount);
+				GetDataFromNet1(dayscount);
             }
             finally{
                 CompleteRun();
@@ -51,12 +51,19 @@ namespace JHStock
 
             netsaveTag = new SaveTag(DateTime.Now, TS.Tag);
 
-            TS.Tag[0].Init(_ssestock);
             List<Stock> Dealstocks = new List<Stock>(_stocks.stocks);
+
+            //Dealstocks = Dealstocks.Take(10).ToList();
+            // Add 上证指数
+            TS.Tag[0].Init(_ssestock);
+            Dealstocks.Add(_ssestock);
+
             TS.UpdateItem(Dealstocks );
             List<Stock> stocks = Dealstocks;
             int stockcountb = stocks.Count;
-            stocks = TS.Tag.Where(r => r.value < 1 && r.value > -10).Select(r => r.s).ToList();
+
+            
+            stocks = TS.Tag.Where(r => r.value < 1 && r.value > -10 ).Select(r => r.s).ToList();
             if (stocks.Count > 0)
             {
                 TS.UpdateItem(stocks);

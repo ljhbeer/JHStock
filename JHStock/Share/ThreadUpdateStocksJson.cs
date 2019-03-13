@@ -17,6 +17,8 @@ namespace JHStock
         private string _datetype;
         public FormatDataFunction(string datetype)
         {
+            if (datetype.EndsWith("ly"))
+                datetype = datetype.Replace("ly", "");
             this._datetype = datetype;
         }
         public void FormatKDData(Tagstock tagstock, Stock s, string txt)

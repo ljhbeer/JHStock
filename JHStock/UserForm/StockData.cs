@@ -160,14 +160,15 @@ namespace JHStock
             if (_netdate.IncludeToday ) //交易日 
                 for (int i = 0; i < 2000; i++)
                 {
-                    List<KData> kdi = (List<KData>)nkd.netsaveTag.Tag[i].Tag;
+                    Tagstock tgi = nkd.netsaveTag.Tag[i];
+                    List<KData> kdi = (List<KData>)tgi.Tag;
                     if (kdi != null && kdi.Count == mergedays + 1)
                     {
                         if (_netdate.Exchanging)
                             kdi = kdi.Take(mergedays).ToList();
                         else //if( mergedays == DaysLength)  //15:00后可以  更新所有数据                 //15:00 后要保留当天数据，因而要删除前一天
                             kdi = kdi.Skip(1).Take(mergedays).ToList();
-
+                        tgi.Tag = kdi;
                     }
                     else if (kdi != null)
                         Msg += nkd.netsaveTag.Tag[i].s.Name + nkd.netsaveTag.Tag[i].s.Code;
@@ -177,33 +178,35 @@ namespace JHStock
             
             int beginday = kd0[0].date;
             int endday = kd0[mergedays-1].date;
-            
+
             if (mergedays == DaysLength)
+            {
+                _savetag = new SaveKdTag(nkd.netsaveTag.StoreDate , nkd.netsaveTag.Tag.Length);
                 _savetag.Init(nkd.netsaveTag);
+            }
             else
             {
-            	// 合并
+                // 合并
                 for (int i = 0; i < 2000; i++)
                 {
-                    List<KData> kdi = (List<KData>)nkd.netsaveTag.Tag[i].Tag;
-                    if (_savetag.Tag[i].kd != null && kdi.Count == mergedays)
-                    { //合并kd 
-                        List<KData> _skdi = (List<KData>)_savetag.Tag[i].kd;
+                    Tagstock tgi = nkd.netsaveTag.Tag[i];
+                    tagkdstock _tgi = _savetag.Tag[i];
+                    List<KData> kdi = (List<KData>)tgi.Tag;
+                    if (_tgi.kd != null && kdi.Count == mergedays)
+                    { //合并kd                        
                         if (kdi[0].date == beginday && kdi[mergedays - 1].date == endday)
                         {
-                            _skdi = _skdi.Skip(mergedays).ToList();
-                            _skdi.AddRange(kdi);
-                            _savetag.Tag[i].kd = _skdi;
+                            _tgi.kd = _tgi.kd.Skip(mergedays).ToList();
+                            _tgi.kd.AddRange(kdi);
                         }
                         else
                         {
-                            int maxlocalday = _skdi.Max(r => r.date);
+                            int maxlocalday = _tgi.kd.Max(r => r.date);
                             KData[] kd = kdi.Where(r => r.date > maxlocalday).ToArray();
                             if (kd.Length > 0)
                             {
-                                _skdi = _skdi.Skip(kd.Length).ToList();
-                                _skdi.AddRange(kdi);
-                                _savetag.Tag[i].kd = _skdi;
+                                _tgi.kd = _tgi.kd.Skip(kd.Length).ToList();
+                                _tgi.kd.AddRange(kdi);
                             }
                         }
                     }

@@ -295,10 +295,10 @@ namespace JHStock.Update
         private ThreadUpdateStocks tuss;
     }
 	public class SaveKdTag{
-        public SaveKdTag(DateTime StoreDate, tagkdstock[] Tag)
+        public SaveKdTag(DateTime StoreDate, int length)
         {
             this.StoreDate = StoreDate;
-			this.Tag = Tag;
+			this.Tag =new tagkdstock[length];
 		}
 		public DateTime StoreDate{get;set;}
 		public tagkdstock[] Tag{get;set;}		
@@ -310,12 +310,20 @@ namespace JHStock.Update
         public  void Init(SaveTag saveTag)
         {
             Tag = new tagkdstock[saveTag.Tag.Length];
+            for(int i=0; i<Tag.Length; i++)
+                Tag[i] = new tagkdstock();
             foreach (Tagstock s in saveTag.Tag)
-            {
-                if (s.index > 0)
+            {               
+                if (s.s != null)               
                 {
-                    Tag[s.index] = new tagkdstock(s.s);
-                    Tag[s.index].kd = (List<KData>)s.Tag;
+                    if (s.index == 0)
+                    {
+                        //MessageBox.Show(s.s.Name);
+                    }
+                    Tag[s.index].Init(s.s);
+                    if (s.Tag != null)
+                        Tag[s.index].kd = (List<KData>)s.Tag;
+                   
                 }
             }
         }
