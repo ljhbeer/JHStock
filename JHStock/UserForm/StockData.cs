@@ -213,7 +213,7 @@ namespace JHStock
 				int epos = txt.IndexOf("}]}");
 				if (bpos != -1 && epos != -1 && epos > bpos) {
 					txt = txt.Substring(bpos, epos - bpos + 3);
-					tagstock t = JsonConvert.DeserializeObject<tagstock>(txt);
+					tagkdstock t = JsonConvert.DeserializeObject<tagkdstock>(txt);
 					return t.kd.Select(r => r.date).ToList();
 				}
 			}

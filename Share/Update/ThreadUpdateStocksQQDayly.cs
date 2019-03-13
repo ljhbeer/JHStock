@@ -21,9 +21,9 @@ namespace JHStock
 	        _exceptionfilename = TimeStringTools.NowDateMin() + "_UpdateException.log";         
 	        DealStocks = new List<Stock>();
 	        MaxThreadSum = 1;
-	        Tag = new tagstock[2000];
+	        Tag = new tagkdstock[2000];
 	        for (int i = 0; i < 2000; i++)
-	            Tag[i] = new tagstock();
+	            Tag[i] = new tagkdstock();
 	        foreach (Stock s in _stocks.stocks)
 	            Tag[s.ID].Init(s);
 
@@ -119,14 +119,14 @@ namespace JHStock
             catch { }
             return null;
         }
-        public static tagstock DownLoadData(Stock s, int Daylength)
+        public static tagkdstock DownLoadData(Stock s, int Daylength)
         {
             string UrlTemplate = urlt.Replace("[daylength]", Daylength.ToString());
             string url = UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
             StringBuilder strall = new StringBuilder();
             string txt = CWeb.GetWebClient(url,_datetpye);                
             txt = CutJsonStringHead(txt);
-            tagstock tag = new tagstock();
+            tagkdstock tag = new tagkdstock();
             try
             {
                 tag.kd = ConstructKdata(s.Code, txt);           
@@ -175,7 +175,7 @@ namespace JHStock
 	    public ShowDeleGate showmsg;
 	    public bool bshowtimeout;
 	    private string _exceptionfilename;
-	    public tagstock[] Tag;
+	    public tagkdstock[] Tag;
 	    
 	    private string UrlTemplate;
 	    private ToolsCXml.BETag btyear = new ToolsCXml.BETag("[nflb\":#@#@-@#@#]");

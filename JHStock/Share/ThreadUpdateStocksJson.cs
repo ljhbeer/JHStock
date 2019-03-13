@@ -1,0 +1,278 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Newtonsoft.Json;
+using JHStock.Update;
+using Tools;
+using ToolsCXml;
+namespace JHStock
+{
+    public delegate void DeleteFormatData(Tagstock tagstock, Stock s, string txt);
+    public class ThreadUpdateStocksQQDaylyTest
+    {
+        public ThreadUpdateStocksQQDaylyTest(Stocks stocks,int Daylength,string datetype="dayly")
+	    {
+	        bshowtimeout = false;	       
+	        showmsg=null;
+            ThreadUpdateStocksConfig TSC1 = new ThreadUpdateStocksConfig(datetype, Daylength);
+            FormatDataFunction FD = new FormatDataFunction(datetype);
+            TSC1.UrlT = new ThreadUpdateUrlTemplate(datetype);
+            TSC1.Files = new ThreadUpdateJsonFiles();
+            TSC1.MaxThreadSum = 10;
+            TSC1.FormatData =FD.FormatKDData;
+            TS = new ThreadUpdateStocksJson(stocks, TSC1);
+	    }
+		public void RunNetDownLoadData()
+	    {
+            DateTime dt1 = System.DateTime.Now;
+            List<Stock> DealStocks = new List<Stock>(TS.Stocks);            
+            TS.UpdateItem(DealStocks);
+            List<Stock> stocks = DealStocks;
+            int stockcountb = stocks.Count;
+            stocks =TS.Tag.Where(r => r.value < 1 && r.value > -10).Select(r => r.s).ToList();
+            if (TS.TSC.Debug)
+            {
+                int stockcounte = stocks.Count;
+                int stockcountc = TS.Tag.Where(r => r.value == 1).Count();
+                MFile.AppendAllText("Update.log", System.DateTime.Now.ToShortTimeString() + " 更新ItemstockHexin " +
+                                    stockcountc + "/" + stockcountb + " 其中有 " + stockcounte + "需要再次更新\r\n");
+            }
+            if (stocks.Count > 0)
+            {
+                TS.UpdateItem(stocks);
+
+                if (TS.TSC.Debug)
+                {
+                    int stockcounte = stocks.Count;
+                    int stockcountc = TS.Tag.Where(r => r.value == 1).Count();
+                    MFile.AppendAllText("Update.log", System.DateTime.Now.ToShortTimeString() + " 再次更新ItemstockHexin " +
+                                        stockcountc + "/" + stockcounte + "\r\n");
+                }
+            }
+            DateTime dt2 = System.DateTime.Now;
+            TimeSpan ts = dt2.Subtract(dt1);
+            if (bshowtimeout)
+                MessageBox.Show("时间" + ts.TotalSeconds);
+	    }
+       
+        public ShowDeleGate showmsg;
+        public bool bshowtimeout;
+        private ThreadUpdateStocksJson TS;
+    }
+    public class FormatDataFunction
+    {
+        private string _datetype;
+        public FormatDataFunction(string datetype)
+        {
+            this._datetype = datetype;
+        }
+        public void FormatKDData(Tagstock tagstock, Stock s, string txt)
+        {
+            txt = CutJsonStringHead(txt);
+            tagstock.Tag = ConstructKdata(s.Code, txt);
+            tagstock.value = 1;
+        }
+        public static List<KData> ConstructKdata(string stockcode, string txt)
+        {
+            QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
+            List<KData> kd = qs.data[stockcode.ToLower()].day
+               .Select(r =>
+               {
+                   KData k = new KData();
+                   k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
+                   k.open = (int)(Convert.ToSingle(r[1]) * 100);
+                   k.close = (int)(Convert.ToSingle(r[2]) * 100);
+                   k.high = (int)(Convert.ToSingle(r[3]) * 100);
+                   k.low = (int)(Convert.ToSingle(r[4]) * 100);
+                   k.vol = (int)(Convert.ToSingle(r[5]) * 100);
+                   return k;
+               }).ToList();
+            return kd;
+        } 
+        private string CutJsonStringHead(string txt)
+        {
+            if (txt.IndexOf("=") != -1)
+                txt = txt.Substring(txt.IndexOf("=") + 1);
+            txt = txt.Replace(_datetype, "day");
+            txt = txt.Replace("qfqday", "day");
+            return txt;
+        }
+    }
+	public class ThreadUpdateStocksJson{
+		public ThreadUpdateStocksJson(Stocks stocks,ThreadUpdateStocksConfig TSC)
+	    {
+	        bshowtimeout = false;
+            _tsc = TSC;
+	        _stocks = stocks;
+	        _cfg = _stocks.Gcfg;
+	        _exceptionfilename = TimeStringTools.NowDateMin() + "_UpdateException.log";         
+	        
+	        MaxThreadSum = TSC.MaxThreadSum;
+	        Tag = new Tagstock[2000];
+	        for (int i = 0; i < 2000; i++)
+	            Tag[i] = new Tagstock();
+	        foreach (Stock s in _stocks.stocks)
+	            Tag[s.ID].Init(s);           
+	        showmsg=null;
+	    }		
+        public void DownLoadJsonData(Stock s)
+        {
+            string url = _tsc.UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
+            string txt = CWeb.GetWebClient(url);
+            try
+            {
+                TSC.FormatData(Tag[s.ID], s, txt);               
+                Tag[s.ID].value = 1;
+            }
+            catch (Exception e)
+            {
+                Tag[s.ID].txt = txt;
+                Tag[s.ID].value = -2;
+                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + Tag[s.ID].txt + "\t" + e.Message + "\r\n\r\n");
+            }
+        }
+		public void UpdateItem(List<Stock> usstocks)
+		{
+			threadsum = 0;
+			threadcompletesum=0;	
+			int time = 0;		
+			DateTime dt1 = System.DateTime.Now;	
+			foreach(Stock s in usstocks){
+				while(threadsum==MaxThreadSum){
+					time++;
+					Thread.Sleep(1);
+				}
+				Interlocked.Increment(ref threadsum);
+				if( time>10){
+					TimeSpan ts = System.DateTime.Now.Subtract(dt1);
+					if(ts.TotalSeconds>5){
+						showmsg("已完成："+threadcompletesum+"");
+						time=0;
+						dt1 = System.DateTime.Now;
+					}
+				}
+				if(threadcompletesum < MaxThreadSum)
+					Thread.Sleep(10);
+				ThreadUpdateStockJson tus = new ThreadUpdateStockJson(s,this);
+				System.Threading.Thread nonParameterThread = new Thread(new ThreadStart(tus.Run));
+				nonParameterThread.Start();
+			}
+			while(threadsum > 0 )
+				Thread.Sleep(10);
+            if(showmsg!=null)
+            showmsg("已完成：" + threadcompletesum + "");
+		}
+        private Stocks _stocks;
+	    private GlobalConfig _cfg;   
+	    public int MaxThreadSum;
+	    public int threadsum;
+	    public int threadcompletesum;
+	    public ShowDeleGate showmsg;
+	    public bool bshowtimeout;
+	    private string _exceptionfilename;
+	    public Tagstock[] Tag;
+        public ThreadUpdateStocksConfig _tsc;
+        public ThreadUpdateStocksConfig TSC{get {return _tsc;}}
+        public List<Stock> Stocks { get { return _stocks.stocks; } }
+    }
+	public class ThreadUpdateStockJson{
+    	private Stock s;
+    	private ThreadUpdateStocksJson _parent;
+    	public ThreadUpdateStockJson(Stock s,ThreadUpdateStocksJson parent){
+    		this.s = s;
+    		this._parent = parent;
+    	}
+    	public void Run(){
+    		try{
+    			_parent.DownLoadJsonData(s);
+    		}catch(Exception e){
+    			MFile.AppendAllText(_parent.TSC.Files.ChildErrorlog,s.ID+"\t"+e.Message+"\r\n");
+    		}
+    		Interlocked.Decrement(ref _parent.threadsum);
+			Interlocked.Increment(ref _parent.threadcompletesum);
+    	}
+    }
+    public class ThreadUpdateStocksConfig
+    {
+        public ThreadUpdateStocksConfig(string datetype, int daylength)
+        {
+            UrlT  = new ThreadUpdateUrlTemplate(datetype);
+            _daylength = daylength.ToString();
+            MaxThreadSum = 1;
+            FormatData = null;
+            Debug = false;
+        }
+        public string UrlTemplate{get {return UrlT.UrlTemplate.Replace("[dayscount]",_daylength);}}
+        public ThreadUpdateUrlTemplate UrlT;
+        public ThreadUpdateJsonFiles Files;
+        private string _daylength;
+        public int MaxThreadSum { get; set; }
+        public DeleteFormatData FormatData { get; set; }
+
+        public bool Debug { get; set; }
+    }
+    public class ThreadUpdateUrlTemplate
+    {        
+        private string _datetype;
+        private string _Datetype;
+        private string urlt;
+        public ThreadUpdateUrlTemplate(string datetype)
+        {
+            this._datetype = datetype;
+            if (!"|dayly|monthly|weekly|".Contains("|" + datetype + "|"))
+                datetype = "dayly";
+            if (_datetype == "weekly")
+                urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_weekqfq&param=[stockcode],week,,,[dayscount],qfq";
+            if (_datetype == "monthly")
+                urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_monthqfq&param=[stockcode],month,,,[dayscount],qfq";
+            if(_datetype == "dayly")
+                 urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[dayscount],bfq";
+        } 
+        public string DateType{ get {return _Datetype;}}
+        public string UrlTemplate {get {return urlt;}}
+    }
+    public class ThreadUpdateJsonFiles
+    {
+        public ThreadUpdateJsonFiles()
+        {
+            ChildErrorlog = "QQDaylyError.log";
+        }
+        private ToolsCXml.BETag btyear = new ToolsCXml.BETag("[nflb\":#@#@-@#@#]");
+        private ToolsCXml.BETag btcheck = new ToolsCXml.BETag("[:#@#@{-}@#@#}]");
+
+        public string ChildErrorlog { get; set; }
+    }
+    public class Tagstock
+    {
+        public Tagstock()
+        {
+            index = 0;
+            value = -100;
+            s = null;
+            txt = "";
+            TagClass = "";
+        }
+        public Tagstock(Stock s)
+        {
+            Init(s);
+        }
+        public void Init(Stock s)
+        {
+            this.s = s;
+            index = s.ID;
+            value = 0;
+        }
+        public Object Tag { get; set; }
+        public int index;
+        public int value;
+        public string TagClass;
+        [JsonIgnore]
+        public Stock s;    // for initlize
+        [JsonIgnore]
+        public string txt;	// for out debug infor
+    }
+}

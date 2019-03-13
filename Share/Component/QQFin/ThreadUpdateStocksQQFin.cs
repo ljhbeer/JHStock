@@ -22,9 +22,9 @@ namespace JHStock.Update
 	        _exceptionfilename = TimeStringTools.NowDateMin() + "_UpdateException.log";         
 	        DealStocks = new List<Stock>();
 	        MaxThreadSum = 1;
-	        Tag = new tagstock[2000];
+	        Tag = new tagkdstock[2000];
 	        for (int i = 0; i < 2000; i++)
-	            Tag[i] = new tagstock();
+	            Tag[i] = new tagkdstock();
 	        foreach (Stock s in _stocks.stocks)
 	            Tag[s.ID].Init(s);
 	        UpdateItemNames = new List<string>(){"MGZB","YLNL","YYNL","CZNL","DJCW"};
@@ -152,7 +152,7 @@ namespace JHStock.Update
 	    public bool bshowtimeout;
 	    private List<string> UpdateItemNames;
 	    private string _exceptionfilename;
-	    public tagstock[] Tag;
+	    public tagkdstock[] Tag;
 	    
 	    private ToolsCXml.BETag btyear = new ToolsCXml.BETag("[nflb\":#@#@-@#@#]");
 	    

@@ -332,7 +332,7 @@ namespace JHStock
                 }
                 return  "";
                }).Aggregate((r1, r2) => r1 + "\r\n" + r2);
-            List<tagstock> hasdistinctarray = 
+            List<tagkdstock> hasdistinctarray = 
                 st.Tag.Where(r => 
                     {
                         if (r.kd != null && r.kd[r.kd.Count - 1].date != newdate)

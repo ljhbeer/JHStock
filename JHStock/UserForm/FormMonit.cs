@@ -420,7 +420,7 @@ namespace JHStock
 			double[] kdvol = _stockdata.GetKD(s.ID).Select(r =>(double)( r.vol)).ToArray();
 			if(staticdaylenght != 200 && staticdaylenght > kdvol.Length && _stockdata.Netdate.Inline){
 				// TODO: Complete TestStock
-				tagstock ts = ThreadUpdateStocksQQDayly.DownLoadData(s,staticdaylenght);
+				tagkdstock ts = ThreadUpdateStocksQQDayly.DownLoadData(s,staticdaylenght);
 				kdvol=
 				ts.kd.Select(r =>(double)( r.vol)).ToArray();
 			}

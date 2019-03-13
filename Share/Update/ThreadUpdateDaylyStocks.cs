@@ -22,9 +22,9 @@ namespace JHStock
             //_XmlFileName = "";
 			RunsStocks = new List<Stock>();
 			MaxThreadSum = 1;
-			Tag = new tagstock[2000];	
+			Tag = new tagkdstock[2000];	
 			for(int i=0; i<2000; i++)
-				Tag[i] = new tagstock();
+				Tag[i] = new tagkdstock();
 			foreach(Stock s in _stocks.stocks)
 				Tag[s.ID].Init(s);
 		}
@@ -107,7 +107,7 @@ namespace JHStock
 		public int MaxThreadSum;		
 		public int threadsum;
 		public int threadcompletesum;
-		public tagstock[] Tag;
+		public tagkdstock[] Tag;
 		public List<Stock> RunsStocks;
 		public ShowDeleGate showmsg;
 		public CompleteDeleGate CompleteRun;

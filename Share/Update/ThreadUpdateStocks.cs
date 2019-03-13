@@ -26,9 +26,9 @@ namespace JHStock.Update
             _XmlFileName = "";
             BounsStocks = new List<Stock>();
             MaxThreadSum = 1;
-            Tag = new tagstock[2000];
+            Tag = new tagkdstock[2000];
             for (int i = 0; i < 2000; i++)
-                Tag[i] = new tagstock();
+                Tag[i] = new tagkdstock();
             foreach (Stock s in _stocks.stocks)
                 Tag[s.ID].Init(s);
         }
@@ -263,7 +263,7 @@ namespace JHStock.Update
         public int MaxThreadSum;
         public int threadsum;
         public int threadcompletesum;
-        public tagstock[] Tag;
+        public tagkdstock[] Tag;
         public List<Stock> BounsStocks;
         public ShowDeleGate showmsg;
         public CompleteDeleGate CompleteRun;
@@ -295,20 +295,20 @@ namespace JHStock.Update
         private ThreadUpdateStocks tuss;
     }
 	public class SaveTag{
-        public SaveTag(DateTime StoreDate, tagstock[] Tag)
+        public SaveTag(DateTime StoreDate, tagkdstock[] Tag)
         {
             this.StoreDate = StoreDate;
 			this.Tag = Tag;
 		}
 		public DateTime StoreDate{get;set;}
-		public tagstock[] Tag{get;set;}		
+		public tagkdstock[] Tag{get;set;}		
 		public void Save(string path)
 		{
 			MFile.WriteAllText( path,JsonConvert.SerializeObject(this));
 		}
 	}
-	public class tagstock{
-		public tagstock(){
+	public class tagkdstock{
+		public tagkdstock(){
 			index = 0;
 			value = -100;
 			s = null;
@@ -316,7 +316,7 @@ namespace JHStock.Update
 			txt = "";
 			
 		}
-		public tagstock(Stock s){
+		public tagkdstock(Stock s){
 			Init(s);
 		}
 		public void Init(Stock s){

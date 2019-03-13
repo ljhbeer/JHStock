@@ -265,6 +265,7 @@
     </Compile>
     <Compile Include="DrawStock.cs" />
     <Compile Include="Share\MoveTracker.cs" />
+    <Compile Include="Share\ThreadUpdateStocksJson.cs" />
     <Compile Include="Share\ZoomBox.cs" />
     <Compile Include="UserForm\Form1.cs">
       <SubType>Form</SubType>
