@@ -63,95 +63,16 @@ namespace JHStock
 			if(bshowtimeout)
 				MessageBox.Show ( "时间"+ts.TotalSeconds);
 	    }  	 
-
-        public static KData[] DownLoadData(String url,Stock s)
-        {
-            try
-            {
-                string txt = CWeb.GetWebClient(url);
-                txt = CutJsonStringHead(txt);
-                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
-                KData[] kd  = qs.data[s.Code.ToLower()].day
-                   .Select(r =>
-                   {
-                       KData k = new KData();
-                       k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
-                       k.open = (int)(Convert.ToSingle(r[1]) * 100);
-                       k.close = (int)(Convert.ToSingle(r[2]) * 100);
-                       k.high = (int)(Convert.ToSingle(r[3]) * 100);
-                       k.low = (int)(Convert.ToSingle(r[4]) * 100);
-                       k.vol = (int)(Convert.ToSingle(r[5]) * 100);
-                       return k;
-                   }).ToArray();
-                return kd;
-            }
-            catch { }
-            return null;
-        }
-        public static string CutJsonStringHead(String txt ,string datetype="day")
-        {
-            if (txt.IndexOf("=") != -1)
-                txt = txt.Substring(txt.IndexOf("=")+1);
-            txt = txt.Replace( datetype, "day");
-            txt = txt.Replace("qfqday", "day");
-            return txt;
-        }
-        public static tagstock DownLoadData(Stock s, int Daylength)
-        {
-            string UrlTemplate = urlt.Replace("[daylength]", Daylength.ToString());
-            string url = UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
-            StringBuilder strall = new StringBuilder();
-            string txt = CWeb.GetWebClient(url);
-            txt = CutJsonStringHead(txt,_datetpye);
-            tagstock tag = new tagstock();
-            try
-            {
-                QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
-                tag.kd = qs.data[s.Code.ToLower()].day
-                   .Select(r =>
-                   {
-                       KData k = new KData();
-                       k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
-                       k.open = (int)(Convert.ToSingle(r[1]) * 100);
-                       k.close = (int)(Convert.ToSingle(r[2]) * 100);
-                       k.high = (int)(Convert.ToSingle(r[3]) * 100);
-                       k.low = (int)(Convert.ToSingle(r[4]) * 100);
-                       k.vol = (int)(Convert.ToSingle(r[5]) * 100);
-                       return k;
-                   }).ToList();
-                tag.value = 1;
-                tag.index = s.ID;
-            }
-            catch (Exception e)
-            {
-                tag.txt = txt;
-                tag.value = -2;
-                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + tag.txt + "\t" + e.Message + "\r\n\r\n");
-            }
-            return tag;
-        }      		
 	    public void DownLoadData(Stock s)
-	    {
-	    	string url = UrlTemplate.Replace("[stockcode]",s.Code.ToLower());
-	        StringBuilder strall = new StringBuilder();
-            string txt = CWeb.GetWebClient(url);
+ 	    {
+ 	    	string url = UrlTemplate.Replace("[stockcode]",s.Code.ToLower());
+ 	        string txt = CWeb.GetWebClient(url);
             txt = CutJsonStringHead(txt,_datetpye);
-			try{
-				 QQStocks qs = JsonConvert.DeserializeObject<QQStocks>( txt);
-				 Tag[s.ID].kd = qs.data[s.Code.ToLower()].day
-	        		.Select( r => {
-	        		 KData k = 	new KData();
-	        		 k.date =Convert.ToInt32( r[0].ToString().Replace("-",""));	
-	        		 k.open = (int)(Convert.ToSingle(r[1])*100);
-	        		 k.close = (int)(Convert.ToSingle(r[2])*100);
-	        		 k.high= (int)(Convert.ToSingle(r[3])*100);
-	        		 k.low = (int)(Convert.ToSingle(r[4])*100);
-	        		 k.vol = (int)(Convert.ToSingle(r[5])*100);
-	        		 return k;
-	        		}).ToList();
-				 Tag[s.ID].value = 1;
-			}catch(Exception e){
-	        	Tag[s.ID].txt = txt;
+ 			try{
+                 Tag[s.ID].kd  = ConstructKdata(s.Code, txt);				
+ 				 Tag[s.ID].value = 1;
+ 			}catch(Exception e){
+ 	        	Tag[s.ID].txt = txt;
 	        	Tag[s.ID].value = -2;
                 MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + Tag[s.ID].txt+"\t"+e.Message + "\r\n\r\n");
 			}
@@ -186,8 +107,65 @@ namespace JHStock
 				Thread.Sleep(10);
             if(showmsg!=null)
             showmsg("已完成：" + threadcompletesum + "");
-		}	
-			
+		}
+        public static KData[] DownLoadData(String url, Stock s)
+        {
+            try
+            {
+                string txt = CWeb.GetWebClient(url);
+                txt = CutJsonStringHead(txt);
+                return ConstructKdata(s.Code, txt).ToArray();
+            }
+            catch { }
+            return null;
+        }
+        public static tagstock DownLoadData(Stock s, int Daylength)
+        {
+            string UrlTemplate = urlt.Replace("[daylength]", Daylength.ToString());
+            string url = UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
+            StringBuilder strall = new StringBuilder();
+            string txt = CWeb.GetWebClient(url,_datetpye);                
+            txt = CutJsonStringHead(txt);
+            tagstock tag = new tagstock();
+            try
+            {
+                tag.kd = ConstructKdata(s.Code, txt);           
+                tag.value = 1;
+                tag.index = s.ID;
+            }
+            catch (Exception e)
+            {
+                tag.txt = txt;
+                tag.value = -2;
+                MFile.AppendAllText("UpdatePrice.log", s.ID + "  " + tag.txt + "\t" + e.Message + "\r\n\r\n");
+            }
+            return tag;
+        }
+        public static List<KData> ConstructKdata(string stockcode, string txt)
+        {
+            QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
+            List<KData> kd = qs.data[stockcode.ToLower()].day
+               .Select(r =>
+               {
+                   KData k = new KData();
+                   k.date = Convert.ToInt32(r[0].ToString().Replace("-", ""));
+                   k.open = (int)(Convert.ToSingle(r[1]) * 100);
+                   k.close = (int)(Convert.ToSingle(r[2]) * 100);
+                   k.high = (int)(Convert.ToSingle(r[3]) * 100);
+                   k.low = (int)(Convert.ToSingle(r[4]) * 100);
+                   k.vol = (int)(Convert.ToSingle(r[5]) * 100);
+                   return k;
+               }).ToList();
+            return kd;
+        }      		
+        public static string CutJsonStringHead(String txt, string datetype = "day")
+        {
+            if (txt.IndexOf("=") != -1)
+                txt = txt.Substring(txt.IndexOf("=") + 1);
+            txt = txt.Replace(datetype, "day");
+            txt = txt.Replace("qfqday", "day");
+            return txt;
+        }
 	    private Stocks _stocks;
 	    private GlobalConfig _cfg;   
 	    public int MaxThreadSum;
