@@ -121,7 +121,7 @@ namespace JHStock
 				return false;
 			}
 			string txt = File.ReadAllText(_jscfg.baseconfig.WorkPath + _locatepricedata);
-			_savetag = JsonConvert.DeserializeObject<SaveTag>(txt);
+			_savetag = JsonConvert.DeserializeObject<SaveKdTag>(txt);
 			if(_savetag.Tag.Count()!=2000){
 				Msg = "本地数据记录有误，或者格式不对，请从新下载生成";
 				return false;
@@ -154,52 +154,67 @@ namespace JHStock
         public void CompleteRun() //数据的处理合并
         {
             string Msg="\r\n MergeData Error: ";
-            int mergedays = nkd.netsaveTag.Tag[0].kd.Count - 1;
+            List<KData> kd0 = (List<KData>)nkd.netsaveTag.Tag[0].Tag;
+            int mergedays = kd0.Count - 1;
             //处理 网上下载数据
             if (_netdate.IncludeToday ) //交易日 
-               for (int i = 0; i < 2000; i++)
-                   if (nkd.netsaveTag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays + 1)
-                   {
-                       if(_netdate.Exchanging)
-                            nkd.netsaveTag.Tag[i].kd = nkd.netsaveTag.Tag[i].kd.Take(mergedays).ToList();
-                       else //if( mergedays == DaysLength)  //15:00后可以  更新所有数据                 //15:00 后要保留当天数据，因而要删除前一天
-                           nkd.netsaveTag.Tag[i].kd = nkd.netsaveTag.Tag[i].kd.Skip(1).Take(mergedays).ToList();
+                for (int i = 0; i < 2000; i++)
+                {
+                    List<KData> kdi = (List<KData>)nkd.netsaveTag.Tag[i].Tag;
+                    if (kdi != null && kdi.Count == mergedays + 1)
+                    {
+                        if (_netdate.Exchanging)
+                            kdi = kdi.Take(mergedays).ToList();
+                        else //if( mergedays == DaysLength)  //15:00后可以  更新所有数据                 //15:00 后要保留当天数据，因而要删除前一天
+                            kdi = kdi.Skip(1).Take(mergedays).ToList();
 
-                   }
-                   else if (nkd.netsaveTag.Tag[i].kd != null)
-                       Msg += nkd.netsaveTag.Tag[i].s.Name + nkd.netsaveTag.Tag[i].s.Code;
-            mergedays = nkd.netsaveTag.Tag[0].kd.Count;
+                    }
+                    else if (kdi != null)
+                        Msg += nkd.netsaveTag.Tag[i].s.Name + nkd.netsaveTag.Tag[i].s.Code;
+                }
+            kd0 = (List<KData>)nkd.netsaveTag.Tag[0].Tag;
+            mergedays = kd0.Count;
             
-            int beginday = nkd.netsaveTag.Tag[0].kd[0].date;
-            int endday = nkd.netsaveTag.Tag[0].kd[mergedays-1].date;
+            int beginday = kd0[0].date;
+            int endday = kd0[mergedays-1].date;
             
             if (mergedays == DaysLength)
-                _savetag = nkd.netsaveTag;
+                _savetag.Init(nkd.netsaveTag);
             else
             {
             	// 合并
                 for (int i = 0; i < 2000; i++)
-                    if (_savetag.Tag[i].kd != null && nkd.netsaveTag.Tag[i].kd.Count == mergedays)
+                {
+                    List<KData> kdi = (List<KData>)nkd.netsaveTag.Tag[i].Tag;
+                    if (_savetag.Tag[i].kd != null && kdi.Count == mergedays)
                     { //合并kd 
-	                	if( nkd.netsaveTag.Tag[i].kd[0].date == beginday && nkd.netsaveTag.Tag[i].kd[mergedays-1].date == endday){
-	                        _savetag.Tag[i].kd = _savetag.Tag[i].kd.Skip(mergedays).ToList();
-	                        _savetag.Tag[i].kd.AddRange( nkd.netsaveTag.Tag[i].kd);
-                		}else{
-                			int maxlocalday = _savetag.Tag[i].kd.Max(r => r.date);
-                			KData[] kd = nkd.netsaveTag.Tag[i].kd.Where( r => r.date>maxlocalday).ToArray();
-                			if(kd.Length>0){
-                				_savetag.Tag[i].kd = _savetag.Tag[i].kd.Skip(kd.Length).ToList();
-                				_savetag.Tag[i].kd.AddRange( kd );
-                			}
-                		}
+                        List<KData> _skdi = (List<KData>)_savetag.Tag[i].kd;
+                        if (kdi[0].date == beginday && kdi[mergedays - 1].date == endday)
+                        {
+                            _skdi = _skdi.Skip(mergedays).ToList();
+                            _skdi.AddRange(kdi);
+                            _savetag.Tag[i].kd = _skdi;
+                        }
+                        else
+                        {
+                            int maxlocalday = _skdi.Max(r => r.date);
+                            KData[] kd = kdi.Where(r => r.date > maxlocalday).ToArray();
+                            if (kd.Length > 0)
+                            {
+                                _skdi = _skdi.Skip(kd.Length).ToList();
+                                _skdi.AddRange(kdi);
+                                _savetag.Tag[i].kd = _skdi;
+                            }
+                        }
                     }
+                }
             }
             _savetag.StoreDate = _netdate.NearestDate;
             _savetag.Save(_jscfg.baseconfig.WorkPath + _locatepricedata);	
             isrunning = false;
         }
 
-        public SaveTag SaveTag
+        public SaveKdTag SavekdTag
         {
             get { return _savetag; }			
 		}
@@ -223,7 +238,7 @@ namespace JHStock
 		private JSConfig _jscfg;
 		private Stocks _stocks;
 		private Stock _ssestock;
-		private SaveTag _savetag;
+		private SaveKdTag _savetag;
 		private NetDate _netdate;
 		private int DaysLength;  		//特定长度 84
 		private int TempDaysCount;  // 临时记录长度

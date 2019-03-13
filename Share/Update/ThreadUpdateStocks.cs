@@ -294,8 +294,8 @@ namespace JHStock.Update
         private string UpdateUrl;
         private ThreadUpdateStocks tuss;
     }
-	public class SaveTag{
-        public SaveTag(DateTime StoreDate, tagkdstock[] Tag)
+	public class SaveKdTag{
+        public SaveKdTag(DateTime StoreDate, tagkdstock[] Tag)
         {
             this.StoreDate = StoreDate;
 			this.Tag = Tag;
@@ -306,7 +306,20 @@ namespace JHStock.Update
 		{
 			MFile.WriteAllText( path,JsonConvert.SerializeObject(this));
 		}
-	}
+
+        public  void Init(SaveTag saveTag)
+        {
+            Tag = new tagkdstock[saveTag.Tag.Length];
+            foreach (Tagstock s in saveTag.Tag)
+            {
+                if (s.index > 0)
+                {
+                    Tag[s.index] = new tagkdstock(s.s);
+                    Tag[s.index].kd = (List<KData>)s.Tag;
+                }
+            }
+        }
+    }
 	public class tagkdstock{
 		public tagkdstock(){
 			index = 0;

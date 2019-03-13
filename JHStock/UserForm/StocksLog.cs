@@ -21,7 +21,7 @@ namespace JHStock
 		
 		public void SaveLog(UpdateMonitInfors umi)
 		{
-			DateTime  Date = _jscfg.globalconfig.StocksData.SaveTag.StoreDate;	
+			DateTime  Date = _jscfg.globalconfig.StocksData.SavekdTag.StoreDate;	
 			DailyStocks[] ds = _dailystocks.Where( r => r.Date == Date).ToArray();
 			if(ds == null || ds.Count() == 0)
 				_dailystocks.Add(new DailyStocks( Date,umi));

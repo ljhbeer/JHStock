@@ -311,7 +311,7 @@ namespace JHStock
         private void buttonSaveDataSelfTest_Click(object sender, EventArgs e)
         {
             //TODO:SaveDataSelfTest
-            SaveTag st = _jscfg.globalconfig.StocksData.SaveTag;
+            SaveKdTag st = _jscfg.globalconfig.StocksData.SavekdTag;
             int newdate = st.Tag[0].kd[st.Tag[0].kd.Count - 1].date;
             
             

@@ -11,58 +11,7 @@ using Tools;
 using ToolsCXml;
 namespace JHStock
 {
-    public delegate void DeleteFormatData(Tagstock tagstock, Stock s, string txt);
-    public class ThreadUpdateStocksQQDaylyTest
-    {
-        public ThreadUpdateStocksQQDaylyTest(Stocks stocks,int Daylength,string datetype="dayly")
-	    {
-	        bshowtimeout = false;	       
-	        showmsg=null;
-            ThreadUpdateStocksConfig TSC1 = new ThreadUpdateStocksConfig(datetype, Daylength);
-            FormatDataFunction FD = new FormatDataFunction(datetype);
-            TSC1.UrlT = new ThreadUpdateUrlTemplate(datetype);
-            TSC1.Files = new ThreadUpdateJsonFiles();
-            TSC1.MaxThreadSum = 10;
-            TSC1.FormatData =FD.FormatKDData;
-            TS = new ThreadUpdateStocksJson(stocks, TSC1);
-	    }
-		public void RunNetDownLoadData()
-	    {
-            DateTime dt1 = System.DateTime.Now;
-            List<Stock> DealStocks = new List<Stock>(TS.Stocks);            
-            TS.UpdateItem(DealStocks);
-            List<Stock> stocks = DealStocks;
-            int stockcountb = stocks.Count;
-            stocks =TS.Tag.Where(r => r.value < 1 && r.value > -10).Select(r => r.s).ToList();
-            if (TS.TSC.Debug)
-            {
-                int stockcounte = stocks.Count;
-                int stockcountc = TS.Tag.Where(r => r.value == 1).Count();
-                MFile.AppendAllText("Update.log", System.DateTime.Now.ToShortTimeString() + " 更新ItemstockHexin " +
-                                    stockcountc + "/" + stockcountb + " 其中有 " + stockcounte + "需要再次更新\r\n");
-            }
-            if (stocks.Count > 0)
-            {
-                TS.UpdateItem(stocks);
-
-                if (TS.TSC.Debug)
-                {
-                    int stockcounte = stocks.Count;
-                    int stockcountc = TS.Tag.Where(r => r.value == 1).Count();
-                    MFile.AppendAllText("Update.log", System.DateTime.Now.ToShortTimeString() + " 再次更新ItemstockHexin " +
-                                        stockcountc + "/" + stockcounte + "\r\n");
-                }
-            }
-            DateTime dt2 = System.DateTime.Now;
-            TimeSpan ts = dt2.Subtract(dt1);
-            if (bshowtimeout)
-                MessageBox.Show("时间" + ts.TotalSeconds);
-	    }
-       
-        public ShowDeleGate showmsg;
-        public bool bshowtimeout;
-        private ThreadUpdateStocksJson TS;
-    }
+    public delegate void DeleteFormatData(Tagstock tagstock, Stock s, string txt);    
     public class FormatDataFunction
     {
         private string _datetype;
@@ -246,6 +195,7 @@ namespace JHStock
 
         public string ChildErrorlog { get; set; }
     }
+    
     public class Tagstock
     {
         public Tagstock()
@@ -274,5 +224,19 @@ namespace JHStock
         public Stock s;    // for initlize
         [JsonIgnore]
         public string txt;	// for out debug infor
+    }
+    public class SaveTag
+    {
+        public SaveTag(DateTime StoreDate, Tagstock[] Tag)
+        {
+            this.StoreDate = StoreDate;
+            this.Tag = Tag;
+        }
+        public DateTime StoreDate { get; set; }
+        public Tagstock[] Tag { get; set; }
+        public void Save(string path)
+        {
+            MFile.WriteAllText(path, JsonConvert.SerializeObject(this));
+        }
     }
 }

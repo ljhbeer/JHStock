@@ -18,7 +18,7 @@ namespace JHStock
 		}       
         public String SaveLog(string title, string content, bool ignore = false) //
         {
-            DateTime Date = _jscfg.globalconfig.StocksData.SaveTag.StoreDate;
+            DateTime Date = _jscfg.globalconfig.StocksData.SavekdTag.StoreDate;
             DailyLogStocks[] ds = _dailystocks.Where(r => r.Date == Date).ToArray();
             if (ds == null || ds.Count() == 0)
                 _dailystocks.Add(new DailyLogStocks(Date, title, content));

@@ -38,9 +38,9 @@ namespace JHStock
             if (Jscfg == null)
                 return bmp;
             StocksData _stockdata = Jscfg.globalconfig.StocksData;
-            if (s != null && _stockdata.SaveTag.Tag[s.ID] != null)
+            if (s != null && _stockdata.SavekdTag.Tag[s.ID] != null)
             {
-                KData[] kd = _stockdata.SaveTag.Tag[s.ID].kd.ToArray();
+                KData[] kd = _stockdata.SavekdTag.Tag[s.ID].kd.ToArray();
                 if (kd != null && kd.Length != 0)
                 {
                     bmp=DrawDaily(kd, s.Name + s.Code + "(日线" + kd[0].date + "-" + kd[kd.Length - 1].date + ")",bmp.Size, cs);
