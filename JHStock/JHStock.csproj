@@ -315,6 +315,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserForm\StocksCustomLog.cs" />
     <Compile Include="UserForm\StocksLog.cs" />
+    <Compile Include="UserForm\UpdateFin.cs" />
     <EmbeddedResource Include="UserForm\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

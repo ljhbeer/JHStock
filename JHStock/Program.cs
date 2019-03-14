@@ -15,7 +15,7 @@ namespace JHStock
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMonit());
+            Application.Run(new Form1());
         }
     }
 }

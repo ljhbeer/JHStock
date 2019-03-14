@@ -132,16 +132,16 @@ namespace JHStock
         private void DownLoadNetDataAndCheckSave(int Dayscount)
         {
             this.TempDaysCount = Dayscount;
-            DownDataFromNet(ThreadShowMsg, CompleteRun);            
+            DownDataFromNet(ThreadShowMsg);            
         }
-        private void DownDataFromNet(ShowDeleGate ThreadShowMsg, CompleteDeleGate ThreadCompleteRun) //等待线程结束 才返回
+        private void DownDataFromNet(ShowDeleGate ThreadShowMsg) //等待线程结束 才返回
         {           
             if (!isrunning)
             {
                 isrunning = true;
                 nkd = new NetKData(_jscfg);
                 nkd.ThreadShowMsg = ThreadShowMsg;
-                nkd.CompleteRun = ThreadCompleteRun;
+                nkd.CompleteRun =  CompleteRun;
                 nkd.DaysCount = TempDaysCount;
                 System.Threading.Thread nonParameterThread =
                     new Thread(new ThreadStart(nkd.GetNetKData));
@@ -302,7 +302,7 @@ namespace JHStock
                 int nd = _netszdate.Max();
                 NearestDate = new DateTime(nd / 10000, nd / 100 % 100, nd % 100);
             }
-            catch(Exception emsg)
+            catch //(Exception emsg)
             {
                 Inline = false;
                 IncludeToday = false;

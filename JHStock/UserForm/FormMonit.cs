@@ -46,6 +46,9 @@ namespace JHStock
 		}
 		private void FormMonit_Load(object sender, EventArgs e)
 		{
+            //MessageBox.Show("showm");
+            if (f.Visible)
+                f.Visible = false;
 			if (Ready)
 			{
 				if (!isinitdatarunning)
@@ -193,8 +196,12 @@ namespace JHStock
 				_jscfg.Load(filename);
 
 			}
-		}
-
+		}       
+        private void FormMonit_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            buttonConfig.PerformClick();
+        }
 		private void buttonAddToTXDBlock_Click(object sender, EventArgs e)
 		{
 			((Button)sender).Enabled = false;
@@ -306,8 +313,8 @@ namespace JHStock
         {
             this.Hide();
             f.Show();
-            this.DebugStocks = f.StocksByItemsShow();
-            this.Show();
+            //this.DebugStocks = f.StocksByItemsShow();
+            //this.Show();
         }
         private void buttonCheckData_Click(object sender, EventArgs e) //逻辑入口
         {
@@ -636,6 +643,7 @@ namespace JHStock
         {
             //throw new NotImplementedException();
         }
+
     }
 	public class UpdateMonitInfors{
 		public UpdateMonitInfors(){

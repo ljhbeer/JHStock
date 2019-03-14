@@ -400,6 +400,7 @@
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "FormMonit";
             this.Text = "FormMonit";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMonit_FormClosing);
             this.Load += new System.EventHandler(this.FormMonit_Load);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();

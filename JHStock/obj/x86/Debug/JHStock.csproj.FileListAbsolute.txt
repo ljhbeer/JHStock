@@ -21,7 +21,6 @@ E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.pdb
 E:\Git\GitHome\Source\github\jhstock\JHStock\bin\Debug\JHStock.exe
 E:\Git\GitHome\Source\github\jhstock\JHStock\bin\Debug\JHStock.pdb
 E:\Git\GitHome\Source\github\jhstock\JHStock\bin\Debug\Newtonsoft.Json.dll
-E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.csprojResolveAssemblyReference.cache
 E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.Form1.resources
 E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.FormCustomLog.resources
 E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.UserForm.FormLog.resources

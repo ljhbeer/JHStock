@@ -73,7 +73,7 @@ namespace JHStock
         public void DownLoadJsonData(Stock s)
         {
             string url = _tsc.UrlTemplate.Replace("[stockcode]", s.Code.ToLower());
-            string txt = CWeb.GetWebClient(url);
+            string txt = CWeb.GetWebClient(url,"utf-8");
             try
             {
                 TSC.FormatData(Tag[s.ID], s, txt);               
@@ -169,12 +169,11 @@ namespace JHStock
     public class ThreadUpdateUrlTemplate
     {        
         private string _datetype;
-        private string _Datetype;
         private string urlt;
         public ThreadUpdateUrlTemplate(string datetype)
         {
             this._datetype = datetype;
-            if (!"|dayly|monthly|weekly|".Contains("|" + datetype + "|"))
+            if (!"|dayly|monthly|weekly|maincwfx".Contains("|" + datetype + "|"))
                 datetype = "dayly";
             if (_datetype == "weekly")
                 urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_weekqfq&param=[stockcode],week,,,[dayscount],qfq";
@@ -182,8 +181,18 @@ namespace JHStock
                 urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_monthqfq&param=[stockcode],month,,,[dayscount],qfq";
             if(_datetype == "dayly")
                  urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[dayscount],bfq";
-        } 
-        public string DateType{ get {return _Datetype;}}
+            if (_datetype == "maincwfx")
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?type=0&code=[stockcode]";
+            if (_datetype == "DubangAnalysis")
+            {
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/DubangAnalysisAjax?code=[stockcode]";
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/zcfzbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH600856";
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/lrbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH600856";
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/xjllbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH600856";
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/PercentAjax_Index?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH600856";
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/PercentAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH600856";
+            }
+        }
         public string UrlTemplate {get {return urlt;}}
     }
     public class ThreadUpdateJsonFiles
