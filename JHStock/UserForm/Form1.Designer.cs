@@ -32,8 +32,11 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.buttonMAMonth = new System.Windows.Forms.Button();
             this.buttonSaveDataSelfTest = new System.Windows.Forms.Button();
-            this.buttonQQFin = new System.Windows.Forms.Button();
+            this.buttonFinCW2 = new System.Windows.Forms.Button();
+            this.buttonFinCW1 = new System.Windows.Forms.Button();
+            this.buttonMAWeek = new System.Windows.Forms.Button();
             this.buttonMA = new System.Windows.Forms.Button();
             this.textBoxInfor = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -46,8 +49,6 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.buttonMAMonth = new System.Windows.Forms.Button();
-            this.buttonMAWeek = new System.Windows.Forms.Button();
             this.checkBoxBeforeDate = new System.Windows.Forms.CheckBox();
             this.textBoxShow = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -73,9 +74,9 @@
             // 
             // buttonImportDB
             // 
-            this.buttonImportDB.Location = new System.Drawing.Point(188, 3);
+            this.buttonImportDB.Location = new System.Drawing.Point(212, 1);
             this.buttonImportDB.Name = "buttonImportDB";
-            this.buttonImportDB.Size = new System.Drawing.Size(73, 21);
+            this.buttonImportDB.Size = new System.Drawing.Size(73, 25);
             this.buttonImportDB.TabIndex = 0;
             this.buttonImportDB.Text = "载入数据库";
             this.buttonImportDB.UseVisualStyleBackColor = true;
@@ -85,7 +86,7 @@
             // 
             this.textBoxMdbPath.Location = new System.Drawing.Point(54, 3);
             this.textBoxMdbPath.Name = "textBoxMdbPath";
-            this.textBoxMdbPath.Size = new System.Drawing.Size(128, 21);
+            this.textBoxMdbPath.Size = new System.Drawing.Size(152, 21);
             this.textBoxMdbPath.TabIndex = 1;
             this.textBoxMdbPath.Text = "jsconfig.ini";
             // 
@@ -107,8 +108,11 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.buttonMAMonth);
             this.splitContainer1.Panel1.Controls.Add(this.buttonSaveDataSelfTest);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonQQFin);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonFinCW2);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonFinCW1);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonMAWeek);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMA);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxInfor);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
@@ -119,12 +123,22 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(730, 564);
-            this.splitContainer1.SplitterDistance = 29;
+            this.splitContainer1.SplitterDistance = 56;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // buttonMAMonth
+            // 
+            this.buttonMAMonth.Location = new System.Drawing.Point(137, 29);
+            this.buttonMAMonth.Name = "buttonMAMonth";
+            this.buttonMAMonth.Size = new System.Drawing.Size(69, 25);
+            this.buttonMAMonth.TabIndex = 38;
+            this.buttonMAMonth.Text = "MA-MMonth";
+            this.buttonMAMonth.UseVisualStyleBackColor = true;
+            this.buttonMAMonth.Click += new System.EventHandler(this.buttonMAMonth_Click);
             // 
             // buttonSaveDataSelfTest
             // 
-            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(426, 2);
+            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(291, 1);
             this.buttonSaveDataSelfTest.Name = "buttonSaveDataSelfTest";
             this.buttonSaveDataSelfTest.Size = new System.Drawing.Size(110, 25);
             this.buttonSaveDataSelfTest.TabIndex = 43;
@@ -132,21 +146,43 @@
             this.buttonSaveDataSelfTest.UseVisualStyleBackColor = true;
             this.buttonSaveDataSelfTest.Click += new System.EventHandler(this.buttonSaveDataSelfTest_Click);
             // 
-            // buttonQQFin
+            // buttonFinCW2
             // 
-            this.buttonQQFin.Location = new System.Drawing.Point(336, 2);
-            this.buttonQQFin.Name = "buttonQQFin";
-            this.buttonQQFin.Size = new System.Drawing.Size(58, 25);
-            this.buttonQQFin.TabIndex = 43;
-            this.buttonQQFin.Text = "更新QQFin";
-            this.buttonQQFin.UseVisualStyleBackColor = true;
-            this.buttonQQFin.Click += new System.EventHandler(this.ButtonQQFinClick);
+            this.buttonFinCW2.Location = new System.Drawing.Point(319, 29);
+            this.buttonFinCW2.Name = "buttonFinCW2";
+            this.buttonFinCW2.Size = new System.Drawing.Size(101, 25);
+            this.buttonFinCW2.TabIndex = 43;
+            this.buttonFinCW2.Tag = "years";
+            this.buttonFinCW2.Text = "更新财务年度";
+            this.buttonFinCW2.UseVisualStyleBackColor = true;
+            this.buttonFinCW2.Click += new System.EventHandler(this.ButtonFinCW1Click);
+            // 
+            // buttonFinCW1
+            // 
+            this.buttonFinCW1.Location = new System.Drawing.Point(212, 29);
+            this.buttonFinCW1.Name = "buttonFinCW1";
+            this.buttonFinCW1.Size = new System.Drawing.Size(101, 25);
+            this.buttonFinCW1.TabIndex = 43;
+            this.buttonFinCW1.Tag = "reports";
+            this.buttonFinCW1.Text = "更新财务报告期";
+            this.buttonFinCW1.UseVisualStyleBackColor = true;
+            this.buttonFinCW1.Click += new System.EventHandler(this.ButtonFinCW1Click);
+            // 
+            // buttonMAWeek
+            // 
+            this.buttonMAWeek.Location = new System.Drawing.Point(69, 29);
+            this.buttonMAWeek.Name = "buttonMAWeek";
+            this.buttonMAWeek.Size = new System.Drawing.Size(69, 25);
+            this.buttonMAWeek.TabIndex = 37;
+            this.buttonMAWeek.Text = "MA-MWeek";
+            this.buttonMAWeek.UseVisualStyleBackColor = true;
+            this.buttonMAWeek.Click += new System.EventHandler(this.buttonMAWeek_Click);
             // 
             // buttonMA
             // 
-            this.buttonMA.Location = new System.Drawing.Point(267, 4);
+            this.buttonMA.Location = new System.Drawing.Point(8, 29);
             this.buttonMA.Name = "buttonMA";
-            this.buttonMA.Size = new System.Drawing.Size(63, 20);
+            this.buttonMA.Size = new System.Drawing.Size(62, 25);
             this.buttonMA.TabIndex = 27;
             this.buttonMA.Text = "MA-MDay";
             this.buttonMA.UseVisualStyleBackColor = true;
@@ -154,10 +190,10 @@
             // 
             // textBoxInfor
             // 
-            this.textBoxInfor.Location = new System.Drawing.Point(563, 4);
+            this.textBoxInfor.Location = new System.Drawing.Point(527, 4);
             this.textBoxInfor.Name = "textBoxInfor";
             this.textBoxInfor.ReadOnly = true;
-            this.textBoxInfor.Size = new System.Drawing.Size(165, 21);
+            this.textBoxInfor.Size = new System.Drawing.Size(201, 21);
             this.textBoxInfor.TabIndex = 30;
             // 
             // splitContainer2
@@ -179,11 +215,9 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.buttonMAMonth);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer2.Panel2.Controls.Add(this.buttonMAWeek);
             this.splitContainer2.Panel2.Controls.Add(this.dgv);
-            this.splitContainer2.Size = new System.Drawing.Size(730, 531);
+            this.splitContainer2.Size = new System.Drawing.Size(730, 504);
             this.splitContainer2.SplitterDistance = 197;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -289,26 +323,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "回测";
             this.groupBox1.Visible = false;
-            // 
-            // buttonMAMonth
-            // 
-            this.buttonMAMonth.Location = new System.Drawing.Point(76, 0);
-            this.buttonMAMonth.Name = "buttonMAMonth";
-            this.buttonMAMonth.Size = new System.Drawing.Size(70, 22);
-            this.buttonMAMonth.TabIndex = 38;
-            this.buttonMAMonth.Text = "MA-MMonth";
-            this.buttonMAMonth.UseVisualStyleBackColor = true;
-            this.buttonMAMonth.Click += new System.EventHandler(this.buttonMAMonth_Click);
-            // 
-            // buttonMAWeek
-            // 
-            this.buttonMAWeek.Location = new System.Drawing.Point(0, 0);
-            this.buttonMAWeek.Name = "buttonMAWeek";
-            this.buttonMAWeek.Size = new System.Drawing.Size(70, 24);
-            this.buttonMAWeek.TabIndex = 37;
-            this.buttonMAWeek.Text = "MA-MWeek";
-            this.buttonMAWeek.UseVisualStyleBackColor = true;
-            this.buttonMAWeek.Click += new System.EventHandler(this.buttonMAWeek_Click);
             // 
             // checkBoxBeforeDate
             // 
@@ -427,7 +441,7 @@
             this.ResumeLayout(false);
 
         }
-        private System.Windows.Forms.Button buttonQQFin;
+        private System.Windows.Forms.Button buttonFinCW1;
         private System.Windows.Forms.TextBox textBoxInfor;
 
         #endregion
@@ -461,6 +475,7 @@
         private System.Windows.Forms.Button buttonSaveDataSelfTest;
         private System.Windows.Forms.Button buttonMAMonth;
         private System.Windows.Forms.Button buttonMAWeek;
+        private System.Windows.Forms.Button buttonFinCW2;
     }
 }
 

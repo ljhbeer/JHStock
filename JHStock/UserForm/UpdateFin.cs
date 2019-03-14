@@ -27,6 +27,7 @@ namespace JHStock.Update
             ThreadUpdateStocksConfig TSC1 = new ThreadUpdateStocksConfig(datetype, 8);
             FormatDataFunction FD = new FormatDataFunction(datetype);
             TSC1.UrlT = new ThreadUpdateUrlTemplate(datetype);
+            TSC1.UrlT.SetParam("[type]", _NumType);
             TSC1.Files = new ThreadUpdateJsonFiles();
             TSC1.MaxThreadSum =50;
             TSC1.FormatData = FD.FormatKDData;
@@ -62,7 +63,7 @@ namespace JHStock.Update
 
             SaveJsonTag _savetag = new SaveJsonTag( System.DateTime.Now ,TS.Tag);
             _savetag.StoreDate = System.DateTime.Now;
-            _savetag.Save(_cfg.Baseconfig.WorkPath + "Data\\cwfx1.dat");	
+            _savetag.Save(_cfg.Baseconfig.WorkPath + "Data\\"+StringDateType +"_cwfx.dat");	
            
         }
         
@@ -76,6 +77,17 @@ namespace JHStock.Update
         public bool bshowtimeout;
         
         private string _exceptionfilename;
+
+        public string StringDateType { get; set; }
+        private string _NumType;
+        internal void SetDateType(string Type)
+        {
+            StringDateType = Type;
+            if (Type == "years")
+                _NumType = "1";
+            else
+                _NumType = "0";
+        }
     }
     public class SaveJsonTag
     {

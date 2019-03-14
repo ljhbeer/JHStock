@@ -234,8 +234,10 @@ namespace JHStock
         {
 
         }
-        private void ButtonQQFinClick(object sender, EventArgs e)
+        private void ButtonFinCW1Click(object sender, EventArgs e)
         {
+            Button btn = (Button)sender;
+            string Type = btn.Tag.ToString();
             Stocks _stocks = _jscfg.globalconfig.Stocks;
             if (_stocks == null || _stocks.stocks.Count == 0)
                 return;
@@ -244,10 +246,10 @@ namespace JHStock
             {
                 //_bshowtime = false;// checkBoxShowTimeOut.Checked;
                 _isrunning = true;
-                _completebtn = buttonQQFin;
+                _completebtn = btn;
                 _completebtn.Enabled = false;
                 UpdateFin updatefin = new UpdateFin(_stocks);
-
+                updatefin.SetDateType(Type); ;
                 updatefin.MaxThreadSum = 20;
                 updatefin.showmsg = new ShowDeleGate(ThreadShowMsg);
                 updatefin.ThreadCompleteRun = new CompleteDeleGate(ThreadCompleteRun);

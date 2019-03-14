@@ -26,7 +26,7 @@ namespace JHStock
             _listdata = null;
             //add new
             _cativeprices =null;
-            _tagstock = null;
+            _tagstockyears = null;
         }
         public List<Stock> stocks { 
             get
@@ -50,8 +50,8 @@ namespace JHStock
         public Tagstock GetTagstock(int index)
         {
             InitCWFX();
-            if (_tagstock != null && index >= 0 && index < 2000)
-                return _tagstock[index];
+            if (_tagstockyears != null && index >= 0 && index < 2000)
+                return _tagstockyears[index];
             return null;
         }
         public void ResetMacdData()
@@ -131,7 +131,7 @@ namespace JHStock
         }
         private void InitCWFX()
         {
-            if (_tagstock== null)
+            if (_tagstockyears== null)
             {
                 LoadCWFX();
             }
@@ -139,19 +139,19 @@ namespace JHStock
         private void LoadCWFX(string allstockfile = "")
         {
             if (allstockfile == "")
-                allstockfile = Gcfg.Baseconfig.WorkPath + "data\\cwfx1.dat"; //季度  。 年度
+                allstockfile = Gcfg.Baseconfig.WorkPath + "data\\reports_cwfx.dat"; //季度  。 年度
             if (File.Exists(allstockfile))
             {
                 try
                 {
-                    _tagstock = new Tagstock[2000];
+                    _tagstockyears = new Tagstock[2000];
                     SaveJsonTag savetag = JsonConvert.DeserializeObject<SaveJsonTag>(File.ReadAllText(allstockfile));
                     foreach (Tagstock t in savetag.Tag)
                     {
                         if(t!=null)
                         if (t.index > 0)
                         {
-                            _tagstock[t.index] = t;
+                            _tagstockyears[t.index] = t;
                             Stock s = StockByIndex(t.index);
                             //s.Tag = t.Tag;
                         }
@@ -228,7 +228,7 @@ namespace JHStock
         private float[,] _macddata;  
         private List<Stock> _stocks;
         private Db.ConnDb db;
-        private Tagstock[] _tagstock;
+        private Tagstock[] _tagstockyears;
         //AddNew
         public CActivePrices CActiveprices{
         	get{

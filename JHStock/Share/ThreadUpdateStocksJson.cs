@@ -182,7 +182,7 @@ namespace JHStock
             if(_datetype == "dayly")
                  urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[dayscount],bfq";
             if (_datetype == "maincwfx")
-                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?type=0&code=[stockcode]";
+                urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?type=[type]&code=[stockcode]";
             if (_datetype == "DubangAnalysis")
             {
                 urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/DubangAnalysisAjax?code=[stockcode]";
@@ -193,7 +193,12 @@ namespace JHStock
                 urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/PercentAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH600856";
             }
         }
+        public  void SetParam(string src, string dst)
+        {
+            urlt = urlt.Replace(src, dst);
+        }
         public string UrlTemplate {get {return urlt;}}
+
     }
     public class ThreadUpdateJsonFiles
     {
