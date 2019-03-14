@@ -67,36 +67,8 @@
       <Link>Share\MFile.cs</Link>
       <DependentUpon>component.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Share\Component\QQFin\CNFITool.cs">
-      <Link>Share\CNFITool.cs</Link>
-      <DependentUpon>QQFin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Share\Component\QQFin\CQFITool.cs">
-      <Link>Share\CQFITool.cs</Link>
-      <DependentUpon>QQFin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Share\Component\QQFin\NFinItem.cs">
-      <Link>Share\NFinItem.cs</Link>
-      <DependentUpon>QQFin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Share\Component\QQFin\QQFin.cs">
-      <Link>Share\QQFin.cs</Link>
-    </Compile>
-    <Compile Include="..\Share\Component\QQFin\QQfinConfig.cs">
-      <Link>Share\QQfinConfig.cs</Link>
-      <DependentUpon>QQFin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Share\Component\QQFin\QQfinItem.cs">
-      <Link>Share\QQfinItem.cs</Link>
-      <DependentUpon>QQFin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Share\Component\QQFin\QQStocks.cs">
+    <Compile Include="..\Share\Component\QQStocks.cs">
       <Link>Share\QQStocks.cs</Link>
-      <DependentUpon>QQFin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Share\Component\QQFin\ThreadUpdateStocksQQFin.cs">
-      <Link>Share\ThreadUpdateStocksQQFin.cs</Link>
-      <DependentUpon>QQFin.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Share\Component\XmlConfig.cs">
       <Link>Share\XmlConfig.cs</Link>

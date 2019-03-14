@@ -111,27 +111,27 @@ namespace JHStock
         public BaseConfig Baseconfig { get { return _baseconfig; } }
         public StaticsConfig Staticsconfig { get; set; }
         public TempConfig Tempconfig { get; set; }
-        public CNFITool NFI{
-        	get
-        	{
-        	if(Stocks==null)
-            		return null;
-                if (_nfi == null  )
-                    _nfi = new CNFITool( _baseconfig.WorkPath+"\\data\\NFT.txt");
-                return _nfi;
-        	}
-        }
-        public CQFITool QFI
-        {
-            get
-            {
-            	if(Stocks==null)
-            		return null;
-                if (_qfi == null  )
-                    _qfi = new CQFITool(_baseconfig.WorkPath+ "data\\QQFin\\" ,Stocks );
-                return _qfi;
-            }
-        }
+        //public CNFITool NFI{
+        //    get
+        //    {
+        //    if(Stocks==null)
+        //            return null;
+        //        if (_nfi == null  )
+        //            _nfi = new CNFITool( _baseconfig.WorkPath+"\\data\\NFT.txt");
+        //        return _nfi;
+        //    }
+        //}
+        //public CQFITool QFI
+        //{
+        //    get
+        //    {
+        //        if(Stocks==null)
+        //            return null;
+        //        if (_qfi == null  )
+        //            _qfi = new CQFITool(_baseconfig.WorkPath+ "data\\QQFin\\" ,Stocks );
+        //        return _qfi;
+        //    }
+        //}
         public CFQTool FQT
         {
             get
@@ -143,8 +143,8 @@ namespace JHStock
         }
 		private BaseConfig _baseconfig;
         private  CFQTool _fq;
-        private  CQFITool _qfi;
-        private  CNFITool _nfi;
+        //private  CQFITool _qfi;
+        //private  CNFITool _nfi;
     }
 	public class StaticsConfig{
         public bool Debug { get; set; }

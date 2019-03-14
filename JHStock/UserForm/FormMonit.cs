@@ -756,12 +756,16 @@ namespace JHStock
             }
             if (true) //bBoxROE5years
             {
-                QQfinItem qf = new QQfinItem();
-                string _qqfinpath = s.Gcfg.Baseconfig.WorkPath + "Data\\QQFin\\";
-                qf.LoadData(_qqfinpath + s.Code + ".txt");
-                List<string> years = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.bgrq.Year.ToString()).ToList();
-                List<string> ROEs = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.jzcsyljq).ToList();
-                header += string.Join("   ", years) + "\r\n" + string.Join("  ", ROEs) + "\r\n\r\n";
+                Tagstock t = s.Gcfg.Stocks.GetTagstock(s.ID);
+                if (t!=null)
+                {
+                    List<JsonMainCWFX> ls =JsonConvert.DeserializeObject <List<JsonMainCWFX>>(t.Tag.ToString());
+                    foreach (JsonMainCWFX js in ls)
+                    {
+                        header +=js.date +"  "+ js.jqjzcsyl + "\r\n";
+                    }
+                    header += "\r\n";
+                }               
             }
             return header + html;
         }
@@ -796,40 +800,11 @@ namespace JHStock
 				dr["分时图"] = new Bitmap(bmp2, bmp.Width / 3, bmp.Height / 3);
 				s.Bmp = bmp;
 				s.Tag = bmp2;
-				dr["财务信息"] = GetCWXX(s);
+				dr["财务信息"] = GetCWXXS(s);
 			} catch {
 			}
 		}
-		private string GetCWXX(Stock s)
-		{
-			string html = "";
-			string header = "";
-			if (bShowHexinFromNet)
-			{
-				string urlt = "http://quote.eastmoney.com/[scode].html";
-				string url = urlt.Replace("[scode]", s.Code);
-				html = CWeb.GetWebClient(url);
-				string pattern = @"(?<=公司核心数据[^-]*)<div class=\""box-x1 mb10\"">[\S\s]*?(?=</table>)";
-				html = Regex.Match(html, pattern).Value;
-				html = Regex.Replace(html, "<[^<>]*>| ", "");
-				html = Regex.Replace(html, "(\r\n){2,}", "\n").Replace("\r\n", "   ").Replace("\n", "\r\n");
-				Match m = Regex.Match(html, "(市净率.*)\\r\\n[\\S\\s]*(ROE.* )");
-				if (m.Success)
-				{
-					header = m.Groups[1].Value + "  " + m.Groups[2] + "\r\n\r\n";
-				}
-			}
-			if(bBoxROE5years)
-			{
-				QQfinItem qf = new QQfinItem();
-				string _qqfinpath =s.Gcfg.Baseconfig.WorkPath + "Data\\QQFin\\";
-				qf.LoadData( _qqfinpath+s.Code + ".txt");
-				List<string> years = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.bgrq.Year.ToString()).ToList();
-				List<string> ROEs = qf.YLNL.Take(20).Where(r => r.bgrq.Month == 12).Select(r => r.jzcsyljq ).ToList();
-				header += string.Join("   ", years)+"\r\n" + string.Join("  ", ROEs) + "\r\n\r\n";
-			}
-			return header + html;
-		}
+		
 		private Bitmap GetBitmapFromUrl(string url)
 		{
 			//string url = string.Format(@"http://webservice.36wu.com/DimensionalCodeService.asmx/GetCodeImgByString?size={0}&content={1}", 5, 123456);
@@ -839,8 +814,7 @@ namespace JHStock
 			{
 				return (Bitmap) Image.FromStream(stream);
 			}
-		}
-		
+		}		
 		private bool bShowHexinFromNet;
 		private bool bBoxROE5years;
 		private Stock s;

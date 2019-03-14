@@ -38,8 +38,6 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.dgv2 = new System.Windows.Forms.DataGridView();
             this.dgv1 = new System.Windows.Forms.DataGridView();
-            this.dgv3 = new System.Windows.Forms.DataGridView();
-            this.dgv4 = new System.Windows.Forms.DataGridView();
             this.Net = new System.Windows.Forms.TabPage();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.m_tab.SuspendLayout();
@@ -49,8 +47,6 @@
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv4)).BeginInit();
             this.Net.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -136,19 +132,16 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.09524F));
             this.tableLayoutPanel2.Controls.Add(this.dgv2, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.dgv1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.dgv3, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.dgv4, 1, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 39);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 81.70055F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 18.29945F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(840, 541);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
@@ -156,11 +149,11 @@
             // 
             this.dgv2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv2.Location = new System.Drawing.Point(3, 273);
+            this.dgv2.Location = new System.Drawing.Point(3, 444);
             this.dgv2.Name = "dgv2";
             this.dgv2.RowHeadersVisible = false;
             this.dgv2.RowTemplate.Height = 23;
-            this.dgv2.Size = new System.Drawing.Size(414, 265);
+            this.dgv2.Size = new System.Drawing.Size(834, 94);
             this.dgv2.TabIndex = 4;
             // 
             // dgv1
@@ -171,30 +164,8 @@
             this.dgv1.Name = "dgv1";
             this.dgv1.RowHeadersVisible = false;
             this.dgv1.RowTemplate.Height = 23;
-            this.dgv1.Size = new System.Drawing.Size(414, 264);
+            this.dgv1.Size = new System.Drawing.Size(834, 435);
             this.dgv1.TabIndex = 1;
-            // 
-            // dgv3
-            // 
-            this.dgv3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv3.Location = new System.Drawing.Point(423, 3);
-            this.dgv3.Name = "dgv3";
-            this.dgv3.RowHeadersVisible = false;
-            this.dgv3.RowTemplate.Height = 23;
-            this.dgv3.Size = new System.Drawing.Size(414, 264);
-            this.dgv3.TabIndex = 4;
-            // 
-            // dgv4
-            // 
-            this.dgv4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv4.Location = new System.Drawing.Point(423, 273);
-            this.dgv4.Name = "dgv4";
-            this.dgv4.RowHeadersVisible = false;
-            this.dgv4.RowTemplate.Height = 23;
-            this.dgv4.Size = new System.Drawing.Size(414, 265);
-            this.dgv4.TabIndex = 4;
             // 
             // Net
             // 
@@ -213,7 +184,7 @@
             this.webBrowser1.Location = new System.Drawing.Point(3, 3);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(846, 605);
+            this.webBrowser1.Size = new System.Drawing.Size(846, 604);
             this.webBrowser1.TabIndex = 0;
             // 
             // FormShow
@@ -232,14 +203,10 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv4)).EndInit();
             this.Net.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
-        private System.Windows.Forms.DataGridView dgv4;
-        private System.Windows.Forms.DataGridView dgv3;
         private System.Windows.Forms.DataGridView dgv1;
         private System.Windows.Forms.DataGridView dgv2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;

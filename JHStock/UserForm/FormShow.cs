@@ -28,61 +28,39 @@ namespace JHStock.UserForm
 			Init();
 		}
 		private void Init(){
-			string urlt = @"http://stock.finance.qq.com/corp1/cwfx.html?mgzb-[stockcode]";
-			if(_jscfg.globalconfig.StocksData.Netdate.Inline){
-				m_tab.TabPages[1].Show();
-				string url = urlt.Replace("[stockcode]",_s.Code.ToLower());
-				webBrowser1.Navigate(url );
-			}else{
-				m_tab.TabPages[1].Visible = false;		
-			}
-			InitLocalData();			
+            string urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/Index?type=web&code=[stockcode]#zyzb-0";
+            try
+            {
+                //if (_jscfg.globalconfig.StocksData.Netdate.Inline)
+                //{
+                //    m_tab.TabPages[1].Show();
+                //    string url = urlt.Replace("[stockcode]", _s.Code.ToLower());
+                //    webBrowser1.Navigate(url);
+                //}
+                //else
+                {
+                    m_tab.TabPages[1].Visible = false;
+                }
+                InitLocalData();
+            }
+            catch
+            {
+            }
 		}
 
 		void InitLocalData()
 		{
-			QQfinItem qf = new QQfinItem();
-			qf.LoadData(_qqfinpath + _s.Code + ".txt");
-			dgv1.DataSource = JsonToDataTable(JsonConvert.SerializeObject(qf.CZNL).Replace("00:00:00", ""));
-			dgv2.DataSource = JsonToDataTable(JsonConvert.SerializeObject(qf.DJCW).Replace("00:00:00", ""));
-			dgv3.DataSource = JsonToDataTable(JsonConvert.SerializeObject(qf.YLNL).Replace("00:00:00", ""));
-			dgv4.DataSource = JsonToDataTable(JsonConvert.SerializeObject(qf.YYNL).Replace("00:00:00", ""));
-
-			string txt = File.ReadAllText("E:\\Project\\Source\\Stock\\Data\\QQFinConfig.txt");
-			Component.QQFinConfig.QQfinConfig fc = new Component.QQFinConfig.QQfinConfig();
-			foreach (DataColumn dc in ((DataTable)(dgv1.DataSource)).Columns) {
-				string n = fc.fincfg["cznl"].col[dc.ColumnName][0];
-				if (n.Length >= 8)
-					n = n.Substring(0, 8);
-				dc.ColumnName = n;
-			}
-			foreach (DataColumn dc in ((DataTable)(dgv2.DataSource)).Columns) {
-				string n = fc.fincfg["djcw"].col[dc.ColumnName][0];
-				if (n.Length >= 8)
-					n = n.Substring(0, 8);
-				dc.ColumnName = n;
-			}
-			foreach (DataColumn dc in ((DataTable)(dgv3.DataSource)).Columns) {
-				string n = fc.fincfg["ylnl"].col[dc.ColumnName][0];
-				if (n.Length >= 8)
-					n = n.Substring(0, 8);
-				dc.ColumnName = n;
-			}
-			foreach (DataColumn dc in ((DataTable)(dgv4.DataSource)).Columns) {
-				string n = fc.fincfg["yynl"].col[dc.ColumnName][0];
-				if (n.Length >= 8)
-					n = n.Substring(0, 8);
-				dc.ColumnName = n;
-			}
-			List<DataGridView> dgvs = new List<DataGridView> {
-				dgv1,
-				dgv2,
-				dgv3,
-				dgv4
-			};
-			foreach (DataGridView dgv in dgvs)
-				foreach (DataGridViewColumn dcc in dgv.Columns)
-					dcc.Width = 65;
+            Tagstock t = _jscfg.globalconfig.Stocks.GetTagstock(_s.ID);
+                if (t != null && t.Tag!=null)
+                {
+                    List<JsonMainCWFX> ls = JsonConvert.DeserializeObject<List<JsonMainCWFX>>(t.Tag.ToString());
+                    foreach (JsonMainCWFX js in ls)
+                    {
+                      
+                    }
+                    dgv1.DataSource = ls;
+                    //dgv3.DataSource = JsonToDataTable(t.Tag.ToString());
+                }             
 		}
 		private void Initmytest()
 		{

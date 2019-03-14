@@ -26,6 +26,7 @@ namespace JHStock
             _listdata = null;
             //add new
             _cativeprices =null;
+            _tagstock = null;
         }
         public List<Stock> stocks { 
             get
@@ -46,7 +47,13 @@ namespace JHStock
         public GlobalConfig Gcfg { get; set; }
         public float[,] MacdData { get { InitMacdDay(); return _macddata; } }
         public int[,] IndexData { get { InitIndexDay(); return _indexdata; } }
-
+        public Tagstock GetTagstock(int index)
+        {
+            InitCWFX();
+            if (_tagstock != null && index >= 0 && index < 2000)
+                return _tagstock[index];
+            return null;
+        }
         public void ResetMacdData()
         {
             _macddata = null;
@@ -122,6 +129,40 @@ namespace JHStock
                 LoadAllMacdData();
             }
         }
+        private void InitCWFX()
+        {
+            if (_tagstock== null)
+            {
+                LoadCWFX();
+            }
+        }
+        private void LoadCWFX(string allstockfile = "")
+        {
+            if (allstockfile == "")
+                allstockfile = Gcfg.Baseconfig.WorkPath + "data\\cwfx1.dat"; //季度  。 年度
+            if (File.Exists(allstockfile))
+            {
+                try
+                {
+                    _tagstock = new Tagstock[2000];
+                    SaveJsonTag savetag = JsonConvert.DeserializeObject<SaveJsonTag>(File.ReadAllText(allstockfile));
+                    foreach (Tagstock t in savetag.Tag)
+                    {
+                        if(t!=null)
+                        if (t.index > 0)
+                        {
+                            _tagstock[t.index] = t;
+                            Stock s = StockByIndex(t.index);
+                            //s.Tag = t.Tag;
+                        }
+                    }
+                }
+                catch
+                {
+                }
+            }
+        
+        }
         private void LoadAllMacdData(string allstockfile = "", int StructSize = 2048*4)
         {
             if (allstockfile == "")
@@ -187,7 +228,7 @@ namespace JHStock
         private float[,] _macddata;  
         private List<Stock> _stocks;
         private Db.ConnDb db;
-        
+        private Tagstock[] _tagstock;
         //AddNew
         public CActivePrices CActiveprices{
         	get{

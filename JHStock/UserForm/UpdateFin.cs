@@ -62,7 +62,7 @@ namespace JHStock.Update
 
             SaveJsonTag _savetag = new SaveJsonTag( System.DateTime.Now ,TS.Tag);
             _savetag.StoreDate = System.DateTime.Now;
-            _savetag.Save(_cfg.Baseconfig.WorkPath + "cwfx1.dat");	
+            _savetag.Save(_cfg.Baseconfig.WorkPath + "Data\\cwfx1.dat");	
            
         }
         
