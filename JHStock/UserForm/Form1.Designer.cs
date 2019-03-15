@@ -32,6 +32,7 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.comboBoxProper = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.radioButtonyears = new System.Windows.Forms.RadioButton();
             this.radioButtonreport = new System.Windows.Forms.RadioButton();
@@ -62,6 +63,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_backbeginday = new System.Windows.Forms.TextBox();
             this.dgv = new System.Windows.Forms.DataGridView();
+            this.buttonExportStockCW = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -128,14 +130,24 @@
             this.splitContainer1.SplitterDistance = 64;
             this.splitContainer1.TabIndex = 3;
             // 
+            // comboBoxProper
+            // 
+            this.comboBoxProper.FormattingEnabled = true;
+            this.comboBoxProper.Location = new System.Drawing.Point(6, 36);
+            this.comboBoxProper.Name = "comboBoxProper";
+            this.comboBoxProper.Size = new System.Drawing.Size(106, 20);
+            this.comboBoxProper.TabIndex = 47;
+            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonExportStockCW);
+            this.groupBox2.Controls.Add(this.comboBoxProper);
             this.groupBox2.Controls.Add(this.radioButtonyears);
             this.groupBox2.Controls.Add(this.radioButtonreport);
             this.groupBox2.Controls.Add(this.buttonFinCW1);
-            this.groupBox2.Location = new System.Drawing.Point(342, 0);
+            this.groupBox2.Location = new System.Drawing.Point(317, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(134, 61);
+            this.groupBox2.Size = new System.Drawing.Size(204, 61);
             this.groupBox2.TabIndex = 46;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "财务";
@@ -155,7 +167,7 @@
             // radioButtonreport
             // 
             this.radioButtonreport.AutoSize = true;
-            this.radioButtonreport.Location = new System.Drawing.Point(6, 40);
+            this.radioButtonreport.Location = new System.Drawing.Point(65, 20);
             this.radioButtonreport.Name = "radioButtonreport";
             this.radioButtonreport.Size = new System.Drawing.Size(71, 16);
             this.radioButtonreport.TabIndex = 45;
@@ -166,9 +178,9 @@
             // 
             // buttonFinCW1
             // 
-            this.buttonFinCW1.Location = new System.Drawing.Point(83, 12);
+            this.buttonFinCW1.Location = new System.Drawing.Point(135, 17);
             this.buttonFinCW1.Name = "buttonFinCW1";
-            this.buttonFinCW1.Size = new System.Drawing.Size(44, 42);
+            this.buttonFinCW1.Size = new System.Drawing.Size(63, 22);
             this.buttonFinCW1.TabIndex = 43;
             this.buttonFinCW1.Tag = "reports";
             this.buttonFinCW1.Text = "更新财务";
@@ -187,7 +199,7 @@
             // 
             // buttonSaveDataSelfTest
             // 
-            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(217, 29);
+            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(201, 29);
             this.buttonSaveDataSelfTest.Name = "buttonSaveDataSelfTest";
             this.buttonSaveDataSelfTest.Size = new System.Drawing.Size(110, 25);
             this.buttonSaveDataSelfTest.TabIndex = 43;
@@ -443,6 +455,17 @@
             this.dgv.Size = new System.Drawing.Size(529, 440);
             this.dgv.TabIndex = 1;
             // 
+            // buttonExportStockCW
+            // 
+            this.buttonExportStockCW.Location = new System.Drawing.Point(135, 40);
+            this.buttonExportStockCW.Name = "buttonExportStockCW";
+            this.buttonExportStockCW.Size = new System.Drawing.Size(63, 22);
+            this.buttonExportStockCW.TabIndex = 48;
+            this.buttonExportStockCW.Tag = "reports";
+            this.buttonExportStockCW.Text = "导出股票";
+            this.buttonExportStockCW.UseVisualStyleBackColor = true;
+            this.buttonExportStockCW.Click += new System.EventHandler(this.buttonExportStockCW_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -507,6 +530,8 @@
         private System.Windows.Forms.RadioButton radioButtonreport;
         private System.Windows.Forms.RadioButton radioButtonyears;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox comboBoxProper;
+        private System.Windows.Forms.Button buttonExportStockCW;
     }
 }
 

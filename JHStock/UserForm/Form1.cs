@@ -13,6 +13,7 @@ using Tools;
 using JHStock.Update;
 using System.Xml;
 using JHStock.UserForm;
+using System.Reflection;
 
 namespace JHStock
 {
@@ -37,7 +38,8 @@ namespace JHStock
             _isrunning = false;
             _ErrorMsg = "";
             _fd = _fm = _fw = null;
-           
+
+            _CN = new ChineseName();
         }
 
         private void InitJsconfig()
@@ -78,6 +80,10 @@ namespace JHStock
             }
 			InitDBAndStocks();
             radioButtonyears.Checked = true;
+            foreach (string str in JsonMainCWFX.GetNameList())
+            {
+                comboBoxProper.Items.Add(_CN.GetChineseName(str));
+            }
             HideShowMonit(ref _fd, "dayly");
             Thread t = new Thread(new ThreadStart(ThreadHideMyself));
             t.Start();
@@ -397,10 +403,45 @@ namespace JHStock
         private FormMonit _fw;
         private FormMonit _fm;
         private FormMonit _fd;
-
-
+        private ChineseName _CN;
 
         public string _CWDateType { get; set; }
+
+        private void buttonExportStockCW_Click(object sender, EventArgs e)
+        {
+            if (comboBoxProper.SelectedIndex == -1) return;
+            string ChineseName = comboBoxProper.SelectedItem.ToString();
+            string propertyname = _CN.GetProperName(comboBoxProper.SelectedItem.ToString());
+            if (propertyname == "") return;
+            Type type = typeof(JsonMainCWFX );
+            PropertyInfo property = type.GetProperty(propertyname);
+            if (property == null) MessageBox.Show("找不到属性名称");
+            StringBuilder sb = new StringBuilder();
+            try{
+            foreach (Stock s in _stocks.stocks)
+            {
+                sb.Append(s.Name + "\t" + s.Code + "\t");
+                Tagstock t = _jscfg.globalconfig.Stocks.GetTagstock(s.ID);
+                if (t != null && t.Tag!=null)
+                {
+                    List<JsonMainCWFX> ls = JsonConvert.DeserializeObject<List<JsonMainCWFX>>(t.Tag.ToString());
+                   sb.AppendLine(   string.Join("\t", ls.Select(rr =>
+                    {
+                        object o = property.GetValue(rr, null);
+                        if (o == null)
+                            return  rr.date + "\t"+ string.Empty;
+                        return rr.date + "\t"+o.ToString();
+                    }).ToList()) );
+                }             
+            }
+            string savefilename = _jscfg.baseconfig.NowWorkPath() + "Export_" + ChineseName + ".txt";
+            MFile.WriteAllText(savefilename,sb.ToString());
+            MessageBox.Show("已保存到文件：" + savefilename );
+            }catch(Exception ee)
+            {
+                MessageBox.Show( "保存失败,原因是："+ee.Message);
+            }
+        }
     }	
 	public class DTNameType{
 		public string Name;

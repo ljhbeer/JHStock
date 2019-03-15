@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using JHStock.Update;
 using Newtonsoft.Json;
 using System.IO;
+using System.Reflection;
 
 namespace JHStock.UserForm
 {
@@ -19,12 +20,15 @@ namespace JHStock.UserForm
 		private Stock _s;
 		private JSConfig _jscfg;
 		private string _qqfinpath;
+        private static ChineseName _schinesename;
 		public FormShow(Stock s, JSConfig _jscfg)
 		{
 			InitializeComponent();
 			this._s = s;
 			this._jscfg = _jscfg;
+            _schinesename = new ChineseName();
 			_qqfinpath = _jscfg.baseconfig.WorkPath +"Data\\QQFin\\";
+            InitDataTable();
 			Init();
 		}
 		private void Init(){
@@ -47,21 +51,44 @@ namespace JHStock.UserForm
             {
             }
 		}
+        private void InitDataTable()
+        {
+            List<string> NameList = JsonMainCWFX.GetNameList();
+            dgv2.DataSource = null;
+            DataTable dt = new DataTable("财务报表");
+            foreach (string Name in NameList)
+            {
+                DataColumn dc = new DataColumn(_schinesename.GetChineseName(Name));
+                dt.Columns.Add(dc);
+            }
+            dgv1.DataSource = dt;
+            foreach (string Name in NameList)
+            {
+                dgv1.Columns[_schinesename.GetChineseName(Name)].DataPropertyName = Name;
+            }
 
+        }        
 		void InitLocalData()
 		{
             Tagstock t = _jscfg.globalconfig.Stocks.GetTagstock(_s.ID);
                 if (t != null && t.Tag!=null)
                 {
                     List<JsonMainCWFX> ls = JsonConvert.DeserializeObject<List<JsonMainCWFX>>(t.Tag.ToString());
-                    foreach (JsonMainCWFX js in ls)
-                    {
-                      
-                    }
-                    dgv1.DataSource = ls;
-                    //dgv3.DataSource = JsonToDataTable(t.Tag.ToString());
+                   
+                    dgv1.DataSource = ls;                   
                 }             
 		}
+
+        private void  InitDgvColumnName(DataGridView dgv)
+        {                  
+            foreach (DataGridViewColumn dc in dgv.Columns)
+            {
+                string chinesename = _schinesename.GetChineseName(dc.Name);
+                if (chinesename != "未知")
+                    dc.DataPropertyName = chinesename;
+            }
+           
+        }
 		private void Initmytest()
 		{
 			string urlt = "http://quote.eastmoney.com/[scode].html";

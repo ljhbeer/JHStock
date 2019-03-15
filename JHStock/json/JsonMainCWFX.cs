@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Reflection;
 public class JsonMainCWFX
 {
     /// <summary>
@@ -137,15 +138,29 @@ public class JsonMainCWFX
     /// <summary>
     /// 
     /// </summary>
-    public string sdbl { get; set; }	
-	
+    public string sdbl { get; set; }
+    public static List<string> GetNameList()
+    {
+        List<string> ls = new List<string>();
+        System.Type t =  (new JsonMainCWFX()).GetType();
+        foreach (PropertyInfo pi in t.GetProperties())
+        {
+            //object value1 = pi.GetValue(tc, null));//用pi.GetValue获得值
+            ls.Add(pi.Name);//获得属性的名字,后面就可以根据名字判断来进行些自己想要的操作
+            //获得属性的类型,进行判断然后进行以后的操作,例如判断获得的属性是整数
+            //if(value1.GetType() == typeof(int))
+            //{
+            //    //进行你想要的操作
+            //}
+        }
+        return ls;
+    }
 }
 public class ChineseName
 {
-    private Dictionary<string, string> _chinesedic;
-    public void Init()
+    public ChineseName()
     {
-
+        initstring();
     }
     public string GetChineseName(string key)
     {
@@ -155,8 +170,13 @@ public class ChineseName
         }
         return "未知";
     }
-
-    public void initstring()
+    public string GetProperName(string chinesename)
+    {
+        if (_properdic.ContainsKey(chinesename))
+            return _properdic[chinesename];
+        return "";
+    }
+    private void initstring()
     {
         List<string> arr = new List<string>(){"date","日期",
 "jbmgsy","基本每股收益(元)",
@@ -199,9 +219,14 @@ public class ChineseName
 "sdbl","速动比率",
         };
         _chinesedic = new Dictionary<string, string>();
+        _properdic = new Dictionary<string, string>();
         for (int i = 0; i < arr.Count; i += 2)
         {
-            _chinesedic[arr[i]] = arr[2];
+            _chinesedic[arr[i]] = arr[i+1];
+            _properdic[arr[i + 1]] = arr[i];
         }
     }
+    private Dictionary<string, string> _chinesedic;
+    private Dictionary<string, string> _properdic;
+
 }
