@@ -131,6 +131,12 @@ namespace JHStock
         }
         private void InitCWFX()
         {
+            if (this.Gcfg.Baseconfig.ReLoadCWFX == true)
+            {
+                this.Gcfg.Baseconfig.ReLoadCWFX = false;
+                if(this._oldCWFile != Gcfg.Baseconfig.CWFilePath)
+                    LoadCWFX();
+            }else
             if (_tagstockyears== null)
             {
                 LoadCWFX();
@@ -139,9 +145,10 @@ namespace JHStock
         private void LoadCWFX(string allstockfile = "")
         {
             if (allstockfile == "")
-                allstockfile = Gcfg.Baseconfig.WorkPath + "data\\reports_cwfx.dat"; //季度  。 年度
+                allstockfile = Gcfg.Baseconfig.WorkPath + Gcfg.Baseconfig.CWFilePath; //季度  。 年度
             if (File.Exists(allstockfile))
             {
+                _oldCWFile = Gcfg.Baseconfig.CWFilePath;
                 try
                 {
                     _tagstockyears = new Tagstock[2000];
@@ -242,6 +249,7 @@ namespace JHStock
         	}
         }
         private CActivePrices _cativeprices;
+        private string _oldCWFile;
        
     }
 }

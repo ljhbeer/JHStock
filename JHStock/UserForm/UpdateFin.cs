@@ -18,6 +18,7 @@ namespace JHStock.Update
             _cfg = _stocks.Gcfg;
             _exceptionfilename = TimeStringTools.NowDateMin() + "_UpdateException.log";                       
             showmsg = null;
+            
         }
         public int MaxThreadSum { get; set; }
         public List<Stock> DealStocks { get; set; }
@@ -63,7 +64,7 @@ namespace JHStock.Update
 
             SaveJsonTag _savetag = new SaveJsonTag( System.DateTime.Now ,TS.Tag);
             _savetag.StoreDate = System.DateTime.Now;
-            _savetag.Save(_cfg.Baseconfig.WorkPath + "Data\\"+StringDateType +"_cwfx.dat");	
+            _savetag.Save(_cfg.Baseconfig.WorkPath + _cfg.Baseconfig.CWFilePath);	
            
         }
         

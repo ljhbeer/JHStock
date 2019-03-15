@@ -28,7 +28,7 @@ namespace JHStock
 			//_stockdata = new StockData();
 			InitializeComponent();
 			InitMaDataTable();
-			this.type = "MA";
+			this.type = "MA";          
 			Ready = Init();
 			isinitdatarunning = false;
 			bCompute = false;
@@ -44,6 +44,13 @@ namespace JHStock
             _formcustomlog =new FormCustomLog(_jscfg,_stockscustomlog);
             StockDraw.Jscfg = _jscfg;
 		}
+        public void InitShowConfig(JSConfig jscfg)
+        {
+            StockDraw.Jscfg = _jscfg;
+            this._jscfg.baseconfig = jscfg.baseconfig;
+            this._jscfg.globalconfig.ChangeBaseConfig( this._jscfg.baseconfig);
+            //this._jscfg.globalconfig = jscfg.globalconfig.
+        }
 		private void FormMonit_Load(object sender, EventArgs e)
 		{
             //MessageBox.Show("showm");
@@ -69,7 +76,7 @@ namespace JHStock
 		}
 		private bool Init()
 		{
-			// init _jscfg and _stocks
+			// init _jscfg and _stocks            
 			string filename = "jsconfig.ini";
 			if (!(filename != "" && File.Exists(filename)))
 			{
@@ -638,11 +645,6 @@ namespace JHStock
         //for Debug Out
 		public List<Stock> DebugStocks;
         private string _kdatatype;
-
-        internal void InitShowConfig()
-        {
-            //throw new NotImplementedException();
-        }
 
     }
 	public class UpdateMonitInfors{

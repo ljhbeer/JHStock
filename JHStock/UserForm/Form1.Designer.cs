@@ -32,10 +32,12 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioButtonyears = new System.Windows.Forms.RadioButton();
+            this.radioButtonreport = new System.Windows.Forms.RadioButton();
+            this.buttonFinCW1 = new System.Windows.Forms.Button();
             this.buttonMAMonth = new System.Windows.Forms.Button();
             this.buttonSaveDataSelfTest = new System.Windows.Forms.Button();
-            this.buttonFinCW2 = new System.Windows.Forms.Button();
-            this.buttonFinCW1 = new System.Windows.Forms.Button();
             this.buttonMAWeek = new System.Windows.Forms.Button();
             this.buttonMA = new System.Windows.Forms.Button();
             this.textBoxInfor = new System.Windows.Forms.TextBox();
@@ -64,6 +66,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -108,10 +111,9 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMAMonth);
             this.splitContainer1.Panel1.Controls.Add(this.buttonSaveDataSelfTest);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonFinCW2);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonFinCW1);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMAWeek);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMA);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxInfor);
@@ -123,8 +125,55 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(730, 564);
-            this.splitContainer1.SplitterDistance = 56;
+            this.splitContainer1.SplitterDistance = 64;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radioButtonyears);
+            this.groupBox2.Controls.Add(this.radioButtonreport);
+            this.groupBox2.Controls.Add(this.buttonFinCW1);
+            this.groupBox2.Location = new System.Drawing.Point(342, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(134, 61);
+            this.groupBox2.TabIndex = 46;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "财务";
+            // 
+            // radioButtonyears
+            // 
+            this.radioButtonyears.AutoSize = true;
+            this.radioButtonyears.Location = new System.Drawing.Point(6, 20);
+            this.radioButtonyears.Name = "radioButtonyears";
+            this.radioButtonyears.Size = new System.Drawing.Size(59, 16);
+            this.radioButtonyears.TabIndex = 44;
+            this.radioButtonyears.TabStop = true;
+            this.radioButtonyears.Text = "按年度";
+            this.radioButtonyears.UseVisualStyleBackColor = true;
+            this.radioButtonyears.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            // 
+            // radioButtonreport
+            // 
+            this.radioButtonreport.AutoSize = true;
+            this.radioButtonreport.Location = new System.Drawing.Point(6, 40);
+            this.radioButtonreport.Name = "radioButtonreport";
+            this.radioButtonreport.Size = new System.Drawing.Size(71, 16);
+            this.radioButtonreport.TabIndex = 45;
+            this.radioButtonreport.TabStop = true;
+            this.radioButtonreport.Text = "按报告期";
+            this.radioButtonreport.UseVisualStyleBackColor = true;
+            this.radioButtonreport.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            // 
+            // buttonFinCW1
+            // 
+            this.buttonFinCW1.Location = new System.Drawing.Point(83, 12);
+            this.buttonFinCW1.Name = "buttonFinCW1";
+            this.buttonFinCW1.Size = new System.Drawing.Size(44, 42);
+            this.buttonFinCW1.TabIndex = 43;
+            this.buttonFinCW1.Tag = "reports";
+            this.buttonFinCW1.Text = "更新财务";
+            this.buttonFinCW1.UseVisualStyleBackColor = true;
+            this.buttonFinCW1.Click += new System.EventHandler(this.ButtonFinCW1Click);
             // 
             // buttonMAMonth
             // 
@@ -138,35 +187,13 @@
             // 
             // buttonSaveDataSelfTest
             // 
-            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(291, 1);
+            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(217, 29);
             this.buttonSaveDataSelfTest.Name = "buttonSaveDataSelfTest";
             this.buttonSaveDataSelfTest.Size = new System.Drawing.Size(110, 25);
             this.buttonSaveDataSelfTest.TabIndex = 43;
             this.buttonSaveDataSelfTest.Text = "SaveDataSelfTest";
             this.buttonSaveDataSelfTest.UseVisualStyleBackColor = true;
             this.buttonSaveDataSelfTest.Click += new System.EventHandler(this.buttonSaveDataSelfTest_Click);
-            // 
-            // buttonFinCW2
-            // 
-            this.buttonFinCW2.Location = new System.Drawing.Point(319, 29);
-            this.buttonFinCW2.Name = "buttonFinCW2";
-            this.buttonFinCW2.Size = new System.Drawing.Size(101, 25);
-            this.buttonFinCW2.TabIndex = 43;
-            this.buttonFinCW2.Tag = "years";
-            this.buttonFinCW2.Text = "更新财务年度";
-            this.buttonFinCW2.UseVisualStyleBackColor = true;
-            this.buttonFinCW2.Click += new System.EventHandler(this.ButtonFinCW1Click);
-            // 
-            // buttonFinCW1
-            // 
-            this.buttonFinCW1.Location = new System.Drawing.Point(212, 29);
-            this.buttonFinCW1.Name = "buttonFinCW1";
-            this.buttonFinCW1.Size = new System.Drawing.Size(101, 25);
-            this.buttonFinCW1.TabIndex = 43;
-            this.buttonFinCW1.Tag = "reports";
-            this.buttonFinCW1.Text = "更新财务报告期";
-            this.buttonFinCW1.UseVisualStyleBackColor = true;
-            this.buttonFinCW1.Click += new System.EventHandler(this.ButtonFinCW1Click);
             // 
             // buttonMAWeek
             // 
@@ -217,7 +244,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Controls.Add(this.dgv);
-            this.splitContainer2.Size = new System.Drawing.Size(730, 504);
+            this.splitContainer2.Size = new System.Drawing.Size(730, 496);
             this.splitContainer2.SplitterDistance = 197;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -430,6 +457,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -475,7 +504,9 @@
         private System.Windows.Forms.Button buttonSaveDataSelfTest;
         private System.Windows.Forms.Button buttonMAMonth;
         private System.Windows.Forms.Button buttonMAWeek;
-        private System.Windows.Forms.Button buttonFinCW2;
+        private System.Windows.Forms.RadioButton radioButtonreport;
+        private System.Windows.Forms.RadioButton radioButtonyears;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
 

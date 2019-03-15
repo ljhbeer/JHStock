@@ -37,6 +37,7 @@ namespace JHStock
             _isrunning = false;
             _ErrorMsg = "";
             _fd = _fm = _fw = null;
+           
         }
 
         private void InitJsconfig()
@@ -76,7 +77,7 @@ namespace JHStock
                 this.Close();
             }
 			InitDBAndStocks();
-
+            radioButtonyears.Checked = true;
             HideShowMonit(ref _fd, "dayly");
             Thread t = new Thread(new ThreadStart(ThreadHideMyself));
             t.Start();
@@ -224,12 +225,24 @@ namespace JHStock
             this.Hide();
             if (f == null)
                 f = new FormMonit(datetype, this);
-            f.InitShowConfig();
+            f.InitShowConfig(_jscfg);
             f.DebugStocks =  StocksByItemsShow();
             f.Show();
             //MessageBox.Show("show2");
         }
-
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonyears.Checked)
+                _CWDateType = "years";
+            if (radioButtonreport.Checked)
+                _CWDateType = "reports";
+            if (_jscfg != null)
+            {
+                _jscfg.baseconfig.SetCWFilePath(_CWDateType);
+                _jscfg.baseconfig.ReLoadCWFX = true;
+            }
+           
+        }
         private void buttonApply_Click(object sender, EventArgs e)
         {
 
@@ -237,7 +250,7 @@ namespace JHStock
         private void ButtonFinCW1Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            string Type = btn.Tag.ToString();
+            string Type = _CWDateType;
             Stocks _stocks = _jscfg.globalconfig.Stocks;
             if (_stocks == null || _stocks.stocks.Count == 0)
                 return;
@@ -384,7 +397,11 @@ namespace JHStock
         private FormMonit _fw;
         private FormMonit _fm;
         private FormMonit _fd;
-	}	
+
+
+
+        public string _CWDateType { get; set; }
+    }	
 	public class DTNameType{
 		public string Name;
 		public Type type;

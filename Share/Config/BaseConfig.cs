@@ -44,8 +44,16 @@ namespace JHStock
         public string szpath { get; set; }
         public string shpath { get; set; }
         public string dbpath { get; set; }  
-        public string WorkPath{ get; set; } 
-	}
+        public string WorkPath{ get; set; }
+        public string CWFilePath { get { return _cwfile; } }
+        public void SetCWFilePath(string filetype)
+        {
+            _cwfile = "data\\"+filetype+"_cwfx.dat";
+        }
+        private string _cwfile;
+
+        public bool ReLoadCWFX { get; set; }
+    }
 	public class UpdateXmlPathConfig
 	{
         public string HexinXml { get; set; }
@@ -111,6 +119,10 @@ namespace JHStock
         public BaseConfig Baseconfig { get { return _baseconfig; } }
         public StaticsConfig Staticsconfig { get; set; }
         public TempConfig Tempconfig { get; set; }
+        public void ChangeBaseConfig(BaseConfig bcfg)
+        {
+            _baseconfig = bcfg;
+        }
         //public CNFITool NFI{
         //    get
         //    {
