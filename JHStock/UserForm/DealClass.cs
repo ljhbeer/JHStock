@@ -36,6 +36,7 @@ namespace JHStock.UserForm
 
         private void LoadFHSG()
         {
+            StringBuilder errormsg = new StringBuilder();
             string template = @"insert into [Kbouns](
 stockid,  PDate,   SG,   ZZ,  PX, progress,CQDate, DJDate,SSDate) 
 Values( [stockid],  [PDate],   [SG],   [ZZ],  [PX], '实施',[CQDate], '[DJDate]','[SSDate]');";
@@ -66,14 +67,25 @@ Values( [stockid],  [PDate],   [SG],   [ZZ],  [PX], '实施',[CQDate], '[DJDate]
                             ZZ = m.Groups[5].Value;
                     }
                     t2 = t2.Replace("[PX]", PX).Replace("[SG]", SG).Replace("[ZZ]", ZZ);
+                    try
+                    {
+                        this._stocks.Gcfg.db.update(t2);
+                    }
+                    catch
+                    {
+                        errormsg.AppendLine(t2);
+                    }
                     return t2;
                 }).ToList();
                 
                 sb.Append(  string.Join("\r\n",lss2));
                 return sb.ToString();
             }).ToList();
-
+            
             MFile.WriteAllText(_jscfg.baseconfig.WorkPath + "Data\\Test.Dat",string.Join("\r\n===========\r\n",lss1));
+            if(errormsg.Length>0)
+            MFile.WriteAllText(_jscfg.baseconfig.WorkPath + "Data\\TestErr.Dat",string.Join("\r\n===========\r\n",errormsg.ToString()));
+            
         }
 
         private void ConstructCQ()
