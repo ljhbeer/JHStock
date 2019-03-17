@@ -187,7 +187,7 @@ namespace JHStock
             if (_datetype == "monthly")
                 urlt = @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_monthqfq&param=[stockcode],month,,,[dayscount],qfq";
             if(_datetype == "dayly")
-                 urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[dayscount],bfq";
+                 urlt =  @"http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param=[stockcode],day,,,[dayscount],qfq";
             if (_datetype == "maincwfx")
                 urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?type=[type]&code=[stockcode]";
             if (_datetype == "DubangAnalysis")
