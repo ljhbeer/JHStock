@@ -280,6 +280,119 @@ namespace JHStock
                 nonParameterThread.Start();
             }
         }
+        private void buttonDownloadsAllKdata_Click(object sender, EventArgs e)
+        {
+            //Button btn = (Button)sender;
+            //DownLoadsAllKdata(btn);
+            string undeal = "";
+            StringBuilder sb = new StringBuilder();
+            foreach (Stock s in _stocks.stocks)
+            {
+                
+                string filetemplate = "{\"[stockcode]\":[[value]]}";
+                string path =_jscfg.baseconfig.WorkPath + "\\Data\\AllKdata\\" + s.Code + ".txt";
+               
+                if (File.Exists(path))
+                {
+                    string txt = File.ReadAllText(path);
+                    txt = CutJsonStringHead(txt);                    
+                    string ss = ConstructKdata(s.Code, txt);
+
+                    filetemplate = filetemplate.Replace("[stockcode]", s.Code)
+                        .Replace("[value]", ss);
+                    sb.Append(filetemplate);
+                    sb.AppendLine(",");
+                }
+                else
+                {
+                    undeal += s.Code + "\t";
+                }
+            }
+            string path2 = _jscfg.baseconfig.WorkPath + "\\Data\\AllFin.dat";
+            MFile.WriteAllText(path2, "[" + sb.ToString() + "]");
+            if (undeal != "")
+                MessageBox.Show(  undeal);
+        }
+
+        private string ConstructKdata(string stockcode, string txt)
+        {
+            QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
+            List<string> kd = qs.data[stockcode.ToLower()].day
+                .Where( r1 => r1.Count==7)
+               .Select(r2 => r2[6].ToString( )).ToList();
+            return string.Join(",\r\n", kd);
+        }
+        private string CutJsonStringHead(string txt)
+        {
+            if (txt.IndexOf("=") != -1)
+                txt = txt.Substring(txt.IndexOf("=") + 1);
+            txt = txt.Replace("dayly", "day");
+            txt = txt.Replace("qfqday", "day");
+            return txt;
+        }
+        private void DownLoadsAllKdata(Button btn)
+        {
+            string Type = "dayly";
+            Stocks _stocks = _jscfg.globalconfig.Stocks;
+            if (_stocks == null || _stocks.stocks.Count == 0)
+                return;
+            if (_stocks.Gcfg.db == null) return;
+            if (!_isrunning)
+            {
+                //_bshowtime = false;// checkBoxShowTimeOut.Checked;
+                _isrunning = true;
+                _completebtn = btn;
+                _completebtn.Enabled = false;
+                UpdateFin updatefin = new UpdateFin(_stocks);
+                updatefin.SetDateType(Type); ;
+                updatefin.MaxThreadSum = 20;
+                updatefin.showmsg = new ShowDeleGate(ThreadShowMsg);
+                updatefin.ThreadCompleteRun = new CompleteDeleGate(ThreadCompleteRun);
+                ////qf.DealStocks.Add(_stocks.StockByIndex(2));
+                ////qf.DealStocks.Add(_stocks.StockByIndex(3))
+                updatefin.DealStocks = _stocks.stocks;
+                _updatetime = DateTime.Now;
+                System.Threading.Thread nonParameterThread = new Thread(updatefin.DownLoadAllKData);
+                nonParameterThread.Start();
+            }
+        }
+        private void buttonExportStockCW_Click(object sender, EventArgs e)
+        {
+            if (comboBoxProper.SelectedIndex == -1) return;
+            string ChineseName = comboBoxProper.SelectedItem.ToString();
+            string propertyname = _CN.GetProperName(comboBoxProper.SelectedItem.ToString());
+            if (propertyname == "") return;
+            Type type = typeof(JsonMainCWFX);
+            PropertyInfo property = type.GetProperty(propertyname);
+            if (property == null) MessageBox.Show("找不到属性名称");
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                foreach (Stock s in _stocks.stocks)
+                {
+                    sb.Append(s.Name + "\t" + s.Code + "\t");
+                    Tagstock t = _jscfg.globalconfig.Stocks.GetTagstock(s.ID);
+                    if (t != null && t.Tag != null)
+                    {
+                        List<JsonMainCWFX> ls = JsonConvert.DeserializeObject<List<JsonMainCWFX>>(t.Tag.ToString());
+                        sb.AppendLine(string.Join("\t", ls.Select(rr =>
+                        {
+                            object o = property.GetValue(rr, null);
+                            if (o == null)
+                                return rr.date + "\t" + string.Empty;
+                            return rr.date + "\t" + o.ToString();
+                        }).ToList()));
+                    }
+                }
+                string savefilename = _jscfg.baseconfig.NowWorkPath() + "Export_" + ChineseName + ".txt";
+                MFile.WriteAllText(savefilename, sb.ToString());
+                MessageBox.Show("已保存到文件：" + savefilename);
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("保存失败,原因是：" + ee.Message);
+            }
+        }
         private void buttonSaveDataSelfTest_Click(object sender, EventArgs e)
         {
             //TODO:SaveDataSelfTest
@@ -334,7 +447,17 @@ namespace JHStock
                     }).Aggregate((r1, r2) => r1 + "\r\n" + r2);
             }
             MFile.WriteAllText("selftest.txt", outstr);
-        }		
+        }
+        public void ThreadActionMsg(string msg)
+        {
+            Invoke(new ActionDeleGate(ActionMsg), new object[] { msg });
+        }
+        public void ActionMsg(string msg)
+        {
+            if (msg.StartsWith("showexchangingtime-"))
+                textBoxExchangeTime.Text = msg.Substring(19);
+
+        }
         private void ThreadShowMsg(string msg)
         {
             this.Invoke(new ShowDeleGate(showfiletxt), new object[] { msg });
@@ -404,44 +527,10 @@ namespace JHStock
         private FormMonit _fm;
         private FormMonit _fd;
         private ChineseName _CN;
-
+        private StocksData _stockdata;
+        private bool bComplete;
         public string _CWDateType { get; set; }
 
-        private void buttonExportStockCW_Click(object sender, EventArgs e)
-        {
-            if (comboBoxProper.SelectedIndex == -1) return;
-            string ChineseName = comboBoxProper.SelectedItem.ToString();
-            string propertyname = _CN.GetProperName(comboBoxProper.SelectedItem.ToString());
-            if (propertyname == "") return;
-            Type type = typeof(JsonMainCWFX );
-            PropertyInfo property = type.GetProperty(propertyname);
-            if (property == null) MessageBox.Show("找不到属性名称");
-            StringBuilder sb = new StringBuilder();
-            try{
-            foreach (Stock s in _stocks.stocks)
-            {
-                sb.Append(s.Name + "\t" + s.Code + "\t");
-                Tagstock t = _jscfg.globalconfig.Stocks.GetTagstock(s.ID);
-                if (t != null && t.Tag!=null)
-                {
-                    List<JsonMainCWFX> ls = JsonConvert.DeserializeObject<List<JsonMainCWFX>>(t.Tag.ToString());
-                   sb.AppendLine(   string.Join("\t", ls.Select(rr =>
-                    {
-                        object o = property.GetValue(rr, null);
-                        if (o == null)
-                            return  rr.date + "\t"+ string.Empty;
-                        return rr.date + "\t"+o.ToString();
-                    }).ToList()) );
-                }             
-            }
-            string savefilename = _jscfg.baseconfig.NowWorkPath() + "Export_" + ChineseName + ".txt";
-            MFile.WriteAllText(savefilename,sb.ToString());
-            MessageBox.Show("已保存到文件：" + savefilename );
-            }catch(Exception ee)
-            {
-                MessageBox.Show( "保存失败,原因是："+ee.Message);
-            }
-        }
     }	
 	public class DTNameType{
 		public string Name;

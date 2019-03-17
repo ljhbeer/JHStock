@@ -32,8 +32,12 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.comboBoxProper = new System.Windows.Forms.ComboBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.textBoxExchangeTime = new System.Windows.Forms.TextBox();
+            this.buttonDownloadsAllKdata = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonExportStockCW = new System.Windows.Forms.Button();
+            this.comboBoxProper = new System.Windows.Forms.ComboBox();
             this.radioButtonyears = new System.Windows.Forms.RadioButton();
             this.radioButtonreport = new System.Windows.Forms.RadioButton();
             this.buttonFinCW1 = new System.Windows.Forms.Button();
@@ -41,7 +45,7 @@
             this.buttonSaveDataSelfTest = new System.Windows.Forms.Button();
             this.buttonMAWeek = new System.Windows.Forms.Button();
             this.buttonMA = new System.Windows.Forms.Button();
-            this.textBoxInfor = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.buttonClearNextList = new System.Windows.Forms.Button();
             this.checkBoxIDIndex = new System.Windows.Forms.CheckBox();
@@ -63,12 +67,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_backbeginday = new System.Windows.Forms.TextBox();
             this.dgv = new System.Windows.Forms.DataGridView();
-            this.buttonExportStockCW = new System.Windows.Forms.Button();
+            this.textBoxInfor = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -113,30 +119,50 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMAMonth);
             this.splitContainer1.Panel1.Controls.Add(this.buttonSaveDataSelfTest);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMAWeek);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMA);
-            this.splitContainer1.Panel1.Controls.Add(this.textBoxInfor);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxMdbPath);
             this.splitContainer1.Panel1.Controls.Add(this.buttonImportDB);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(730, 564);
-            this.splitContainer1.SplitterDistance = 64;
+            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
+            this.splitContainer1.Size = new System.Drawing.Size(750, 634);
+            this.splitContainer1.SplitterDistance = 65;
             this.splitContainer1.TabIndex = 3;
             // 
-            // comboBoxProper
+            // groupBox3
             // 
-            this.comboBoxProper.FormattingEnabled = true;
-            this.comboBoxProper.Location = new System.Drawing.Point(6, 36);
-            this.comboBoxProper.Name = "comboBoxProper";
-            this.comboBoxProper.Size = new System.Drawing.Size(106, 20);
-            this.comboBoxProper.TabIndex = 47;
+            this.groupBox3.Controls.Add(this.textBoxExchangeTime);
+            this.groupBox3.Controls.Add(this.buttonDownloadsAllKdata);
+            this.groupBox3.Location = new System.Drawing.Point(525, 1);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(221, 60);
+            this.groupBox3.TabIndex = 47;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "更新";
+            // 
+            // textBoxExchangeTime
+            // 
+            this.textBoxExchangeTime.Location = new System.Drawing.Point(108, 38);
+            this.textBoxExchangeTime.Name = "textBoxExchangeTime";
+            this.textBoxExchangeTime.Size = new System.Drawing.Size(112, 21);
+            this.textBoxExchangeTime.TabIndex = 1;
+            // 
+            // buttonDownloadsAllKdata
+            // 
+            this.buttonDownloadsAllKdata.Location = new System.Drawing.Point(9, 35);
+            this.buttonDownloadsAllKdata.Name = "buttonDownloadsAllKdata";
+            this.buttonDownloadsAllKdata.Size = new System.Drawing.Size(91, 24);
+            this.buttonDownloadsAllKdata.TabIndex = 0;
+            this.buttonDownloadsAllKdata.Text = "下载所有日线";
+            this.buttonDownloadsAllKdata.UseVisualStyleBackColor = true;
+            this.buttonDownloadsAllKdata.Click += new System.EventHandler(this.buttonDownloadsAllKdata_Click);
             // 
             // groupBox2
             // 
@@ -151,6 +177,25 @@
             this.groupBox2.TabIndex = 46;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "财务";
+            // 
+            // buttonExportStockCW
+            // 
+            this.buttonExportStockCW.Location = new System.Drawing.Point(135, 40);
+            this.buttonExportStockCW.Name = "buttonExportStockCW";
+            this.buttonExportStockCW.Size = new System.Drawing.Size(63, 22);
+            this.buttonExportStockCW.TabIndex = 48;
+            this.buttonExportStockCW.Tag = "reports";
+            this.buttonExportStockCW.Text = "导出股票";
+            this.buttonExportStockCW.UseVisualStyleBackColor = true;
+            this.buttonExportStockCW.Click += new System.EventHandler(this.buttonExportStockCW_Click);
+            // 
+            // comboBoxProper
+            // 
+            this.comboBoxProper.FormattingEnabled = true;
+            this.comboBoxProper.Location = new System.Drawing.Point(6, 36);
+            this.comboBoxProper.Name = "comboBoxProper";
+            this.comboBoxProper.Size = new System.Drawing.Size(106, 20);
+            this.comboBoxProper.TabIndex = 47;
             // 
             // radioButtonyears
             // 
@@ -227,18 +272,25 @@
             this.buttonMA.UseVisualStyleBackColor = true;
             this.buttonMA.Click += new System.EventHandler(this.buttonMA_Click);
             // 
-            // textBoxInfor
+            // tableLayoutPanel1
             // 
-            this.textBoxInfor.Location = new System.Drawing.Point(527, 4);
-            this.textBoxInfor.Name = "textBoxInfor";
-            this.textBoxInfor.ReadOnly = true;
-            this.textBoxInfor.Size = new System.Drawing.Size(201, 21);
-            this.textBoxInfor.TabIndex = 30;
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.splitContainer2, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxInfor, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(750, 565);
+            this.tableLayoutPanel1.TabIndex = 1;
             // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Location = new System.Drawing.Point(3, 3);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -256,8 +308,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Controls.Add(this.dgv);
-            this.splitContainer2.Size = new System.Drawing.Size(730, 496);
-            this.splitContainer2.SplitterDistance = 197;
+            this.splitContainer2.Size = new System.Drawing.Size(744, 539);
+            this.splitContainer2.SplitterDistance = 200;
             this.splitContainer2.TabIndex = 0;
             // 
             // buttonClearNextList
@@ -455,22 +507,20 @@
             this.dgv.Size = new System.Drawing.Size(529, 440);
             this.dgv.TabIndex = 1;
             // 
-            // buttonExportStockCW
+            // textBoxInfor
             // 
-            this.buttonExportStockCW.Location = new System.Drawing.Point(135, 40);
-            this.buttonExportStockCW.Name = "buttonExportStockCW";
-            this.buttonExportStockCW.Size = new System.Drawing.Size(63, 22);
-            this.buttonExportStockCW.TabIndex = 48;
-            this.buttonExportStockCW.Tag = "reports";
-            this.buttonExportStockCW.Text = "导出股票";
-            this.buttonExportStockCW.UseVisualStyleBackColor = true;
-            this.buttonExportStockCW.Click += new System.EventHandler(this.buttonExportStockCW_Click);
+            this.textBoxInfor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxInfor.Location = new System.Drawing.Point(3, 548);
+            this.textBoxInfor.Name = "textBoxInfor";
+            this.textBoxInfor.ReadOnly = true;
+            this.textBoxInfor.Size = new System.Drawing.Size(744, 21);
+            this.textBoxInfor.TabIndex = 30;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(730, 564);
+            this.ClientSize = new System.Drawing.Size(750, 634);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -480,8 +530,12 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -532,6 +586,10 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox comboBoxProper;
         private System.Windows.Forms.Button buttonExportStockCW;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button buttonDownloadsAllKdata;
+        private System.Windows.Forms.TextBox textBoxExchangeTime;
     }
 }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Tools;
+using System.Text.RegularExpressions;
 
 namespace JHStock.Update
 {
@@ -21,7 +22,7 @@ namespace JHStock.Update
             
         }
         public int MaxThreadSum { get; set; }
-        public List<Stock> DealStocks { get; set; }
+        public List<Stock> DealStocks { get; set; } 
         public void DownLoadFinData()
         {
             string datetype = "maincwfx";
@@ -57,11 +58,70 @@ namespace JHStock.Update
             CompleteRun(TS);
             ThreadCompleteRun(); //输出信息
         }
-        private void CompleteRun(ThreadUpdateStocksJson TS)
-        {           
-            //List<Object> ls=
-            //Tag.Where(r => r.Tag != null).Select(r => new Object(){r.index,  (JsonMainCWFX)r.Tag)).ToList();
+        public void DownLoadAllKData()
+        {
+            string datetype = "dayly";
+            int dayscount = _stocks.ListDate.Count;
+            ThreadUpdateStocksConfig TSC1 = new ThreadUpdateStocksConfig(datetype, dayscount);
+            JHStock.FormatDataFunction FD = new JHStock.FormatDataFunction(datetype);
+            TSC1.UrlT = new ThreadUpdateUrlTemplate(datetype);
+        
+            TSC1.Files = new ThreadUpdateJsonFiles();
+            TSC1.Files.OutPutMode = "singlefile";
+            TSC1.Files.ThreadOutTxt = ThreadOutTxt;
+            TSC1.MaxThreadSum =20;
+            TSC1.FormatData = null;//FD.FormatKDData;
+            ThreadUpdateStocksJson TS = new ThreadUpdateStocksJson(_stocks, TSC1);
+            if (ThreadShowMsg != null)
+                TS.showmsg = new ShowDeleGate(ThreadShowMsg);
 
+            List<Stock> Dealstocks = new List<Stock>(_stocks.stocks);
+            if (showmsg!= null)
+                TS.showmsg = showmsg;
+            //Dealstocks = Dealstocks.Take(10).ToList();
+            // Add 上证指数
+            //TS.Tag[0].Init(_ssestock);
+            //Dealstocks.Add(_ssestock);
+
+            TS.UpdateItem(Dealstocks);
+            List<Stock> stocks = Dealstocks;
+            int stockcountb = stocks.Count;
+
+
+            stocks = TS.Tag.Where(r => r.value < 1 && r.value > -10).Select(r => r.s).ToList();
+            if (stocks.Count > 0)
+            {
+                TS.UpdateItem(stocks);
+            }
+            CompleteRunAllKData(TS);
+            ThreadCompleteRun(); //输出信息
+        } //暂时不用
+        public void ThreadOutTxt(Tagstock tagstock, Stock s, string txt)
+        {
+            MFile.WriteAllText(_cfg.Baseconfig.WorkPath + "\\Data\\AllKdata\\" + s.Code + ".txt",txt);
+
+            //string str = JsonConvert.SerializeObject(tagstock.Tag);
+            //MFile.WriteAllText(_cfg.Baseconfig.WorkPath + "\\Data\\AllKdata\\" + s.Code + "_1.txt",str);
+            //str = ChangeDecodeUxxx(txt);
+            //MFile.WriteAllText(_cfg.Baseconfig.WorkPath + "\\Data\\AllKdata\\" + s.Code + "_2.txt", str);
+        }
+        private string ChangeDecodeUxxx(string input)
+        {
+            Regex regex = new Regex(@"\\u(\w{4})");
+            string result = regex.Replace(input, delegate(Match m)
+            {
+                string hexStr = m.Groups[1].Value;
+                string charStr = ((char)int.Parse(hexStr, System.Globalization.NumberStyles.HexNumber)).ToString();
+                return charStr;
+            });
+            return result;
+        }
+        private void CompleteRunAllKData(ThreadUpdateStocksJson TS)
+        {
+            ;
+        }
+        private void CompleteRun(ThreadUpdateStocksJson TS)
+        {     
             SaveJsonTag _savetag = new SaveJsonTag( System.DateTime.Now ,TS.Tag);
             _savetag.StoreDate = System.DateTime.Now;
             _savetag.Save(_cfg.Baseconfig.WorkPath + _cfg.Baseconfig.CWFilePath);	

@@ -11,7 +11,8 @@ using Tools;
 using ToolsCXml;
 namespace JHStock
 {
-    public delegate void DeleteFormatData(Tagstock tagstock, Stock s, string txt);    
+    public delegate void DelegateFormatData(Tagstock tagstock, Stock s, string txt);
+    public delegate void DelegateOutPutTxt(Tagstock tagstock, Stock s, string txt);  
     public class FormatDataFunction
     {
         private string _datetype;
@@ -76,8 +77,14 @@ namespace JHStock
             string txt = CWeb.GetWebClient(url,"utf-8");
             try
             {
+                if (TSC.FormatData != null) 
                 TSC.FormatData(Tag[s.ID], s, txt);               
                 Tag[s.ID].value = 1;
+                if (TSC.Files.OutPutMode == "singlefile")
+                {
+                    if (TSC.Files.ThreadOutTxt != null)
+                        TSC.Files.ThreadOutTxt(Tag[s.ID],s, txt);
+                }
             }
             catch (Exception e)
             {
@@ -162,7 +169,7 @@ namespace JHStock
         public ThreadUpdateJsonFiles Files;
         private string _daylength;
         public int MaxThreadSum { get; set; }
-        public DeleteFormatData FormatData { get; set; }
+        public DelegateFormatData FormatData { get; set; }
 
         public bool Debug { get; set; }
     }
@@ -205,11 +212,15 @@ namespace JHStock
         public ThreadUpdateJsonFiles()
         {
             ChildErrorlog = "QQDaylyError.log";
+            OutPutMode = "unifile";
         }
         private ToolsCXml.BETag btyear = new ToolsCXml.BETag("[nflb\":#@#@-@#@#]");
         private ToolsCXml.BETag btcheck = new ToolsCXml.BETag("[:#@#@{-}@#@#}]");
 
         public string ChildErrorlog { get; set; }
+
+        public string OutPutMode { get; set; }
+        public DelegateOutPutTxt ThreadOutTxt;       
     }
     
     public class Tagstock
