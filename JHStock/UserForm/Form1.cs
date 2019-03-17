@@ -282,80 +282,11 @@ namespace JHStock
         }
         private void buttonDownloadsAllKdata_Click(object sender, EventArgs e)
         {
-            //Button btn = (Button)sender;
-            //DownLoadsAllKdata(btn);
-            string undeal = "";
-            StringBuilder sb = new StringBuilder();
-            foreach (Stock s in _stocks.stocks)
-            {
-                
-                string filetemplate = "{\"[stockcode]\":[[value]]}";
-                string path =_jscfg.baseconfig.WorkPath + "\\Data\\AllKdata\\" + s.Code + ".txt";
-               
-                if (File.Exists(path))
-                {
-                    string txt = File.ReadAllText(path);
-                    txt = CutJsonStringHead(txt);                    
-                    string ss = ConstructKdata(s.Code, txt);
-
-                    filetemplate = filetemplate.Replace("[stockcode]", s.Code)
-                        .Replace("[value]", ss);
-                    sb.Append(filetemplate);
-                    sb.AppendLine(",");
-                }
-                else
-                {
-                    undeal += s.Code + "\t";
-                }
-            }
-            string path2 = _jscfg.baseconfig.WorkPath + "\\Data\\AllFin.dat";
-            MFile.WriteAllText(path2, "[" + sb.ToString() + "]");
-            if (undeal != "")
-                MessageBox.Show(  undeal);
+            DealClass DC = new DealClass(_jscfg , _stocks,this);
+            Button btn = (Button)sender;
+            DC.TestDownLoads(btn);          
         }
 
-        private string ConstructKdata(string stockcode, string txt)
-        {
-            QQStocks qs = JsonConvert.DeserializeObject<QQStocks>(txt);
-            List<string> kd = qs.data[stockcode.ToLower()].day
-                .Where( r1 => r1.Count==7)
-               .Select(r2 => r2[6].ToString( )).ToList();
-            return string.Join(",\r\n", kd);
-        }
-        private string CutJsonStringHead(string txt)
-        {
-            if (txt.IndexOf("=") != -1)
-                txt = txt.Substring(txt.IndexOf("=") + 1);
-            txt = txt.Replace("dayly", "day");
-            txt = txt.Replace("qfqday", "day");
-            return txt;
-        }
-        private void DownLoadsAllKdata(Button btn)
-        {
-            string Type = "dayly";
-            Stocks _stocks = _jscfg.globalconfig.Stocks;
-            if (_stocks == null || _stocks.stocks.Count == 0)
-                return;
-            if (_stocks.Gcfg.db == null) return;
-            if (!_isrunning)
-            {
-                //_bshowtime = false;// checkBoxShowTimeOut.Checked;
-                _isrunning = true;
-                _completebtn = btn;
-                _completebtn.Enabled = false;
-                UpdateFin updatefin = new UpdateFin(_stocks);
-                updatefin.SetDateType(Type); ;
-                updatefin.MaxThreadSum = 20;
-                updatefin.showmsg = new ShowDeleGate(ThreadShowMsg);
-                updatefin.ThreadCompleteRun = new CompleteDeleGate(ThreadCompleteRun);
-                ////qf.DealStocks.Add(_stocks.StockByIndex(2));
-                ////qf.DealStocks.Add(_stocks.StockByIndex(3))
-                updatefin.DealStocks = _stocks.stocks;
-                _updatetime = DateTime.Now;
-                System.Threading.Thread nonParameterThread = new Thread(updatefin.DownLoadAllKData);
-                nonParameterThread.Start();
-            }
-        }
         private void buttonExportStockCW_Click(object sender, EventArgs e)
         {
             if (comboBoxProper.SelectedIndex == -1) return;
@@ -458,15 +389,15 @@ namespace JHStock
                 textBoxExchangeTime.Text = msg.Substring(19);
 
         }
-        private void ThreadShowMsg(string msg)
+        public void ThreadShowMsg(string msg)
         {
             this.Invoke(new ShowDeleGate(showfiletxt), new object[] { msg });
         }
-        private void ThreadAppendMsg(string msg)
+        public void ThreadAppendMsg(string msg)
         {
             Invoke(new ShowDeleGate(showappendfiletxt), new object[] { msg });
         }
-        private void ThreadCompleteRun()
+        public void ThreadCompleteRun()
         {
             Invoke(new CompleteDeleGate(CompleteRun));
         }
@@ -521,7 +452,7 @@ namespace JHStock
         //private Boolean _bshowtime;
 		private Boolean _isrunning;
 		private Button _completebtn;
-		private DateTime _updatetime;
+		public DateTime _updatetime;
 		private string _ErrorMsg;
         private FormMonit _fw;
         private FormMonit _fm;
