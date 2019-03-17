@@ -179,9 +179,17 @@ namespace JHStock
             int beginday = kd0[0].date;
             int endday = kd0[mergedays-1].date;
 
+            bool weekmonthexchange = false;
+            int testweekdate = _savetag.Tag[0].kd[_savetag.Tag[0].kd.Count - 1].date;
+            if (!Netdate.ListHistoryDate.Contains(testweekdate))
+            {
+                //周线 月线 替换首日
+                weekmonthexchange = true;
+            }
+
             if (mergedays == DaysLength)
             {
-                _savetag = new SaveKdTag(nkd.netsaveTag.StoreDate , nkd.netsaveTag.Tag.Length);
+                _savetag = new SaveKdTag(nkd.netsaveTag.StoreDate, nkd.netsaveTag.Tag.Length);
                 _savetag.Init(nkd.netsaveTag);
             }
             else
@@ -196,7 +204,10 @@ namespace JHStock
                     { //合并kd                        
                         if (kdi[0].date == beginday && kdi[mergedays - 1].date == endday)
                         {
-                            _tgi.kd = _tgi.kd.Skip(mergedays).ToList();
+                            if(weekmonthexchange)
+                                _tgi.kd = _tgi.kd.Skip(mergedays-1).Take(_tgi.kd.Count - mergedays).ToList();
+                            else
+                                _tgi.kd = _tgi.kd.Skip(mergedays).ToList();
                             _tgi.kd.AddRange(kdi);
                         }
                         else
@@ -205,7 +216,10 @@ namespace JHStock
                             KData[] kd = kdi.Where(r => r.date > maxlocalday).ToArray();
                             if (kd.Length > 0)
                             {
-                                _tgi.kd = _tgi.kd.Skip(kd.Length).ToList();
+                                if (weekmonthexchange)
+                                    _tgi.kd = _tgi.kd.Skip(kd.Length-1).Take(_tgi.kd.Count -kd.Length).ToList();
+                                else 
+                                    _tgi.kd = _tgi.kd.Skip(kd.Length).ToList();
                                 _tgi.kd.AddRange(kdi);
                             }
                         }
