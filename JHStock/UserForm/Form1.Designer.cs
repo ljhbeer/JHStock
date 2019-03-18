@@ -73,6 +73,7 @@
             this.textBox_backbeginday = new System.Windows.Forms.TextBox();
             this.dgv = new System.Windows.Forms.DataGridView();
             this.textBoxInfor = new System.Windows.Forms.TextBox();
+            this.buttonCreateMacd = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -245,6 +246,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.buttonCreateMacd);
             this.groupBox3.Controls.Add(this.textBoxExchangeTime);
             this.groupBox3.Controls.Add(this.buttonDownloadsAllKdata);
             this.groupBox3.Location = new System.Drawing.Point(590, 1);
@@ -567,11 +569,11 @@
             // dgv
             // 
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv.Location = new System.Drawing.Point(0, 0);
+            this.dgv.Location = new System.Drawing.Point(0, 144);
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
             this.dgv.RowTemplate.Height = 23;
-            this.dgv.Size = new System.Drawing.Size(529, 497);
+            this.dgv.Size = new System.Drawing.Size(529, 353);
             this.dgv.TabIndex = 1;
             // 
             // textBoxInfor
@@ -582,6 +584,16 @@
             this.textBoxInfor.ReadOnly = true;
             this.textBoxInfor.Size = new System.Drawing.Size(744, 21);
             this.textBoxInfor.TabIndex = 30;
+            // 
+            // buttonCreateMacd
+            // 
+            this.buttonCreateMacd.Location = new System.Drawing.Point(6, 68);
+            this.buttonCreateMacd.Name = "buttonCreateMacd";
+            this.buttonCreateMacd.Size = new System.Drawing.Size(91, 24);
+            this.buttonCreateMacd.TabIndex = 2;
+            this.buttonCreateMacd.Text = "创建MACD";
+            this.buttonCreateMacd.UseVisualStyleBackColor = true;
+            this.buttonCreateMacd.Click += new System.EventHandler(this.buttonCreateMacd_Click);
             // 
             // Form1
             // 
@@ -666,6 +678,7 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button buttonExportStock;
         private System.Windows.Forms.Button buttonExportTempData;
+        private System.Windows.Forms.Button buttonCreateMacd;
     }
 }
 

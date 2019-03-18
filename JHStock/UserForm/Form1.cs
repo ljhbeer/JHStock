@@ -426,6 +426,43 @@ namespace JHStock
             DealClass DC = new DealClass(_jscfg, _stocks, this);
             DC.ExportFhKgData(StocksByItemsShow());  
         }
+
+        private void buttonCreateMacd_Click(object sender, EventArgs e)
+        {
+            ((Button)sender).Enabled = false;
+            MACD macd = new MACD();
+            //if (checkBoxBeforeDate.Checked)
+            //{
+            //    int backdate = Config.ToIntDate(DateTime.Today.AddDays(-1));
+            //    int datepos = _stocks.GetStartDatePos(backdate);
+
+            //    CreateAllStockMACDData(cfg, _stocks, cfg.StaticDays, datepos);
+            //}
+            //else
+            //{
+            //    CreateAllStockMACDData(cfg, _stocks, cfg.StaticDays);
+            //}
+            _stocks.ResetMacdData();
+            ((Button)sender).Enabled = true;
+        }
+        private void BTN_BACKMACDClick(object sender, EventArgs e)
+        {
+            //			int begindate = Convert.ToInt32( textBox_backbeginday.Text);
+            //			int enddate = Convert.ToInt32(textBox_backendday.Text);
+            //			int greendays = Convert.ToInt32(textBox_backgreendays.Text);
+            //			int nowdays = Convert.ToInt32(textBox_backnowdays.Text);
+            //			string type = "MACD";
+            //			if (itemsShow.Count > 0)
+            //			{
+            //				FormMonitBack f = new FormMonitBack(_stocks, itemsShow, exchangestatus, type, begindate, enddate, greendays, nowdays);
+            //				f.ShowDialog();
+            //			}
+            //			else
+            //			{
+            //				MessageBox.Show("没有添加回测股票");
+            //			}
+        }
+
         public void ThreadActionMsg(string msg)
         {
             Invoke(new ActionDeleGate(ActionMsg), new object[] { msg });
