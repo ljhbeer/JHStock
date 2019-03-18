@@ -30,8 +30,17 @@
         {
             this.buttonImportDB = new System.Windows.Forms.Button();
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.buttonExportTempData = new System.Windows.Forms.Button();
+            this.buttonExportStock = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radioButtonWeek = new System.Windows.Forms.RadioButton();
+            this.radioButtonMonth = new System.Windows.Forms.RadioButton();
+            this.radioButtonDay = new System.Windows.Forms.RadioButton();
+            this.buttonMA = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.buttonSaveDataSelfTest = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxExchangeTime = new System.Windows.Forms.TextBox();
             this.buttonDownloadsAllKdata = new System.Windows.Forms.Button();
@@ -41,10 +50,6 @@
             this.radioButtonyears = new System.Windows.Forms.RadioButton();
             this.radioButtonreport = new System.Windows.Forms.RadioButton();
             this.buttonFinCW1 = new System.Windows.Forms.Button();
-            this.buttonMAMonth = new System.Windows.Forms.Button();
-            this.buttonSaveDataSelfTest = new System.Windows.Forms.Button();
-            this.buttonMAWeek = new System.Windows.Forms.Button();
-            this.buttonMA = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.buttonClearNextList = new System.Windows.Forms.Button();
@@ -72,6 +77,9 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -85,9 +93,9 @@
             // 
             // buttonImportDB
             // 
-            this.buttonImportDB.Location = new System.Drawing.Point(212, 1);
+            this.buttonImportDB.Location = new System.Drawing.Point(3, 40);
             this.buttonImportDB.Name = "buttonImportDB";
-            this.buttonImportDB.Size = new System.Drawing.Size(73, 25);
+            this.buttonImportDB.Size = new System.Drawing.Size(93, 25);
             this.buttonImportDB.TabIndex = 0;
             this.buttonImportDB.Text = "载入数据库";
             this.buttonImportDB.UseVisualStyleBackColor = true;
@@ -95,68 +103,167 @@
             // 
             // textBoxMdbPath
             // 
-            this.textBoxMdbPath.Location = new System.Drawing.Point(54, 3);
+            this.textBoxMdbPath.Location = new System.Drawing.Point(3, 16);
             this.textBoxMdbPath.Name = "textBoxMdbPath";
-            this.textBoxMdbPath.Size = new System.Drawing.Size(152, 21);
+            this.textBoxMdbPath.Size = new System.Drawing.Size(104, 21);
             this.textBoxMdbPath.TabIndex = 1;
             this.textBoxMdbPath.Text = "jsconfig.ini";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "配置";
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox6);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox5);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox4);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonMAMonth);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonSaveDataSelfTest);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonMAWeek);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonMA);
-            this.splitContainer1.Panel1.Controls.Add(this.label1);
-            this.splitContainer1.Panel1.Controls.Add(this.textBoxMdbPath);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonImportDB);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer1.Size = new System.Drawing.Size(750, 634);
-            this.splitContainer1.SplitterDistance = 65;
+            this.splitContainer1.SplitterDistance = 104;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.buttonExportTempData);
+            this.groupBox6.Controls.Add(this.buttonExportStock);
+            this.groupBox6.Location = new System.Drawing.Point(411, 8);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(173, 92);
+            this.groupBox6.TabIndex = 50;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "导出数据";
+            // 
+            // buttonExportTempData
+            // 
+            this.buttonExportTempData.Location = new System.Drawing.Point(5, 59);
+            this.buttonExportTempData.Name = "buttonExportTempData";
+            this.buttonExportTempData.Size = new System.Drawing.Size(168, 29);
+            this.buttonExportTempData.TabIndex = 1;
+            this.buttonExportTempData.Text = "导出已选分红的数据";
+            this.buttonExportTempData.UseVisualStyleBackColor = true;
+            this.buttonExportTempData.Click += new System.EventHandler(this.buttonExportTempData_Click);
+            // 
+            // buttonExportStock
+            // 
+            this.buttonExportStock.Location = new System.Drawing.Point(5, 30);
+            this.buttonExportStock.Name = "buttonExportStock";
+            this.buttonExportStock.Size = new System.Drawing.Size(168, 29);
+            this.buttonExportStock.TabIndex = 0;
+            this.buttonExportStock.Text = "导出已选列表的数据";
+            this.buttonExportStock.UseVisualStyleBackColor = true;
+            this.buttonExportStock.Click += new System.EventHandler(this.buttonExportStock_Click);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.radioButtonWeek);
+            this.groupBox5.Controls.Add(this.radioButtonMonth);
+            this.groupBox5.Controls.Add(this.radioButtonDay);
+            this.groupBox5.Controls.Add(this.buttonMA);
+            this.groupBox5.Location = new System.Drawing.Point(116, 5);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(113, 95);
+            this.groupBox5.TabIndex = 49;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Monitor-MA";
+            // 
+            // radioButtonWeek
+            // 
+            this.radioButtonWeek.AutoSize = true;
+            this.radioButtonWeek.Location = new System.Drawing.Point(53, 20);
+            this.radioButtonWeek.Name = "radioButtonWeek";
+            this.radioButtonWeek.Size = new System.Drawing.Size(47, 16);
+            this.radioButtonWeek.TabIndex = 2;
+            this.radioButtonWeek.Text = "Week";
+            this.radioButtonWeek.UseVisualStyleBackColor = true;
+            this.radioButtonWeek.CheckedChanged += new System.EventHandler(this.radioButtonDay_CheckedChanged);
+            // 
+            // radioButtonMonth
+            // 
+            this.radioButtonMonth.AutoSize = true;
+            this.radioButtonMonth.Location = new System.Drawing.Point(6, 39);
+            this.radioButtonMonth.Name = "radioButtonMonth";
+            this.radioButtonMonth.Size = new System.Drawing.Size(53, 16);
+            this.radioButtonMonth.TabIndex = 1;
+            this.radioButtonMonth.Text = "Month";
+            this.radioButtonMonth.UseVisualStyleBackColor = true;
+            this.radioButtonMonth.CheckedChanged += new System.EventHandler(this.radioButtonDay_CheckedChanged);
+            // 
+            // radioButtonDay
+            // 
+            this.radioButtonDay.AutoSize = true;
+            this.radioButtonDay.Checked = true;
+            this.radioButtonDay.Location = new System.Drawing.Point(6, 17);
+            this.radioButtonDay.Name = "radioButtonDay";
+            this.radioButtonDay.Size = new System.Drawing.Size(41, 16);
+            this.radioButtonDay.TabIndex = 0;
+            this.radioButtonDay.TabStop = true;
+            this.radioButtonDay.Text = "Day";
+            this.radioButtonDay.UseVisualStyleBackColor = true;
+            this.radioButtonDay.CheckedChanged += new System.EventHandler(this.radioButtonDay_CheckedChanged);
+            // 
+            // buttonMA
+            // 
+            this.buttonMA.Location = new System.Drawing.Point(6, 64);
+            this.buttonMA.Name = "buttonMA";
+            this.buttonMA.Size = new System.Drawing.Size(94, 25);
+            this.buttonMA.TabIndex = 27;
+            this.buttonMA.Text = "MA";
+            this.buttonMA.UseVisualStyleBackColor = true;
+            this.buttonMA.Click += new System.EventHandler(this.buttonMA_Click);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.buttonImportDB);
+            this.groupBox4.Controls.Add(this.textBoxMdbPath);
+            this.groupBox4.Controls.Add(this.buttonSaveDataSelfTest);
+            this.groupBox4.Location = new System.Drawing.Point(3, 5);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(107, 96);
+            this.groupBox4.TabIndex = 48;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "配置";
+            // 
+            // buttonSaveDataSelfTest
+            // 
+            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(0, 71);
+            this.buttonSaveDataSelfTest.Name = "buttonSaveDataSelfTest";
+            this.buttonSaveDataSelfTest.Size = new System.Drawing.Size(107, 25);
+            this.buttonSaveDataSelfTest.TabIndex = 43;
+            this.buttonSaveDataSelfTest.Text = "SaveDataSelfTest";
+            this.buttonSaveDataSelfTest.UseVisualStyleBackColor = true;
+            this.buttonSaveDataSelfTest.Click += new System.EventHandler(this.buttonSaveDataSelfTest_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.textBoxExchangeTime);
             this.groupBox3.Controls.Add(this.buttonDownloadsAllKdata);
-            this.groupBox3.Location = new System.Drawing.Point(525, 1);
+            this.groupBox3.Location = new System.Drawing.Point(590, 1);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(221, 60);
+            this.groupBox3.Size = new System.Drawing.Size(156, 93);
             this.groupBox3.TabIndex = 47;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "更新";
             // 
             // textBoxExchangeTime
             // 
-            this.textBoxExchangeTime.Location = new System.Drawing.Point(108, 38);
+            this.textBoxExchangeTime.Location = new System.Drawing.Point(0, 35);
             this.textBoxExchangeTime.Name = "textBoxExchangeTime";
             this.textBoxExchangeTime.Size = new System.Drawing.Size(112, 21);
             this.textBoxExchangeTime.TabIndex = 1;
             // 
             // buttonDownloadsAllKdata
             // 
-            this.buttonDownloadsAllKdata.Location = new System.Drawing.Point(9, 35);
+            this.buttonDownloadsAllKdata.Location = new System.Drawing.Point(0, 11);
             this.buttonDownloadsAllKdata.Name = "buttonDownloadsAllKdata";
             this.buttonDownloadsAllKdata.Size = new System.Drawing.Size(91, 24);
             this.buttonDownloadsAllKdata.TabIndex = 0;
@@ -171,30 +278,30 @@
             this.groupBox2.Controls.Add(this.radioButtonyears);
             this.groupBox2.Controls.Add(this.radioButtonreport);
             this.groupBox2.Controls.Add(this.buttonFinCW1);
-            this.groupBox2.Location = new System.Drawing.Point(317, 0);
+            this.groupBox2.Location = new System.Drawing.Point(235, 9);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(204, 61);
+            this.groupBox2.Size = new System.Drawing.Size(170, 92);
             this.groupBox2.TabIndex = 46;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "财务";
             // 
             // buttonExportStockCW
             // 
-            this.buttonExportStockCW.Location = new System.Drawing.Point(135, 40);
+            this.buttonExportStockCW.Location = new System.Drawing.Point(73, 39);
             this.buttonExportStockCW.Name = "buttonExportStockCW";
-            this.buttonExportStockCW.Size = new System.Drawing.Size(63, 22);
+            this.buttonExportStockCW.Size = new System.Drawing.Size(89, 22);
             this.buttonExportStockCW.TabIndex = 48;
             this.buttonExportStockCW.Tag = "reports";
-            this.buttonExportStockCW.Text = "导出股票";
+            this.buttonExportStockCW.Text = "导出所有股票";
             this.buttonExportStockCW.UseVisualStyleBackColor = true;
             this.buttonExportStockCW.Click += new System.EventHandler(this.buttonExportStockCW_Click);
             // 
             // comboBoxProper
             // 
             this.comboBoxProper.FormattingEnabled = true;
-            this.comboBoxProper.Location = new System.Drawing.Point(6, 36);
+            this.comboBoxProper.Location = new System.Drawing.Point(6, 65);
             this.comboBoxProper.Name = "comboBoxProper";
-            this.comboBoxProper.Size = new System.Drawing.Size(106, 20);
+            this.comboBoxProper.Size = new System.Drawing.Size(156, 20);
             this.comboBoxProper.TabIndex = 47;
             // 
             // radioButtonyears
@@ -212,7 +319,7 @@
             // radioButtonreport
             // 
             this.radioButtonreport.AutoSize = true;
-            this.radioButtonreport.Location = new System.Drawing.Point(65, 20);
+            this.radioButtonreport.Location = new System.Drawing.Point(91, 20);
             this.radioButtonreport.Name = "radioButtonreport";
             this.radioButtonreport.Size = new System.Drawing.Size(71, 16);
             this.radioButtonreport.TabIndex = 45;
@@ -223,7 +330,7 @@
             // 
             // buttonFinCW1
             // 
-            this.buttonFinCW1.Location = new System.Drawing.Point(135, 17);
+            this.buttonFinCW1.Location = new System.Drawing.Point(6, 39);
             this.buttonFinCW1.Name = "buttonFinCW1";
             this.buttonFinCW1.Size = new System.Drawing.Size(63, 22);
             this.buttonFinCW1.TabIndex = 43;
@@ -231,46 +338,6 @@
             this.buttonFinCW1.Text = "更新财务";
             this.buttonFinCW1.UseVisualStyleBackColor = true;
             this.buttonFinCW1.Click += new System.EventHandler(this.ButtonFinCW1Click);
-            // 
-            // buttonMAMonth
-            // 
-            this.buttonMAMonth.Location = new System.Drawing.Point(137, 29);
-            this.buttonMAMonth.Name = "buttonMAMonth";
-            this.buttonMAMonth.Size = new System.Drawing.Size(69, 25);
-            this.buttonMAMonth.TabIndex = 38;
-            this.buttonMAMonth.Text = "MA-MMonth";
-            this.buttonMAMonth.UseVisualStyleBackColor = true;
-            this.buttonMAMonth.Click += new System.EventHandler(this.buttonMAMonth_Click);
-            // 
-            // buttonSaveDataSelfTest
-            // 
-            this.buttonSaveDataSelfTest.Location = new System.Drawing.Point(201, 29);
-            this.buttonSaveDataSelfTest.Name = "buttonSaveDataSelfTest";
-            this.buttonSaveDataSelfTest.Size = new System.Drawing.Size(110, 25);
-            this.buttonSaveDataSelfTest.TabIndex = 43;
-            this.buttonSaveDataSelfTest.Text = "SaveDataSelfTest";
-            this.buttonSaveDataSelfTest.UseVisualStyleBackColor = true;
-            this.buttonSaveDataSelfTest.Click += new System.EventHandler(this.buttonSaveDataSelfTest_Click);
-            // 
-            // buttonMAWeek
-            // 
-            this.buttonMAWeek.Location = new System.Drawing.Point(69, 29);
-            this.buttonMAWeek.Name = "buttonMAWeek";
-            this.buttonMAWeek.Size = new System.Drawing.Size(69, 25);
-            this.buttonMAWeek.TabIndex = 37;
-            this.buttonMAWeek.Text = "MA-MWeek";
-            this.buttonMAWeek.UseVisualStyleBackColor = true;
-            this.buttonMAWeek.Click += new System.EventHandler(this.buttonMAWeek_Click);
-            // 
-            // buttonMA
-            // 
-            this.buttonMA.Location = new System.Drawing.Point(8, 29);
-            this.buttonMA.Name = "buttonMA";
-            this.buttonMA.Size = new System.Drawing.Size(62, 25);
-            this.buttonMA.TabIndex = 27;
-            this.buttonMA.Text = "MA-MDay";
-            this.buttonMA.UseVisualStyleBackColor = true;
-            this.buttonMA.Click += new System.EventHandler(this.buttonMA_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -283,8 +350,8 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(750, 565);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(750, 526);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // splitContainer2
@@ -308,7 +375,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Controls.Add(this.dgv);
-            this.splitContainer2.Size = new System.Drawing.Size(744, 539);
+            this.splitContainer2.Size = new System.Drawing.Size(744, 488);
             this.splitContainer2.SplitterDistance = 200;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -340,7 +407,7 @@
             this.listBox2.ItemHeight = 12;
             this.listBox2.Location = new System.Drawing.Point(0, 332);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(197, 196);
+            this.listBox2.Size = new System.Drawing.Size(197, 160);
             this.listBox2.TabIndex = 19;
             // 
             // comboBoxCol
@@ -407,7 +474,7 @@
             this.groupBox1.Controls.Add(this.textBox_backendday);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBox_backbeginday);
-            this.groupBox1.Location = new System.Drawing.Point(0, 31);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(526, 59);
             this.groupBox1.TabIndex = 29;
@@ -500,17 +567,17 @@
             // dgv
             // 
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv.Location = new System.Drawing.Point(0, 91);
+            this.dgv.Location = new System.Drawing.Point(0, 0);
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
             this.dgv.RowTemplate.Height = 23;
-            this.dgv.Size = new System.Drawing.Size(529, 440);
+            this.dgv.Size = new System.Drawing.Size(529, 497);
             this.dgv.TabIndex = 1;
             // 
             // textBoxInfor
             // 
             this.textBoxInfor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxInfor.Location = new System.Drawing.Point(3, 548);
+            this.textBoxInfor.Location = new System.Drawing.Point(3, 497);
             this.textBoxInfor.Name = "textBoxInfor";
             this.textBoxInfor.ReadOnly = true;
             this.textBoxInfor.Size = new System.Drawing.Size(744, 21);
@@ -526,10 +593,14 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -576,11 +647,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonSaveDataSelfTest;
-        private System.Windows.Forms.Button buttonMAMonth;
-        private System.Windows.Forms.Button buttonMAWeek;
         private System.Windows.Forms.RadioButton radioButtonreport;
         private System.Windows.Forms.RadioButton radioButtonyears;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -590,6 +658,14 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button buttonDownloadsAllKdata;
         private System.Windows.Forms.TextBox textBoxExchangeTime;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton radioButtonWeek;
+        private System.Windows.Forms.RadioButton radioButtonMonth;
+        private System.Windows.Forms.RadioButton radioButtonDay;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button buttonExportStock;
+        private System.Windows.Forms.Button buttonExportTempData;
     }
 }
 

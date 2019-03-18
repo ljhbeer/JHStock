@@ -19,12 +19,13 @@ namespace JHStock.UserForm
         private Form1 form1;
         private bool _isrunning;
         private Button _completebtn;
-
+        public ShowDeleGate ShowMsg;
         public DealClass(JSConfig _jscfg, Stocks _stocks, Form1 form1)
         {
             this._jscfg = _jscfg;
             this._stocks = _stocks;
             this.form1 = form1;
+            ShowMsg = form1.ThreadShowMsg;
         }
         public void TestDownLoads(System.Windows.Forms.Button btn)
         {
@@ -33,7 +34,6 @@ namespace JHStock.UserForm
             LoadFHSG();
 
         }
-
         private void LoadFHSG()
         {
             StringBuilder errormsg = new StringBuilder();
@@ -87,7 +87,6 @@ Values( [stockid],  [PDate],   [SG],   [ZZ],  [PX], '实施',[CQDate], '[DJDate]
             MFile.WriteAllText(_jscfg.baseconfig.WorkPath + "Data\\TestErr.Dat",string.Join("\r\n===========\r\n",errormsg.ToString()));
             
         }
-
         private void ConstructCQ()
         {
             string undeal = "";
@@ -165,7 +164,67 @@ Values( [stockid],  [PDate],   [SG],   [ZZ],  [PX], '实施',[CQDate], '[DJDate]
                 nonParameterThread.Start();
             }
         }
-
+        public void ExportKData(List<Stock> dealstock, FormMonit f)
+        {
+            SaveKdTag kdtag = f.GetStockData().SavekdTag;
+            string str1 = "";
+            try
+            {
+                foreach (Stock s in dealstock)
+                {
+                    tagkdstock t = kdtag.Tag[s.ID];
+                    if (t != null && t.kd != null)
+                    {
+                        str1 = string.Join("\r\n",
+                            t.kd.Select(r =>
+                            {
+                                string sss = r.date + "\t" + r.open + "\t" + r.close;
+                                return sss;
+                            }));
+                    }
+                    string savefilename = _jscfg.baseconfig.NowWorkPath()  +  "Export_"+_jscfg.KdataType +"_"+ s.Code + ".txt";
+                    MFile.WriteAllText(savefilename, str1);
+                    ShowMsg("已保存到文件：" + savefilename);
+                    
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("保存失败,原因是：" + ee.Message);
+            }
+        }
+        public void ExportFhKgData(List<Stock> dealstock )
+        {
+            List<Fhsgs> ls = JsonConvert.DeserializeObject<List<Fhsgs>>(File.ReadAllText(_jscfg.baseconfig.WorkPath + "Data\\AllFin.Dat"));
+            try
+            {
+                foreach (Stock s in dealstock)
+                {
+                    Fhsgs find = ls.Find( r=> r.stockcode == s.Code);
+                    string str1 = "";
+                    if(find!=null){
+                        Fhsgs t = find;
+                        if (t != null && t.FHSG != null)
+                        {
+                            str1 = string.Join("\r\n",
+                               t.FHSG.Select( r => {
+                                   string str = "";
+                                   str = r.nd + "\t"+r.cqr+" "+r.FHcontent;
+                                   return str;
+                               }).ToList()
+                                );
+                        }
+                        string savefilename = _jscfg.baseconfig.NowWorkPath() + "Export_FhKg_" + s.Code + ".txt";
+                        MFile.WriteAllText(savefilename, str1);
+                        ShowMsg("已保存到文件：" + savefilename);
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("保存失败,原因是：" + ee.Message);
+            }
+        }
     }
     public class FHSGItem
     {

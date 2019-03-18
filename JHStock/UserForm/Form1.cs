@@ -40,6 +40,7 @@ namespace JHStock
             _fd = _fm = _fw = null;
 
             _CN = new ChineseName();
+            _MonitDateType = "dayly";
         }
 
         private void InitJsconfig()
@@ -213,18 +214,24 @@ namespace JHStock
 				itemsShow.Clear();
 				listBox2.Items.Clear();
 			}
-		}		
-		private void buttonMA_Click(object sender, EventArgs e)
-		{
-            HideShowMonit(ref _fd,"dayly");
 		}
-        private void buttonMAWeek_Click(object sender, EventArgs e)
+        private void radioButtonDay_CheckedChanged(object sender, EventArgs e)
         {
-            HideShowMonit(ref _fw,"weekly");
+            RadioButton rb = (RadioButton)sender;
+            string txt = rb.Text.ToLower() + "ly";
+            _MonitDateType = "dayly";
+            if ("|dayly|weekly|monthly|".Contains(txt))
+                _MonitDateType = txt;
+            _jscfg.KdataType = _MonitDateType;
         }
-        private void buttonMAMonth_Click(object sender, EventArgs e)
+        private void buttonMA_Click(object sender, EventArgs e)
         {
-            HideShowMonit(ref _fm,"monthly");
+            if (_MonitDateType == "dayly")
+                HideShowMonit(ref _fd, _MonitDateType);
+            else if (_MonitDateType == "weekly")
+                HideShowMonit(ref _fw, _MonitDateType);
+            else if (_MonitDateType == "monthly")
+                HideShowMonit(ref _fm, _MonitDateType);
         }
         private void HideShowMonit(ref FormMonit f,string datetype)
         {
@@ -284,9 +291,8 @@ namespace JHStock
         {
             DealClass DC = new DealClass(_jscfg , _stocks,this);
             Button btn = (Button)sender;
-            DC.TestDownLoads(btn);          
+            //DC.TestDownLoads(btn);          
         }
-
         private void buttonExportStockCW_Click(object sender, EventArgs e)
         {
             if (comboBoxProper.SelectedIndex == -1) return;
@@ -379,6 +385,47 @@ namespace JHStock
             }
             MFile.WriteAllText("selftest.txt", outstr);
         }
+        private void buttonExportStock_Click(object sender, EventArgs e)
+        {          
+            //string propertyname = _CN.GetProperName(comboBoxProper.SelectedItem.ToString());
+            //if (propertyname == "") return;
+            //Type type = typeof(JsonMainCWFX);
+            //PropertyInfo property = type.GetProperty(propertyname);
+            //if (property == null) MessageBox.Show("找不到属性名称");
+            if (listBox2.Items.Count == 0) return;         
+            DealClass DC = new DealClass(_jscfg, _stocks, this);
+            DC.ExportKData( StocksByItemsShow(),  GetActiveFormMonit());           
+        }
+        private FormMonit GetActiveFormMonit()
+        {
+            FormMonit f = null;
+            if (_MonitDateType == "dayly")
+            {
+                if (_fd == null)
+                    _fd = new FormMonit(_MonitDateType, this);
+                f = _fd;
+            }
+            else if (_MonitDateType == "weekly")
+            {
+                if (_fw == null)
+                    _fw = new FormMonit(_MonitDateType, this);
+                f = _fw;
+            }
+            else if (_MonitDateType == "monthly")
+            {
+                if (_fm == null)
+                    _fm = new FormMonit(_MonitDateType, this);
+                f = _fm;
+            }
+            f.InitShowConfig(_jscfg);
+            return f;
+        }
+        private void buttonExportTempData_Click(object sender, EventArgs e)
+        {
+            if (listBox2.Items.Count == 0) return;
+            DealClass DC = new DealClass(_jscfg, _stocks, this);
+            DC.ExportFhKgData(StocksByItemsShow());  
+        }
         public void ThreadActionMsg(string msg)
         {
             Invoke(new ActionDeleGate(ActionMsg), new object[] { msg });
@@ -461,6 +508,7 @@ namespace JHStock
         private StocksData _stockdata;
         private bool bComplete;
         public string _CWDateType { get; set; }
+        public string _MonitDateType { get; set; }
 
     }	
 	public class DTNameType{

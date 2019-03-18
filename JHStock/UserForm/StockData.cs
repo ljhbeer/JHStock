@@ -194,18 +194,19 @@ namespace JHStock
             }
             else
             {
+                StringBuilder sb = new StringBuilder();
                 // 合并
                 for (int i = 0; i < 2000; i++)
                 {
                     Tagstock tgi = nkd.netsaveTag.Tag[i];
                     tagkdstock _tgi = _savetag.Tag[i];
                     List<KData> kdi = (List<KData>)tgi.Tag;
-                    if (_tgi.kd != null && kdi.Count == mergedays)
+                    if (_tgi.kd != null && kdi != null && kdi.Count == mergedays)
                     { //合并kd                        
                         if (kdi[0].date == beginday && kdi[mergedays - 1].date == endday)
                         {
-                            if(weekmonthexchange)
-                                _tgi.kd = _tgi.kd.Skip(mergedays-1).Take(_tgi.kd.Count - mergedays).ToList();
+                            if (weekmonthexchange)
+                                _tgi.kd = _tgi.kd.Skip(mergedays - 1).Take(_tgi.kd.Count - mergedays).ToList();
                             else
                                 _tgi.kd = _tgi.kd.Skip(mergedays).ToList();
                             _tgi.kd.AddRange(kdi);
@@ -217,14 +218,24 @@ namespace JHStock
                             if (kd.Length > 0)
                             {
                                 if (weekmonthexchange)
-                                    _tgi.kd = _tgi.kd.Skip(kd.Length-1).Take(_tgi.kd.Count -kd.Length).ToList();
-                                else 
+                                    _tgi.kd = _tgi.kd.Skip(kd.Length - 1).Take(_tgi.kd.Count - kd.Length).ToList();
+                                else
                                     _tgi.kd = _tgi.kd.Skip(kd.Length).ToList();
                                 _tgi.kd.AddRange(kdi);
                             }
                         }
                     }
+                    else
+                    {
+                        if (_tgi.kd != null && kdi == null)
+                        {
+                            sb.Append(_tgi.index + "\t");
+                            //_tgi.index;
+                        }
+                    }
                 }
+                string errormsg = sb.ToString();
+                MFile.AppendAllText(_jscfg.baseconfig.NowWorkPath() + "error.log", "已删除index" + errormsg);
             }
             _savetag.StoreDate = _netdate.NearestDate;
             _savetag.Save(_jscfg.baseconfig.WorkPath + _locatepricedata);	
@@ -233,8 +244,13 @@ namespace JHStock
 
         public SaveKdTag SavekdTag
         {
-            get { return _savetag; }			
-		}
+            get
+            {
+                if (_savetag == null)
+                    LoadLocalData();
+                return _savetag;
+            }
+        }
 		//init localdate
 		public List<int> SHLocalDate()
 		{

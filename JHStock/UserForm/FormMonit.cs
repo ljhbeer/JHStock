@@ -622,7 +622,10 @@ namespace JHStock
 			}
 			return MA;
 		}
-		
+		public StocksData GetStockData()
+        {
+            return _stockdata;
+        }
 		private JSConfig _jscfg;
 		private Stocks _stocks;
 		private string type;
