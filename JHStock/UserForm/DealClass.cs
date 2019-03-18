@@ -225,6 +225,60 @@ Values( [stockid],  [PDate],   [SG],   [ZZ],  [PX], '实施',[CQDate], '[DJDate]
                 MessageBox.Show("保存失败,原因是：" + ee.Message);
             }
         }
+        public void ExportMacd(List<Stock> dealstock, FormMonit f, bool OriginKdata = false )
+        {
+            SaveKdTag kdtag = f.GetStockData().SavekdTag;
+            try
+            {
+                foreach (Stock s in dealstock)
+                {
+                    List< KData> kd=null;
+                    if (OriginKdata)
+                    {
+                        kd = s.GetKData().ToList();
+                    }
+                    else
+                    {
+                        tagkdstock t = kdtag.Tag[s.ID];
+                        if (t != null)
+                        {
+                            kd = t.kd;
+                        }
+                    }
+                    if (kd != null)
+                    {
+                        string savefilename = _jscfg.baseconfig.NowWorkPath() + "Export_MACD_" + s.Code + ".txt";
+                        MFile.WriteAllText(savefilename, s.OutMacd( kd));
+                        ShowMsg("已保存到文件：" + savefilename);
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("保存失败,原因是：" + ee.Message);
+            }
+        }
+        public void CreateAllMacd(FormMonit f)
+        {
+            SaveKdTag kdtag = f.GetStockData().SavekdTag;
+            Tagstock[] Tag = new Tagstock[2000];
+	        for (int i = 0; i < 2000; i++)
+	            Tag[i] = new Tagstock();
+	        foreach (Stock s in _stocks.stocks)
+	            Tag[s.ID].Init(s);
+            SaveJsonTag savetag = new SaveJsonTag(System.DateTime.Now, Tag);
+            foreach (Stock s in _stocks.stocks)
+            {
+                tagkdstock t = kdtag.Tag[s.ID];
+                if (t != null && t.kd != null)
+                {
+                    Tag[s.ID].Tag = MACD.ComputeMacdArray(t.kd.ToArray());
+                }
+            }
+            string savefilename = _jscfg.baseconfig.WorkPath+"Data\\"  +form1._MonitDateType+ "_AllMacd"   + ".dat";
+            savetag.Save(savefilename);
+            ShowMsg("已保存到文件：" + savefilename);
+        }
     }
     public class FHSGItem
     {

@@ -157,14 +157,17 @@ namespace JHStock
         private  CFQTool _fq;
         //private  CQFITool _qfi;
         //private  CNFITool _nfi;
+
+        public int DaysCount { get { return Staticsconfig.KDataDaysCount;  } }
     }
 	public class StaticsConfig{
         public bool Debug { get; set; }
         public int BeginDay { get; set; }
         public int EndDay { get; set; }
-        public int StaticDays { get; set; }  
+        public int StaticDays { get; set; }
+        public int KDataDaysCount { get; set; }  
         public string wout { get; set; }
-	}
+    }
     public class TempConfig
     {
         public TempConfig()

@@ -420,28 +420,25 @@ namespace JHStock
             f.InitShowConfig(_jscfg);
             return f;
         }
-        private void buttonExportTempData_Click(object sender, EventArgs e)
+        private void buttonExportFhKgData_Click(object sender, EventArgs e)
         {
             if (listBox2.Items.Count == 0) return;
             DealClass DC = new DealClass(_jscfg, _stocks, this);
             DC.ExportFhKgData(StocksByItemsShow());  
         }
-
+        private void buttonExportMacd_Click(object sender, EventArgs e)
+        {
+            if (listBox2.Items.Count == 0) return;
+            DealClass DC = new DealClass(_jscfg, _stocks, this);
+          
+            DC.ExportMacd(StocksByItemsShow(), GetActiveFormMonit()  , checkBoxOrginKdata.Checked && _MonitDateType == "dayly");   
+        }
         private void buttonCreateMacd_Click(object sender, EventArgs e)
         {
             ((Button)sender).Enabled = false;
-            MACD macd = new MACD();
-            //if (checkBoxBeforeDate.Checked)
-            //{
-            //    int backdate = Config.ToIntDate(DateTime.Today.AddDays(-1));
-            //    int datepos = _stocks.GetStartDatePos(backdate);
-
-            //    CreateAllStockMACDData(cfg, _stocks, cfg.StaticDays, datepos);
-            //}
-            //else
-            //{
-            //    CreateAllStockMACDData(cfg, _stocks, cfg.StaticDays);
-            //}
+            DealClass DC = new DealClass(_jscfg, _stocks, this);
+            DC.CreateAllMacd( GetActiveFormMonit() );   
+           
             _stocks.ResetMacdData();
             ((Button)sender).Enabled = true;
         }
@@ -546,6 +543,8 @@ namespace JHStock
         private bool bComplete;
         public string _CWDateType { get; set; }
         public string _MonitDateType { get; set; }
+
+
 
     }	
 	public class DTNameType{

@@ -32,7 +32,7 @@ namespace JHStock.UserForm
 			Init();
 		}
 		private void Init(){
-            string urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/Index?type=web&code=[stockcode]#zyzb-0";
+            //string urlt = @"http://f10.eastmoney.com/NewFinanceAnalysis/Index?type=web&code=[stockcode]#zyzb-0";
             try
             {
                 //if (_jscfg.globalconfig.StocksData.Netdate.Inline)

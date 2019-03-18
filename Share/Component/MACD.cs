@@ -69,14 +69,14 @@ namespace JHStock
 
             return this;
         }
-        public MACD[] ComputeMacdArray(int[] close)
+        public static MACD[] ComputeMacdArray(int[] close)
         {
             MACD[] mv = new MACD[close.Length];
             for (int i = 1; i < mv.Length; i++)
                 mv[i] = mv[i - 1].Next(close[i]);
             return mv;
         }
-        public MACD[] ComputeMacdArray(KData[] kdata)
+        public static MACD[] ComputeMacdArray(KData[] kdata)
         {
             if (kdata.Length < 2) return new MACD[0];
             MACD[] mv = new MACD[kdata.Length];

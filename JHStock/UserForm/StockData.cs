@@ -25,7 +25,7 @@ namespace JHStock
             nkd = null;
 			activeKD = new KData[2000];
 			TempDaysCount = 0;
-			DaysLength = 84;
+            DaysLength = _jscfg.staticsconfig.KDataDaysCount;
             _netdate = new NetDate(DaysLength, _jscfg.KdataType);
             _locatepricedata = "data\\"+_jscfg.KdataType+"_ExpPrice.dat";
 		}
@@ -180,13 +180,15 @@ namespace JHStock
             int endday = kd0[mergedays-1].date;
 
             bool weekmonthexchange = false;
-            int testweekdate = _savetag.Tag[0].kd[_savetag.Tag[0].kd.Count - 1].date;
-            if (!Netdate.ListHistoryDate.Contains(testweekdate))
+            if (_savetag != null)
             {
-                //周线 月线 替换首日
-                weekmonthexchange = true;
+                int testweekdate = _savetag.Tag[0].kd[_savetag.Tag[0].kd.Count - 1].date;
+                if (!Netdate.ListHistoryDate.Contains(testweekdate))
+                {
+                    //周线 月线 替换首日
+                    weekmonthexchange = true;
+                }
             }
-
             if (mergedays == DaysLength)
             {
                 _savetag = new SaveKdTag(nkd.netsaveTag.StoreDate, nkd.netsaveTag.Tag.Length);

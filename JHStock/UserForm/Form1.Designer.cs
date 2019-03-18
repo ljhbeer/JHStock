@@ -32,6 +32,7 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.buttonExportMacd = new System.Windows.Forms.Button();
             this.buttonExportTempData = new System.Windows.Forms.Button();
             this.buttonExportStock = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -42,6 +43,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.buttonSaveDataSelfTest = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.buttonCreateMacd = new System.Windows.Forms.Button();
             this.textBoxExchangeTime = new System.Windows.Forms.TextBox();
             this.buttonDownloadsAllKdata = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -73,7 +75,7 @@
             this.textBox_backbeginday = new System.Windows.Forms.TextBox();
             this.dgv = new System.Windows.Forms.DataGridView();
             this.textBoxInfor = new System.Windows.Forms.TextBox();
-            this.buttonCreateMacd = new System.Windows.Forms.Button();
+            this.checkBoxOrginKdata = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -135,6 +137,8 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.checkBoxOrginKdata);
+            this.groupBox6.Controls.Add(this.buttonExportMacd);
             this.groupBox6.Controls.Add(this.buttonExportTempData);
             this.groupBox6.Controls.Add(this.buttonExportStock);
             this.groupBox6.Location = new System.Drawing.Point(411, 8);
@@ -144,23 +148,33 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "导出数据";
             // 
+            // buttonExportMacd
+            // 
+            this.buttonExportMacd.Location = new System.Drawing.Point(5, 49);
+            this.buttonExportMacd.Name = "buttonExportMacd";
+            this.buttonExportMacd.Size = new System.Drawing.Size(78, 29);
+            this.buttonExportMacd.TabIndex = 2;
+            this.buttonExportMacd.Text = "导出MACD";
+            this.buttonExportMacd.UseVisualStyleBackColor = true;
+            this.buttonExportMacd.Click += new System.EventHandler(this.buttonExportMacd_Click);
+            // 
             // buttonExportTempData
             // 
-            this.buttonExportTempData.Location = new System.Drawing.Point(5, 59);
+            this.buttonExportTempData.Location = new System.Drawing.Point(86, 15);
             this.buttonExportTempData.Name = "buttonExportTempData";
-            this.buttonExportTempData.Size = new System.Drawing.Size(168, 29);
+            this.buttonExportTempData.Size = new System.Drawing.Size(87, 29);
             this.buttonExportTempData.TabIndex = 1;
-            this.buttonExportTempData.Text = "导出已选分红的数据";
+            this.buttonExportTempData.Text = "导出分红扩股";
             this.buttonExportTempData.UseVisualStyleBackColor = true;
-            this.buttonExportTempData.Click += new System.EventHandler(this.buttonExportTempData_Click);
+            this.buttonExportTempData.Click += new System.EventHandler(this.buttonExportFhKgData_Click);
             // 
             // buttonExportStock
             // 
-            this.buttonExportStock.Location = new System.Drawing.Point(5, 30);
+            this.buttonExportStock.Location = new System.Drawing.Point(5, 14);
             this.buttonExportStock.Name = "buttonExportStock";
-            this.buttonExportStock.Size = new System.Drawing.Size(168, 29);
+            this.buttonExportStock.Size = new System.Drawing.Size(79, 29);
             this.buttonExportStock.TabIndex = 0;
-            this.buttonExportStock.Text = "导出已选列表的数据";
+            this.buttonExportStock.Text = "导出KData";
             this.buttonExportStock.UseVisualStyleBackColor = true;
             this.buttonExportStock.Click += new System.EventHandler(this.buttonExportStock_Click);
             // 
@@ -255,6 +269,16 @@
             this.groupBox3.TabIndex = 47;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "更新";
+            // 
+            // buttonCreateMacd
+            // 
+            this.buttonCreateMacd.Location = new System.Drawing.Point(6, 68);
+            this.buttonCreateMacd.Name = "buttonCreateMacd";
+            this.buttonCreateMacd.Size = new System.Drawing.Size(91, 24);
+            this.buttonCreateMacd.TabIndex = 2;
+            this.buttonCreateMacd.Text = "创建MACD";
+            this.buttonCreateMacd.UseVisualStyleBackColor = true;
+            this.buttonCreateMacd.Click += new System.EventHandler(this.buttonCreateMacd_Click);
             // 
             // textBoxExchangeTime
             // 
@@ -585,15 +609,15 @@
             this.textBoxInfor.Size = new System.Drawing.Size(744, 21);
             this.textBoxInfor.TabIndex = 30;
             // 
-            // buttonCreateMacd
+            // checkBoxOrginKdata
             // 
-            this.buttonCreateMacd.Location = new System.Drawing.Point(6, 68);
-            this.buttonCreateMacd.Name = "buttonCreateMacd";
-            this.buttonCreateMacd.Size = new System.Drawing.Size(91, 24);
-            this.buttonCreateMacd.TabIndex = 2;
-            this.buttonCreateMacd.Text = "创建MACD";
-            this.buttonCreateMacd.UseVisualStyleBackColor = true;
-            this.buttonCreateMacd.Click += new System.EventHandler(this.buttonCreateMacd_Click);
+            this.checkBoxOrginKdata.AutoSize = true;
+            this.checkBoxOrginKdata.Location = new System.Drawing.Point(89, 57);
+            this.checkBoxOrginKdata.Name = "checkBoxOrginKdata";
+            this.checkBoxOrginKdata.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxOrginKdata.TabIndex = 3;
+            this.checkBoxOrginKdata.Text = "原始日线";
+            this.checkBoxOrginKdata.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -609,6 +633,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -679,6 +704,8 @@
         private System.Windows.Forms.Button buttonExportStock;
         private System.Windows.Forms.Button buttonExportTempData;
         private System.Windows.Forms.Button buttonCreateMacd;
+        private System.Windows.Forms.Button buttonExportMacd;
+        private System.Windows.Forms.CheckBox checkBoxOrginKdata;
     }
 }
 

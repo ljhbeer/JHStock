@@ -9,11 +9,11 @@ namespace JHStock
 {
     public static class MyExtend
     {
-        public static void OutMacd(this Stock s, MACD macd, int daylength)
+        public static void OutMacd(this Stock s, int daylength)
         {
             StringBuilder outstr = new StringBuilder();
             KData[] kd = s.GetKData();
-            MACD[] md = macd.ComputeMacdArray(kd);
+            MACD[] md = MACD.ComputeMacdArray(kd);
             int i = 0;
             outstr.AppendLine("日    期\tEMAS\tEMAL\tDIF\tDEA\tMACD");
             foreach (MACD m in md)
@@ -23,6 +23,23 @@ namespace JHStock
             }
             outstr.AppendLine("====================================End");
             MFile.WriteAllText("MACD详细数据\\" + s.Name.Replace("*", "") + s.NumCode + "debug_MACD每日数据.txt", outstr.ToString());
+        }
+        public static string OutMacd(this Stock s, List<KData> kd)
+        {
+            StringBuilder outstr = new StringBuilder();
+            int daylength = kd.Count;
+            MACD[] md = MACD.ComputeMacdArray(kd.ToArray());
+            int i = 0;
+            outstr.AppendLine("日    期\tEMAS\tEMAL\tDIF\tDEA\tMACD");
+            foreach (MACD m in md)
+            {
+                outstr.AppendLine(kd[i].date + m.ToString());
+                i++;
+            }
+            outstr.AppendLine();
+            return outstr.ToString();
+            //outstr.AppendLine("====================================End");
+            //MFile.WriteAllText("MACD详细数据\\" + s.Name.Replace("*", "") + s.NumCode + "debug_MACD每日数据.txt", outstr.ToString());
         }
         public static void TestFuQuan(this Stock s, int daylength, Stocks stocks)
         {
