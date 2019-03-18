@@ -73,6 +73,7 @@ namespace JHStock
 				MessageBox.Show("显示form1.从新配置");
 				this.Show();
 			}
+            ComputeVol = radioButtonVol.Checked;
 		}
 		private bool Init()
 		{
@@ -431,12 +432,18 @@ namespace JHStock
 		{
 			if (!_stockdata.HasKdata(s.ID))
 				return;
-			double[] kdvol = _stockdata.GetKD(s.ID).Select(r =>(double)( r.vol)).ToArray();
+            double[] kdvol;
+            if(ComputeVol)
+			    kdvol = _stockdata.GetKD(s.ID).Select(r =>(double)( r.vol)).ToArray();
+            else
+                kdvol = _stockdata.GetKD(s.ID).Select(r => (double)(r.close)).ToArray();
 			if(staticdaylenght != 200 && staticdaylenght > kdvol.Length && _stockdata.Netdate.Inline){
 				// TODO: Complete TestStock
 				tagkdstock ts = ThreadUpdateStocksQQDayly.DownLoadData(s,staticdaylenght);
-				kdvol=
-				ts.kd.Select(r =>(double)( r.vol)).ToArray();
+                if (ComputeVol)
+                    kdvol=ts.kd.Select(r =>(double)( r.vol)).ToArray();
+                else
+                    kdvol = ts.kd.Select(r => (double)(r.close)).ToArray();
 			}
 			
 			
@@ -479,7 +486,7 @@ namespace JHStock
 //				str+= "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
 //					+ "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
 //					+ "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
-				MFile.WriteAllText(s.Name + s.NumCode + ".txt", str);
+				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
 			}
 		}		
 		private List<Point> MergeLines(List<Point> lines, List<int> maL, int bigbreak)
@@ -648,6 +655,11 @@ namespace JHStock
         //for Debug Out
 		public List<Stock> DebugStocks;
         private string _kdatatype;
+        private bool ComputeVol;
+        private void radioButtonVol_CheckedChanged(object sender, EventArgs e)
+        {
+            ComputeVol = radioButtonVol.Checked;
+        }
 
     }
 	public class UpdateMonitInfors{

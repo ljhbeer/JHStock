@@ -58,6 +58,8 @@
             this.buttonSaveLog = new System.Windows.Forms.Button();
             this.ButtonOpenDaily = new System.Windows.Forms.Button();
             this.buttonCustomLog = new System.Windows.Forms.Button();
+            this.radioButtonVol = new System.Windows.Forms.RadioButton();
+            this.radioButtonClos = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -85,7 +87,7 @@
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 57F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 73F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(791, 505);
@@ -118,7 +120,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(55, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(699, 51);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(699, 67);
             this.flowLayoutPanel1.TabIndex = 15;
             // 
             // groupBox2
@@ -128,15 +130,15 @@
             this.groupBox2.Controls.Add(this.buttonAddToTXDBlock);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(101, 46);
+            this.groupBox2.Size = new System.Drawing.Size(101, 64);
             this.groupBox2.TabIndex = 28;
             this.groupBox2.TabStop = false;
             // 
             // buttonToTxt
             // 
-            this.buttonToTxt.Location = new System.Drawing.Point(59, 24);
+            this.buttonToTxt.Location = new System.Drawing.Point(0, 46);
             this.buttonToTxt.Name = "buttonToTxt";
-            this.buttonToTxt.Size = new System.Drawing.Size(36, 18);
+            this.buttonToTxt.Size = new System.Drawing.Size(78, 18);
             this.buttonToTxt.TabIndex = 18;
             this.buttonToTxt.Text = "ToTxt";
             this.buttonToTxt.UseVisualStyleBackColor = true;
@@ -164,6 +166,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.radioButtonClos);
+            this.groupBox3.Controls.Add(this.radioButtonVol);
             this.groupBox3.Controls.Add(this.buttonRefreshMin);
             this.groupBox3.Controls.Add(this.buttonSaveSelect);
             this.groupBox3.Controls.Add(this.checkBoxDebugOutPut);
@@ -172,13 +176,13 @@
             this.groupBox3.Controls.Add(this.checkBoxUserDefinitionStocks);
             this.groupBox3.Location = new System.Drawing.Point(110, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(264, 46);
+            this.groupBox3.Size = new System.Drawing.Size(264, 70);
             this.groupBox3.TabIndex = 29;
             this.groupBox3.TabStop = false;
             // 
             // buttonRefreshMin
             // 
-            this.buttonRefreshMin.Location = new System.Drawing.Point(189, 28);
+            this.buttonRefreshMin.Location = new System.Drawing.Point(69, 46);
             this.buttonRefreshMin.Name = "buttonRefreshMin";
             this.buttonRefreshMin.Size = new System.Drawing.Size(73, 18);
             this.buttonRefreshMin.TabIndex = 29;
@@ -188,7 +192,7 @@
             // 
             // buttonSaveSelect
             // 
-            this.buttonSaveSelect.Location = new System.Drawing.Point(125, 28);
+            this.buttonSaveSelect.Location = new System.Drawing.Point(0, 46);
             this.buttonSaveSelect.Name = "buttonSaveSelect";
             this.buttonSaveSelect.Size = new System.Drawing.Size(63, 18);
             this.buttonSaveSelect.TabIndex = 28;
@@ -199,7 +203,7 @@
             // checkBoxDebugOutPut
             // 
             this.checkBoxDebugOutPut.AutoSize = true;
-            this.checkBoxDebugOutPut.Location = new System.Drawing.Point(105, 10);
+            this.checkBoxDebugOutPut.Location = new System.Drawing.Point(114, 10);
             this.checkBoxDebugOutPut.Name = "checkBoxDebugOutPut";
             this.checkBoxDebugOutPut.Size = new System.Drawing.Size(78, 16);
             this.checkBoxDebugOutPut.TabIndex = 27;
@@ -208,9 +212,9 @@
             // 
             // buttonReCompute
             // 
-            this.buttonReCompute.Location = new System.Drawing.Point(217, 9);
+            this.buttonReCompute.Location = new System.Drawing.Point(162, 44);
             this.buttonReCompute.Name = "buttonReCompute";
-            this.buttonReCompute.Size = new System.Drawing.Size(42, 18);
+            this.buttonReCompute.Size = new System.Drawing.Size(96, 22);
             this.buttonReCompute.TabIndex = 23;
             this.buttonReCompute.Text = "计算";
             this.buttonReCompute.UseVisualStyleBackColor = true;
@@ -314,13 +318,13 @@
             this.dgv.AllowUserToAddRows = false;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv.Location = new System.Drawing.Point(55, 60);
+            this.dgv.Location = new System.Drawing.Point(55, 76);
             this.dgv.Name = "dgv";
             this.dgv.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.Black;
             this.dgv.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.White;
             this.dgv.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgv.RowTemplate.Height = 23;
-            this.dgv.Size = new System.Drawing.Size(699, 416);
+            this.dgv.Size = new System.Drawing.Size(699, 400);
             this.dgv.TabIndex = 2;
             this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
             // 
@@ -331,7 +335,7 @@
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(46, 51);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(46, 67);
             this.flowLayoutPanel2.TabIndex = 25;
             // 
             // buttonConfig
@@ -357,9 +361,9 @@
             this.flowLayoutPanel3.Controls.Add(this.ButtonOpenDaily);
             this.flowLayoutPanel3.Controls.Add(this.buttonCustomLog);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 60);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 76);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(46, 416);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(46, 400);
             this.flowLayoutPanel3.TabIndex = 26;
             // 
             // buttonSaveLog
@@ -391,6 +395,30 @@
             this.buttonCustomLog.Text = "编辑日志";
             this.buttonCustomLog.UseVisualStyleBackColor = true;
             this.buttonCustomLog.Click += new System.EventHandler(this.buttonCustomLog_Click);
+            // 
+            // radioButtonVol
+            // 
+            this.radioButtonVol.AutoSize = true;
+            this.radioButtonVol.Checked = true;
+            this.radioButtonVol.Location = new System.Drawing.Point(198, 26);
+            this.radioButtonVol.Name = "radioButtonVol";
+            this.radioButtonVol.Size = new System.Drawing.Size(35, 16);
+            this.radioButtonVol.TabIndex = 30;
+            this.radioButtonVol.TabStop = true;
+            this.radioButtonVol.Text = "量";
+            this.radioButtonVol.UseVisualStyleBackColor = true;
+            this.radioButtonVol.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
+            // 
+            // radioButtonClos
+            // 
+            this.radioButtonClos.AutoSize = true;
+            this.radioButtonClos.Location = new System.Drawing.Point(198, 8);
+            this.radioButtonClos.Name = "radioButtonClos";
+            this.radioButtonClos.Size = new System.Drawing.Size(59, 16);
+            this.radioButtonClos.TabIndex = 31;
+            this.radioButtonClos.Text = "收盘价";
+            this.radioButtonClos.UseVisualStyleBackColor = true;
+            this.radioButtonClos.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
             // 
             // FormMonit
             // 
@@ -453,5 +481,7 @@
         private System.Windows.Forms.CheckBox checkBoxROE5years;
         private System.Windows.Forms.Button buttonSaveSelect;
         private System.Windows.Forms.Button buttonCustomLog;
+        private System.Windows.Forms.RadioButton radioButtonClos;
+        private System.Windows.Forms.RadioButton radioButtonVol;
     }
 }
