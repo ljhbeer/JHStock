@@ -248,10 +248,10 @@ namespace JHStock
 				if(!(int.TryParse(textBoxdefineDays.Text,out days) && days>80))
 					days = 200; //TestStock中   ，int staticdaylenght = 200)
 				foreach (Stock s in DebugStocks)
-					TestStock(s,checkBoxDebugOutPut.Checked,days);
+					TestStockSelect(s,checkBoxDebugOutPut.Checked,days);
 			}else{
 				foreach (Stock s in _stocks.stocks)
-					TestStock(s);
+					TestStockSelect(s);
 			}
 			ShowSelectedStocks();
 		}
@@ -428,6 +428,34 @@ namespace JHStock
 			return outstr;
 		}
 		//List<KData> listclose = kd.Skip(0).Take(60).ToList();
+        public void TestStockSelect(Stock s, bool DebugOutPut = false, int staticdaylenght = 200)
+        {
+            if (ComputeVol)
+            {
+                TestStock(s, DebugOutPut, staticdaylenght);
+            }
+            else
+            {
+                int L = 10;
+                int S = 5;
+                if (_kdatatype == "dayly") 
+                {
+                    S = 10;
+                    L = 20;
+                }
+                else if (_kdatatype == "weekly") //20,40
+                {
+                    S = 20;
+                    L = 40;
+                }
+                else if (_kdatatype == "monthly") //5,10
+                {
+                    S = 5;
+                    L = 10;
+                }
+                TestStockMA(s,S,L, DebugOutPut, staticdaylenght);                 
+            }
+        }
 		public void TestStock(Stock s,bool DebugOutPut = false, int staticdaylenght = 200)
 		{
 			if (!_stockdata.HasKdata(s.ID))
@@ -482,13 +510,75 @@ namespace JHStock
 				List<List<string>> lls = vma5.Select( r=>{List<string> re = new List<string>{r.ToString(),ma5L[li].ToString(),L[li].ToString()}; li++; return re;} ).ToList();
 				
 				string str = "\r\nvma5\tma5L\tL\r\n"+lls.Select( r=> string.Join("\t",r)).Aggregate((r1, r2) => r1+"\r\n" + r2);
-				
-//				str+= "\r\nvma5\t" + vma5.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-//					+ "\r\nma5L\t" + ma5L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2)
-//					+ "\r\nL\t" + L.Select(r => r + "\t").Aggregate((r1, r2) => r1 + r2);
 				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
 			}
-		}		
+		}
+        private void TestStockMA(Stock s, int S, int L, bool DebugOutPut=false, int staticdaylenght=200)
+        {
+            if (!_stockdata.HasKdata(s.ID))
+				return;
+            List<KData> kd = _stockdata.GetKD(s.ID);
+			if(staticdaylenght != 200 && staticdaylenght > kd.Count && _stockdata.Netdate.Inline)
+            {
+				tagkdstock ts = ThreadUpdateStocksQQDayly.DownLoadData(s,staticdaylenght);
+                kd = ts.kd;
+            }
+            double[] kdvol;
+            if(ComputeVol)
+			    kdvol = kd.Select(r =>(double)( r.vol)).ToArray();
+            else
+                kdvol = kd.Select(r => (double)(r.close)).ToArray();				
+
+            List<double> maL = MA(0, L, kdvol);
+            List<double> maS = MA(L - S, S, kdvol);
+            List<double> Bar = new List<double>();
+            for (int i = 0; i < maL.Count; i++)
+                Bar.Add(maS[i] - maL[i]);
+            double max = Bar.Max();
+            //百分
+            List<int> PerBar = Bar.Select(r => (int)(r * 100/max + (r > 0 ? 0.5 : -0.5))).ToList();
+            PerBar.Reverse();
+            int N = 0;
+            int P = 0;
+            if(PerBar[0] >= 0 ){
+               N = PerBar.FindIndex(r => r < 0);
+               if (N >= 0)
+               {
+                   P = PerBar.FindIndex(N, r => r >= 0);
+                   P -= N;
+                   N -= 1;
+               }
+            }
+            if(N>=0 && P>0)
+            {
+                bool bselect = false;
+                if (_kdatatype == "dayly" && N <=2 && P>= 10
+                    ||_kdatatype == "weekly" && N <=2 && P>= 10 
+                    ||_kdatatype == "monthly" && N <=1 && P>= 5)
+                {
+                    bselect = true;
+                }
+                if(bselect)
+                {
+                    selectstock.Add(s);
+                    // 持续天数  \t 后续天数  \t  后续天数的情况
+                    List<int> LL = PerBar.Take(N).ToList();
+                    LL.Reverse();
+                    savestockinfor.Add(P + "\t" + N + "\t" + string.Join(",",LL));
+                }
+            }
+
+			if (DebugOutPut)
+			{
+                int li = 0;
+                List<List<string>> lls = maL.Select(r => { 
+                    List<string> re = new List<string> {kd[li+L-1].date.ToString(), r.ToString("0.00"), maS[li].ToString("0.00"), Bar[li].ToString("0.00") }; li++; return re; 
+                }).ToList();
+				string str = "\r\nDate\tmaL\tmaS\tBar\r\n"+lls.Select( r=> string.Join("\t",r)).Aggregate((r1, r2) => r1+"\r\n" + r2);
+				
+				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
+			}
+        }
 		private List<Point> MergeLines(List<Point> lines, List<int> maL, int bigbreak)
 		{
 			if(lines.Count<2) return lines;;
@@ -608,25 +698,31 @@ namespace JHStock
 		private List<double> MA(int skip, int daylength, int[] listdata)
 		{
 			List<double> MA = new List<double>();
-			double sum = listdata.Skip(skip).Take(daylength).Sum();
+            listdata = listdata.Skip(skip).ToArray();
+            double sum = listdata.Take(daylength).Sum();
+            skip = 0;
 			for (int i = skip + daylength; i < listdata.Length; i++)
 			{
 				double avg = sum * 1.0 / daylength;
 				MA.Add(avg);
 				sum += listdata[i] - listdata[i - daylength];
-			}
+            }
+            MA.Add(sum * 1.0 / daylength);
 			return MA;
 		}
 		private List<double> MA(int skip, int daylength, double[] listdata)
 		{
 			List<double> MA = new List<double>();
-			double sum = listdata.Skip(skip).Take(daylength).Sum();
+            listdata = listdata.Skip(skip).ToArray();
+			double sum = listdata.Take(daylength).Sum();
+            skip = 0;
 			for (int i = skip + daylength; i < listdata.Length; i++)
 			{
 				double avg = sum * 1.0 / daylength;
 				MA.Add(avg);
 				sum += listdata[i] - listdata[i - daylength];
 			}
+            MA.Add(sum * 1.0 / daylength);
 			return MA;
 		}
 		public StocksData GetStockData()
