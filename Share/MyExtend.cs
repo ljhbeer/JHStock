@@ -91,6 +91,36 @@ namespace JHStock
             }
             return false;
         }
+        public static Bitmap DrawKData(this Stock s, List<KData> kd)
+        {
+            Bitmap Bmp = new Bitmap(400, 50, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+          
+            List<double> ListItem = new List<double>(kd.Select(r =>
+            {
+                if (r.close > r.open)
+                    return (r.high * 100.0 / r.low - 100);
+                return -(r.high * 100.0 / r.low - 100);
+            }));
+            double avg = ListItem.Select(r => r > 0 ? r : -r).Average();
+            double max = ListItem.Max(r => r > 0 ? r : -r); //22
+            BitmapTools.DrawBitmap(Bmp, ListItem, max);
+            return Bmp;
+        }
+        public static Bitmap DrawBar(this Stock s, List<int> bar)
+        {
+            Bitmap Bmp = new Bitmap(400, 50, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            //KData[] kd = s.GetKData(-1, s.Gcfg.Staticsconfig.StaticDays, true); //获得60天
+            //List<double> ListItem = new List<double>(kd.Select(r =>
+            //{
+            //    if (r.close > r.open)
+            //        return (r.high * 100.0 / r.low - 100);
+            //    return -(r.high * 100.0 / r.low - 100);
+            //}));
+            //avg = ListItem.Select(r => r > 0 ? r : -r).Average();
+            //double max = 22;// ListItem.Max(r => r > 0 ? r : -r);
+            //BitmapTools.DrawBitmap(Bmp, ListItem, max);
+            return Bmp;
+        }
         public static Bitmap DrawZhenfuBmp(this Stock s, ref double avg)
         {
             Bitmap Bmp = new Bitmap(400, 50, System.Drawing.Imaging.PixelFormat.Format24bppRgb);

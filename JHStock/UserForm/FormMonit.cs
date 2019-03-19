@@ -371,6 +371,8 @@ namespace JHStock
 			int i = 0;
 			_umi.b5years = checkBoxROE5years.Checked;
 			_umi.bshownet = checkBoxShowHexinFromNet.Checked;
+            if (selectstock.Count > 0)
+                selectstock[0].Gcfg.StocksData = _stockdata;
 			foreach (Stock s in selectstock)
 			{
 				DataRow dr = dt.NewRow();
@@ -392,7 +394,8 @@ namespace JHStock
 				dt.Rows.Add(dr);
 				i++;
 			}
-			_umi.run();
+            if(selectstock.Count<80)
+			_umi.run(_kdatatype);
 		}
 		private Bitmap GetBitmapFromUrl(string url)
 		{
@@ -527,14 +530,14 @@ namespace JHStock
             if(ComputeVol)
 			    kdvol = kd.Select(r =>(double)( r.vol)).ToArray();
             else
-                kdvol = kd.Select(r => (double)(r.close)).ToArray();				
+                kdvol = kd.Select(r => (double)(r.close/100.0)).ToArray();				
 
             List<double> maL = MA(0, L, kdvol);
             List<double> maS = MA(L - S, S, kdvol);
             List<double> Bar = new List<double>();
             for (int i = 0; i < maL.Count; i++)
                 Bar.Add(maS[i] - maL[i]);
-            double max = Bar.Max();
+            double max = Bar.Max(r => Math.Abs(r));
             //百分
             List<int> PerBar = Bar.Select(r => (int)(r * 100/max + (r > 0 ? 0.5 : -0.5))).ToList();
             PerBar.Reverse();
@@ -553,8 +556,8 @@ namespace JHStock
             {
                 bool bselect = false;
                 if (_kdatatype == "dayly" && N <=2 && P>= 10
-                    ||_kdatatype == "weekly" && N <=2 && P>= 10 
-                    ||_kdatatype == "monthly" && N <=1 && P>= 5)
+                    ||_kdatatype == "weekly" && N <=1 && P>= 10 
+                    ||_kdatatype == "monthly" && N <=1 && P>= 8)
                 {
                     bselect = true;
                 }
@@ -576,7 +579,7 @@ namespace JHStock
                 }).ToList();
 				string str = "\r\nDate\tmaL\tmaS\tBar\r\n"+lls.Select( r=> string.Join("\t",r)).Aggregate((r1, r2) => r1+"\r\n" + r2);
 				
-				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
+				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+" "+N+"-"+P+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
 			}
         }
 		private List<Point> MergeLines(List<Point> lines, List<int> maL, int bigbreak)
@@ -798,11 +801,35 @@ namespace JHStock
 				foreach(UpdateMonitInfor u in ls){
 					u.RunMin();
 				}
-			}else if(type == "stocklog"){
-				foreach(UpdateMonitInfor u in ls){
-					u.RunStockLog();
-				}
-			}
+            }
+            else if (type == "stocklog")
+            {
+                foreach (UpdateMonitInfor u in ls)
+                {
+                    u.RunStockLog();
+                }
+            }
+            else if (type == "dayly")
+            {
+                foreach (UpdateMonitInfor u in ls)
+                {
+                    u.RunDayly();
+                }
+            }
+            else if (type == "weekly")
+            {
+                foreach (UpdateMonitInfor u in ls)
+                {
+                    u.RunWeekly();
+                }
+            }
+            else if (type == "monthly")
+            {
+                foreach (UpdateMonitInfor u in ls)
+                {
+                    u.RunMonthly();
+                }
+            }
 			while(true){
 				Thread.Sleep(100);
 				if(runcount == 0)
@@ -844,6 +871,24 @@ namespace JHStock
 			UpdataStockLog();
 			Interlocked.Decrement(ref ums.runcount);
 		}
+        public void RunDayly()
+        {
+            Interlocked.Increment(ref ums.runcount);
+            UpdataOthers();
+            Interlocked.Decrement(ref ums.runcount);
+        }
+        public void RunWeekly()
+        {
+            Interlocked.Increment(ref ums.runcount);
+            UpdataOthers();
+            Interlocked.Decrement(ref ums.runcount);
+        }
+        public void RunMonthly()
+        {
+            Interlocked.Increment(ref ums.runcount);
+            UpdataMonthly();
+            Interlocked.Decrement(ref ums.runcount);
+        }
 		public DataRow DataRow()
 		{
 			return dr;
@@ -903,21 +948,43 @@ namespace JHStock
 			}catch {
 			}
 		}
-		private void UpdataOthers( )
-		{
-			try {
-				string url = "http://image.sinajs.cn/newchart/daily/n/[stockcode].gif".Replace("[stockcode]", s.Code.ToLower());
-				Bitmap bmp = GetBitmapFromUrl(url);
-				dr["画图"] = new Bitmap(bmp, bmp.Width / 3, bmp.Height / 3);
-				Bitmap bmp2 = GetBitmapFromUrl(url.Replace("daily", "min"));
-				dr["分时图"] = new Bitmap(bmp2, bmp.Width / 3, bmp.Height / 3);
-				s.Bmp = bmp;
-				s.Tag = bmp2;
-				dr["财务信息"] = GetCWXXS(s);
-			} catch {
-			}
-		}
-		
+        private void UpdataOthers()
+        {
+            try
+            {
+                string url = "http://image.sinajs.cn/newchart/daily/n/[stockcode].gif".Replace("[stockcode]", s.Code.ToLower());
+                Bitmap bmp = GetBitmapFromUrl(url);
+                dr["画图"] = new Bitmap(bmp, bmp.Width / 3, bmp.Height / 3);
+                Bitmap bmp2 = GetBitmapFromUrl(url.Replace("daily", "min"));
+                dr["分时图"] = new Bitmap(bmp2, bmp.Width / 3, bmp.Height / 3);
+                s.Bmp = bmp;
+                s.Tag = bmp2;
+                dr["财务信息"] = GetCWXXS(s);
+            }
+            catch
+            {
+            }
+        }
+        private void UpdataMonthly()
+        {
+            try
+            {
+                string url = "http://image.sinajs.cn/newchart/daily/n/[stockcode].gif".Replace("[stockcode]", s.Code.ToLower());
+                List<KData> kd = s.Gcfg.StocksData.GetKD(s.ID);
+                Bitmap bmp = s.DrawKData(kd);
+                dr["画图"] = new Bitmap(bmp, bmp.Width / 3, bmp.Height / 3);
+                Bitmap bmp2 = GetBitmapFromUrl(url.Replace("daily", "min"));
+                dr["分时图"] = new Bitmap(bmp2, bmp.Width / 3, bmp.Height / 3);
+                s.Bmp = bmp;
+                s.Tag = bmp2;
+                dr["财务信息"] = GetCWXXS(s);
+            }
+            catch
+            {
+            }
+        }
+
+
 		private Bitmap GetBitmapFromUrl(string url)
 		{
 			//string url = string.Format(@"http://webservice.36wu.com/DimensionalCodeService.asmx/GetCodeImgByString?size={0}&content={1}", 5, 123456);
@@ -933,7 +1000,8 @@ namespace JHStock
 		private Stock s;
 		private  DataRow dr;
 		private UpdateMonitInfors ums;
-	}
+
+    }
 }
 #region runnet
 /*
