@@ -85,9 +85,12 @@ namespace JHStock
             {
                 comboBoxProper.Items.Add(_CN.GetChineseName(str));
             }
-            HideShowMonit(ref _fd, "dayly");
-            Thread t = new Thread(new ThreadStart(ThreadHideMyself));
-            t.Start();
+            if (_jscfg.Memostr != null && _jscfg.Memostr.Contains("LoadShowDayly"))
+            {
+                HideShowMonit(ref _fd, "dayly");
+                Thread t = new Thread(new ThreadStart(ThreadHideMyself));
+                t.Start();
+            }
 		}
         public void ThreadHideMyself()
         {

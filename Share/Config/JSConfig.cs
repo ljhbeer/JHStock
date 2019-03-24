@@ -39,6 +39,7 @@ namespace JHStock
         	this.globalconfig = jc.globalconfig;
         	this.conditionconfig = jc.conditionconfig;
         	this.staticsconfig = jc.staticsconfig;
+            this.Memostr = jc.Memostr;
         }
         public void Save(string tfilename = "")
         {

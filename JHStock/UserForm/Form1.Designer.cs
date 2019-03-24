@@ -32,6 +32,7 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.checkBoxOrginKdata = new System.Windows.Forms.CheckBox();
             this.buttonExportMacd = new System.Windows.Forms.Button();
             this.buttonExportTempData = new System.Windows.Forms.Button();
             this.buttonExportStock = new System.Windows.Forms.Button();
@@ -75,7 +76,6 @@
             this.textBox_backbeginday = new System.Windows.Forms.TextBox();
             this.dgv = new System.Windows.Forms.DataGridView();
             this.textBoxInfor = new System.Windows.Forms.TextBox();
-            this.checkBoxOrginKdata = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -147,6 +147,16 @@
             this.groupBox6.TabIndex = 50;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "导出数据";
+            // 
+            // checkBoxOrginKdata
+            // 
+            this.checkBoxOrginKdata.AutoSize = true;
+            this.checkBoxOrginKdata.Location = new System.Drawing.Point(89, 57);
+            this.checkBoxOrginKdata.Name = "checkBoxOrginKdata";
+            this.checkBoxOrginKdata.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxOrginKdata.TabIndex = 3;
+            this.checkBoxOrginKdata.Text = "原始日线";
+            this.checkBoxOrginKdata.UseVisualStyleBackColor = true;
             // 
             // buttonExportMacd
             // 
@@ -608,16 +618,6 @@
             this.textBoxInfor.ReadOnly = true;
             this.textBoxInfor.Size = new System.Drawing.Size(744, 21);
             this.textBoxInfor.TabIndex = 30;
-            // 
-            // checkBoxOrginKdata
-            // 
-            this.checkBoxOrginKdata.AutoSize = true;
-            this.checkBoxOrginKdata.Location = new System.Drawing.Point(89, 57);
-            this.checkBoxOrginKdata.Name = "checkBoxOrginKdata";
-            this.checkBoxOrginKdata.Size = new System.Drawing.Size(72, 16);
-            this.checkBoxOrginKdata.TabIndex = 3;
-            this.checkBoxOrginKdata.Text = "原始日线";
-            this.checkBoxOrginKdata.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
