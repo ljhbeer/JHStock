@@ -37,10 +37,11 @@
             this.checkBoxTable = new System.Windows.Forms.CheckBox();
             this.buttonAddToTXDBlock = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.radioButtonClos = new System.Windows.Forms.RadioButton();
+            this.radioButtonVol = new System.Windows.Forms.RadioButton();
             this.buttonRefreshMin = new System.Windows.Forms.Button();
             this.buttonSaveSelect = new System.Windows.Forms.Button();
             this.checkBoxDebugOutPut = new System.Windows.Forms.CheckBox();
-            this.buttonReCompute = new System.Windows.Forms.Button();
             this.checkBoxMonitdays = new System.Windows.Forms.CheckBox();
             this.checkBoxUserDefinitionStocks = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -58,8 +59,7 @@
             this.buttonSaveLog = new System.Windows.Forms.Button();
             this.ButtonOpenDaily = new System.Windows.Forms.Button();
             this.buttonCustomLog = new System.Windows.Forms.Button();
-            this.radioButtonVol = new System.Windows.Forms.RadioButton();
-            this.radioButtonClos = new System.Windows.Forms.RadioButton();
+            this.buttonReCompute = new System.Windows.Forms.Button();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -180,6 +180,30 @@
             this.groupBox3.TabIndex = 29;
             this.groupBox3.TabStop = false;
             // 
+            // radioButtonClos
+            // 
+            this.radioButtonClos.AutoSize = true;
+            this.radioButtonClos.Location = new System.Drawing.Point(198, 8);
+            this.radioButtonClos.Name = "radioButtonClos";
+            this.radioButtonClos.Size = new System.Drawing.Size(59, 16);
+            this.radioButtonClos.TabIndex = 31;
+            this.radioButtonClos.Text = "收盘价";
+            this.radioButtonClos.UseVisualStyleBackColor = true;
+            this.radioButtonClos.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
+            // 
+            // radioButtonVol
+            // 
+            this.radioButtonVol.AutoSize = true;
+            this.radioButtonVol.Checked = true;
+            this.radioButtonVol.Location = new System.Drawing.Point(198, 26);
+            this.radioButtonVol.Name = "radioButtonVol";
+            this.radioButtonVol.Size = new System.Drawing.Size(35, 16);
+            this.radioButtonVol.TabIndex = 30;
+            this.radioButtonVol.TabStop = true;
+            this.radioButtonVol.Text = "量";
+            this.radioButtonVol.UseVisualStyleBackColor = true;
+            this.radioButtonVol.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
+            // 
             // buttonRefreshMin
             // 
             this.buttonRefreshMin.Location = new System.Drawing.Point(69, 46);
@@ -209,16 +233,6 @@
             this.checkBoxDebugOutPut.TabIndex = 27;
             this.checkBoxDebugOutPut.Text = "Debug输出";
             this.checkBoxDebugOutPut.UseVisualStyleBackColor = true;
-            // 
-            // buttonReCompute
-            // 
-            this.buttonReCompute.Location = new System.Drawing.Point(162, 44);
-            this.buttonReCompute.Name = "buttonReCompute";
-            this.buttonReCompute.Size = new System.Drawing.Size(96, 22);
-            this.buttonReCompute.TabIndex = 23;
-            this.buttonReCompute.Text = "计算";
-            this.buttonReCompute.UseVisualStyleBackColor = true;
-            this.buttonReCompute.Click += new System.EventHandler(this.buttonReCompute_Click);
             // 
             // checkBoxMonitdays
             // 
@@ -396,29 +410,15 @@
             this.buttonCustomLog.UseVisualStyleBackColor = true;
             this.buttonCustomLog.Click += new System.EventHandler(this.buttonCustomLog_Click);
             // 
-            // radioButtonVol
+            // buttonReCompute
             // 
-            this.radioButtonVol.AutoSize = true;
-            this.radioButtonVol.Checked = true;
-            this.radioButtonVol.Location = new System.Drawing.Point(198, 26);
-            this.radioButtonVol.Name = "radioButtonVol";
-            this.radioButtonVol.Size = new System.Drawing.Size(35, 16);
-            this.radioButtonVol.TabIndex = 30;
-            this.radioButtonVol.TabStop = true;
-            this.radioButtonVol.Text = "量";
-            this.radioButtonVol.UseVisualStyleBackColor = true;
-            this.radioButtonVol.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
-            // 
-            // radioButtonClos
-            // 
-            this.radioButtonClos.AutoSize = true;
-            this.radioButtonClos.Location = new System.Drawing.Point(198, 8);
-            this.radioButtonClos.Name = "radioButtonClos";
-            this.radioButtonClos.Size = new System.Drawing.Size(59, 16);
-            this.radioButtonClos.TabIndex = 31;
-            this.radioButtonClos.Text = "收盘价";
-            this.radioButtonClos.UseVisualStyleBackColor = true;
-            this.radioButtonClos.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
+            this.buttonReCompute.Location = new System.Drawing.Point(162, 44);
+            this.buttonReCompute.Name = "buttonReCompute";
+            this.buttonReCompute.Size = new System.Drawing.Size(96, 22);
+            this.buttonReCompute.TabIndex = 23;
+            this.buttonReCompute.Text = "计算";
+            this.buttonReCompute.UseVisualStyleBackColor = true;
+            this.buttonReCompute.Click += new System.EventHandler(this.buttonReCompute_Click);
             // 
             // FormMonit
             // 
@@ -464,7 +464,6 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button buttonAddToTXDBlock;
         private System.Windows.Forms.Button buttonToTxt;
-        private System.Windows.Forms.Button buttonReCompute;
         private System.Windows.Forms.Button buttonConfig;
         private System.Windows.Forms.Button buttonCheckData;
         private System.Windows.Forms.CheckBox checkBoxTable;
@@ -483,5 +482,6 @@
         private System.Windows.Forms.Button buttonCustomLog;
         private System.Windows.Forms.RadioButton radioButtonClos;
         private System.Windows.Forms.RadioButton radioButtonVol;
+        private System.Windows.Forms.Button buttonReCompute;
     }
 }

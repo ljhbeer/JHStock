@@ -431,8 +431,10 @@ namespace JHStock
 			return outstr;
 		}
 		//List<KData> listclose = kd.Skip(0).Take(60).ToList();
-        public void TestStockSelect(Stock s, bool DebugOutPut = false, int staticdaylenght = 200)
+        public string TestStockSelect(Stock s, bool DebugOutPut = false, int staticdaylenght = 200, bool fromparent = false)
         {
+            _FromParentCmd = fromparent;
+            _ParentMsg = "";
             if (ComputeVol)
             {
                 TestStock(s, DebugOutPut, staticdaylenght);
@@ -458,6 +460,9 @@ namespace JHStock
                 }
                 TestStockMA(s,S,L, DebugOutPut, staticdaylenght);                 
             }
+            if (fromparent)
+                return _ParentMsg;
+            return "";
         }
 		public void TestStock(Stock s,bool DebugOutPut = false, int staticdaylenght = 200)
 		{
@@ -502,6 +507,12 @@ namespace JHStock
 					savestockinfor.Add( LastLine.Y +"\t"+ undays+"\t"+ string.Join(",",ma5L.Skip(epos).Take(undays)));
 				}
 			}
+            if (_FromParentCmd)
+            {
+                List<int> L = ma5L.Select(r => 0).ToList();
+                string str = string.Join( "," , L.Select( r => r.ToString()).ToList());
+                _ParentMsg = s.Name +"\t"+ s.NumCode + "\tL:"+ str ;
+            }
 			if (DebugOutPut)
 			{
 				List<int> L = ma5L.Select(r => 0).ToList();
@@ -549,7 +560,7 @@ namespace JHStock
                {
                    P = PerBar.FindIndex(N, r => r >= 0);
                    P -= N;
-                   N -= 1;
+                   //N -= 1;
                }
             }
             if(N>=0 && P>0)
@@ -565,21 +576,28 @@ namespace JHStock
                 {
                     selectstock.Add(s);
                     // 持续天数  \t 后续天数  \t  后续天数的情况
+                    PerBar.Reverse();
                     List<int> LL = PerBar.Take(N).ToList();
-                    LL.Reverse();
                     savestockinfor.Add(P + "\t" + N + "\t" + string.Join(",",LL));
                 }
             }
-
+            if (_FromParentCmd)
+            {
+                int skip = 0;
+                if (N >= 0 && P > 0)
+                    skip = Bar.Count - N - P-1;
+				string str = string.Join(",", Bar.Skip(skip).Select( r=> r.ToString("0.000")).ToList());
+                _ParentMsg = s.Name + "\t" + s.NumCode + "\t" + P + "\t" + N + "\tBar\t" + str;
+            }
 			if (DebugOutPut)
 			{
                 int li = 0;
                 List<List<string>> lls = maL.Select(r => { 
-                    List<string> re = new List<string> {kd[li+L-1].date.ToString(), r.ToString("0.00"), maS[li].ToString("0.00"), Bar[li].ToString("0.00") }; li++; return re; 
+                    List<string> re = new List<string> {kd[li+L-1].date.ToString(), r.ToString("0.00"), maS[li].ToString("0.00"), Bar[li].ToString("0.000") }; li++; return re; 
                 }).ToList();
 				string str = "\r\nDate\tmaL\tmaS\tBar\r\n"+lls.Select( r=> string.Join("\t",r)).Aggregate((r1, r2) => r1+"\r\n" + r2);
 				
-				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+" "+N+"-"+P+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
+				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+" "+P+"-"+N+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
 			}
         }
 		private List<Point> MergeLines(List<Point> lines, List<int> maL, int bigbreak)
@@ -755,6 +773,8 @@ namespace JHStock
 		public List<Stock> DebugStocks;
         private string _kdatatype;
         private bool ComputeVol;
+        private string _ParentMsg;
+        private bool _FromParentCmd;
         private void radioButtonVol_CheckedChanged(object sender, EventArgs e)
         {
             ComputeVol = radioButtonVol.Checked;

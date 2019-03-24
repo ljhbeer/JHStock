@@ -390,11 +390,6 @@ namespace JHStock
         }
         private void buttonExportStock_Click(object sender, EventArgs e)
         {          
-            //string propertyname = _CN.GetProperName(comboBoxProper.SelectedItem.ToString());
-            //if (propertyname == "") return;
-            //Type type = typeof(JsonMainCWFX);
-            //PropertyInfo property = type.GetProperty(propertyname);
-            //if (property == null) MessageBox.Show("找不到属性名称");
             if (listBox2.Items.Count == 0) return;         
             DealClass DC = new DealClass(_jscfg, _stocks, this);
             DC.ExportKData( StocksByItemsShow(),  GetActiveFormMonit());           
@@ -444,6 +439,16 @@ namespace JHStock
            
             _stocks.ResetMacdData();
             ((Button)sender).Enabled = true;
+        }
+        private void radioButtonVol_CheckedChanged(object sender, EventArgs e)
+        {
+            ComputeVol = radioButtonVol.Checked;
+        }
+        private void ReCompute_Click(object sender, EventArgs e)
+        {
+            if (listBox2.Items.Count == 0) return;
+            DealClass DC = new DealClass(_jscfg, _stocks, this);
+            DC.ExportTestKData(StocksByItemsShow(), GetActiveFormMonit(),ComputeVol); 
         }
         private void BTN_BACKMACDClick(object sender, EventArgs e)
         {
@@ -543,8 +548,10 @@ namespace JHStock
         private ChineseName _CN;
         private StocksData _stockdata;
         private bool bComplete;
+        private bool ComputeVol;
         public string _CWDateType { get; set; }
         public string _MonitDateType { get; set; }
+       
     }	
 	public class DTNameType{
 		public string Name;

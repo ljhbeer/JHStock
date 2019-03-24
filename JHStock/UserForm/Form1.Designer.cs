@@ -32,9 +32,12 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.radioButtonClos = new System.Windows.Forms.RadioButton();
+            this.radioButtonVol = new System.Windows.Forms.RadioButton();
             this.checkBoxOrginKdata = new System.Windows.Forms.CheckBox();
             this.buttonExportMacd = new System.Windows.Forms.Button();
             this.buttonExportTempData = new System.Windows.Forms.Button();
+            this.ReCompute = new System.Windows.Forms.Button();
             this.buttonExportStock = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.radioButtonWeek = new System.Windows.Forms.RadioButton();
@@ -137,21 +140,48 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.radioButtonClos);
+            this.groupBox6.Controls.Add(this.radioButtonVol);
             this.groupBox6.Controls.Add(this.checkBoxOrginKdata);
             this.groupBox6.Controls.Add(this.buttonExportMacd);
             this.groupBox6.Controls.Add(this.buttonExportTempData);
+            this.groupBox6.Controls.Add(this.ReCompute);
             this.groupBox6.Controls.Add(this.buttonExportStock);
             this.groupBox6.Location = new System.Drawing.Point(411, 8);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(173, 92);
+            this.groupBox6.Size = new System.Drawing.Size(258, 92);
             this.groupBox6.TabIndex = 50;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "导出数据";
             // 
+            // radioButtonClos
+            // 
+            this.radioButtonClos.AutoSize = true;
+            this.radioButtonClos.Checked = true;
+            this.radioButtonClos.Location = new System.Drawing.Point(185, 13);
+            this.radioButtonClos.Name = "radioButtonClos";
+            this.radioButtonClos.Size = new System.Drawing.Size(59, 16);
+            this.radioButtonClos.TabIndex = 31;
+            this.radioButtonClos.TabStop = true;
+            this.radioButtonClos.Text = "收盘价";
+            this.radioButtonClos.UseVisualStyleBackColor = true;
+            this.radioButtonClos.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
+            // 
+            // radioButtonVol
+            // 
+            this.radioButtonVol.AutoSize = true;
+            this.radioButtonVol.Location = new System.Drawing.Point(185, 35);
+            this.radioButtonVol.Name = "radioButtonVol";
+            this.radioButtonVol.Size = new System.Drawing.Size(35, 16);
+            this.radioButtonVol.TabIndex = 30;
+            this.radioButtonVol.Text = "量";
+            this.radioButtonVol.UseVisualStyleBackColor = true;
+            this.radioButtonVol.CheckedChanged += new System.EventHandler(this.radioButtonVol_CheckedChanged);
+            // 
             // checkBoxOrginKdata
             // 
             this.checkBoxOrginKdata.AutoSize = true;
-            this.checkBoxOrginKdata.Location = new System.Drawing.Point(89, 57);
+            this.checkBoxOrginKdata.Location = new System.Drawing.Point(185, 56);
             this.checkBoxOrginKdata.Name = "checkBoxOrginKdata";
             this.checkBoxOrginKdata.Size = new System.Drawing.Size(72, 16);
             this.checkBoxOrginKdata.TabIndex = 3;
@@ -177,6 +207,16 @@
             this.buttonExportTempData.Text = "导出分红扩股";
             this.buttonExportTempData.UseVisualStyleBackColor = true;
             this.buttonExportTempData.Click += new System.EventHandler(this.buttonExportFhKgData_Click);
+            // 
+            // ReCompute
+            // 
+            this.ReCompute.Location = new System.Drawing.Point(86, 49);
+            this.ReCompute.Name = "ReCompute";
+            this.ReCompute.Size = new System.Drawing.Size(87, 29);
+            this.ReCompute.TabIndex = 23;
+            this.ReCompute.Text = "导出测试股票数据";
+            this.ReCompute.UseVisualStyleBackColor = true;
+            this.ReCompute.Click += new System.EventHandler(this.ReCompute_Click);
             // 
             // buttonExportStock
             // 
@@ -273,16 +313,16 @@
             this.groupBox3.Controls.Add(this.buttonCreateMacd);
             this.groupBox3.Controls.Add(this.textBoxExchangeTime);
             this.groupBox3.Controls.Add(this.buttonDownloadsAllKdata);
-            this.groupBox3.Location = new System.Drawing.Point(590, 1);
+            this.groupBox3.Location = new System.Drawing.Point(667, 1);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(156, 93);
+            this.groupBox3.Size = new System.Drawing.Size(79, 93);
             this.groupBox3.TabIndex = 47;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "更新";
             // 
             // buttonCreateMacd
             // 
-            this.buttonCreateMacd.Location = new System.Drawing.Point(6, 68);
+            this.buttonCreateMacd.Location = new System.Drawing.Point(0, 68);
             this.buttonCreateMacd.Name = "buttonCreateMacd";
             this.buttonCreateMacd.Size = new System.Drawing.Size(91, 24);
             this.buttonCreateMacd.TabIndex = 2;
@@ -706,6 +746,9 @@
         private System.Windows.Forms.Button buttonCreateMacd;
         private System.Windows.Forms.Button buttonExportMacd;
         private System.Windows.Forms.CheckBox checkBoxOrginKdata;
+        private System.Windows.Forms.RadioButton radioButtonClos;
+        private System.Windows.Forms.RadioButton radioButtonVol;
+        private System.Windows.Forms.Button ReCompute;
     }
 }
 

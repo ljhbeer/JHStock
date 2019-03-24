@@ -279,6 +279,19 @@ Values( [stockid],  [PDate],   [SG],   [ZZ],  [PX], '实施',[CQDate], '[DJDate]
             savetag.Save(savefilename);
             ShowMsg("已保存到文件：" + savefilename);
         }
+        public void ExportTestKData(List<Stock> dealstock, FormMonit f, bool ComputeVol)
+        {
+            SaveKdTag kdtag = f.GetStockData().SavekdTag;
+            StringBuilder sb = new StringBuilder();
+            foreach(Stock s in dealstock)
+            {
+                sb.AppendLine(
+                f.TestStockSelect(s, false, 200, true));
+            }
+            string savefilename = _jscfg.baseconfig.NowWorkPath()+ "Export_"+_jscfg.KdataType +"_ComputeVol_" + ComputeVol + ".txt";
+            MFile.WriteAllText(savefilename, sb.ToString());
+            ShowMsg("已保存到文件：" + savefilename);
+        }
     }
     public class FHSGItem
     {
