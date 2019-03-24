@@ -532,7 +532,6 @@ namespace JHStock
 		private JHStock.JSConfig _jscfg;
 		private JHStock.Stocks _stocks;
 		private List<string> columntitles { get; set; }
-        
         //private Boolean _bshowtime;
 		private Boolean _isrunning;
 		private Button _completebtn;
@@ -546,9 +545,6 @@ namespace JHStock
         private bool bComplete;
         public string _CWDateType { get; set; }
         public string _MonitDateType { get; set; }
-
-
-
     }	
 	public class DTNameType{
 		public string Name;
