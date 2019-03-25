@@ -448,7 +448,7 @@ namespace JHStock
         {
             if (listBox2.Items.Count == 0) return;
             DealClass DC = new DealClass(_jscfg, _stocks, this);
-            DC.ExportTestKData(StocksByItemsShow(), GetActiveFormMonit(),ComputeVol); 
+            DC.ExportTestKData(StocksByItemsShow(), GetActiveFormMonit(),ComputeVol,checkBoxKDate.Checked); 
         }
         private void BTN_BACKMACDClick(object sender, EventArgs e)
         {
@@ -551,6 +551,29 @@ namespace JHStock
         private bool ComputeVol;
         public string _CWDateType { get; set; }
         public string _MonitDateType { get; set; }
+
+        private void buttonImportCustom_Click(object sender, EventArgs e)
+        {
+            FormImportCustomStocks f = new FormImportCustomStocks(items,_stocks);
+            f.ShowDialog();
+            if (f.ImportOK)
+            {
+                bool change = false;
+                foreach (string txt in f.ImportItems)
+                {
+                        if (!itemsShow.Contains(txt))
+                        {
+                            itemsShow.Add(txt);
+                            change = true;
+                        }
+                }
+                if (change)
+                {
+                    listBox2.Items.Clear();
+                    listBox2.Items.AddRange(itemsShow.ToArray());
+                }
+            }
+        }
        
     }	
 	public class DTNameType{

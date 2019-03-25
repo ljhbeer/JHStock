@@ -37,20 +37,23 @@
             this.checkBoxTable = new System.Windows.Forms.CheckBox();
             this.buttonAddToTXDBlock = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.buttonComputeUnImage = new System.Windows.Forms.Button();
+            this.checkBoxKDate = new System.Windows.Forms.CheckBox();
             this.radioButtonClos = new System.Windows.Forms.RadioButton();
             this.radioButtonVol = new System.Windows.Forms.RadioButton();
             this.buttonRefreshMin = new System.Windows.Forms.Button();
             this.buttonSaveSelect = new System.Windows.Forms.Button();
             this.checkBoxDebugOutPut = new System.Windows.Forms.CheckBox();
+            this.buttonReCompute = new System.Windows.Forms.Button();
             this.checkBoxMonitdays = new System.Windows.Forms.CheckBox();
             this.checkBoxUserDefinitionStocks = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBoxExchangeTime = new System.Windows.Forms.TextBox();
-            this.buttonCheckData = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowHexinFromNet = new System.Windows.Forms.CheckBox();
             this.checkBoxROE5years = new System.Windows.Forms.CheckBox();
             this.checkBoxSHowCWFX = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxExchangeTime = new System.Windows.Forms.TextBox();
+            this.buttonCheckData = new System.Windows.Forms.Button();
             this.dgv = new System.Windows.Forms.DataGridView();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonConfig = new System.Windows.Forms.Button();
@@ -59,13 +62,12 @@
             this.buttonSaveLog = new System.Windows.Forms.Button();
             this.ButtonOpenDaily = new System.Windows.Forms.Button();
             this.buttonCustomLog = new System.Windows.Forms.Button();
-            this.buttonReCompute = new System.Windows.Forms.Button();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -115,8 +117,8 @@
             // 
             this.flowLayoutPanel1.Controls.Add(this.groupBox2);
             this.flowLayoutPanel1.Controls.Add(this.groupBox3);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox1);
             this.flowLayoutPanel1.Controls.Add(this.groupBox4);
+            this.flowLayoutPanel1.Controls.Add(this.groupBox1);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(55, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -166,6 +168,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.buttonComputeUnImage);
+            this.groupBox3.Controls.Add(this.checkBoxKDate);
             this.groupBox3.Controls.Add(this.radioButtonClos);
             this.groupBox3.Controls.Add(this.radioButtonVol);
             this.groupBox3.Controls.Add(this.buttonRefreshMin);
@@ -176,9 +180,29 @@
             this.groupBox3.Controls.Add(this.checkBoxUserDefinitionStocks);
             this.groupBox3.Location = new System.Drawing.Point(110, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(264, 70);
+            this.groupBox3.Size = new System.Drawing.Size(362, 70);
             this.groupBox3.TabIndex = 29;
             this.groupBox3.TabStop = false;
+            // 
+            // buttonComputeUnImage
+            // 
+            this.buttonComputeUnImage.Location = new System.Drawing.Point(265, 43);
+            this.buttonComputeUnImage.Name = "buttonComputeUnImage";
+            this.buttonComputeUnImage.Size = new System.Drawing.Size(96, 22);
+            this.buttonComputeUnImage.TabIndex = 33;
+            this.buttonComputeUnImage.Text = "计算非图";
+            this.buttonComputeUnImage.UseVisualStyleBackColor = true;
+            this.buttonComputeUnImage.Click += new System.EventHandler(this.buttonComputeUnImage_Click);
+            // 
+            // checkBoxKDate
+            // 
+            this.checkBoxKDate.AutoSize = true;
+            this.checkBoxKDate.Location = new System.Drawing.Point(281, 11);
+            this.checkBoxKDate.Name = "checkBoxKDate";
+            this.checkBoxKDate.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxKDate.TabIndex = 32;
+            this.checkBoxKDate.Text = "穿越日线";
+            this.checkBoxKDate.UseVisualStyleBackColor = true;
             // 
             // radioButtonClos
             // 
@@ -234,6 +258,16 @@
             this.checkBoxDebugOutPut.Text = "Debug输出";
             this.checkBoxDebugOutPut.UseVisualStyleBackColor = true;
             // 
+            // buttonReCompute
+            // 
+            this.buttonReCompute.Location = new System.Drawing.Point(162, 44);
+            this.buttonReCompute.Name = "buttonReCompute";
+            this.buttonReCompute.Size = new System.Drawing.Size(96, 22);
+            this.buttonReCompute.TabIndex = 23;
+            this.buttonReCompute.Text = "计算";
+            this.buttonReCompute.UseVisualStyleBackColor = true;
+            this.buttonReCompute.Click += new System.EventHandler(this.buttonReCompute_Click);
+            // 
             // checkBoxMonitdays
             // 
             this.checkBoxMonitdays.AutoSize = true;
@@ -254,42 +288,14 @@
             this.checkBoxUserDefinitionStocks.Text = "自定义检测股票";
             this.checkBoxUserDefinitionStocks.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.textBoxExchangeTime);
-            this.groupBox1.Controls.Add(this.buttonCheckData);
-            this.groupBox1.Location = new System.Drawing.Point(380, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(89, 46);
-            this.groupBox1.TabIndex = 27;
-            this.groupBox1.TabStop = false;
-            // 
-            // textBoxExchangeTime
-            // 
-            this.textBoxExchangeTime.Location = new System.Drawing.Point(4, 27);
-            this.textBoxExchangeTime.Name = "textBoxExchangeTime";
-            this.textBoxExchangeTime.ReadOnly = true;
-            this.textBoxExchangeTime.Size = new System.Drawing.Size(80, 21);
-            this.textBoxExchangeTime.TabIndex = 31;
-            // 
-            // buttonCheckData
-            // 
-            this.buttonCheckData.Location = new System.Drawing.Point(0, 6);
-            this.buttonCheckData.Name = "buttonCheckData";
-            this.buttonCheckData.Size = new System.Drawing.Size(85, 21);
-            this.buttonCheckData.TabIndex = 30;
-            this.buttonCheckData.Text = "实时交易数据";
-            this.buttonCheckData.UseVisualStyleBackColor = true;
-            this.buttonCheckData.Click += new System.EventHandler(this.buttonCheckData_Click);
-            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.checkBoxShowHexinFromNet);
             this.groupBox4.Controls.Add(this.checkBoxROE5years);
             this.groupBox4.Controls.Add(this.checkBoxSHowCWFX);
-            this.groupBox4.Location = new System.Drawing.Point(475, 3);
+            this.groupBox4.Location = new System.Drawing.Point(478, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(203, 46);
+            this.groupBox4.Size = new System.Drawing.Size(118, 66);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
             // 
@@ -298,7 +304,7 @@
             this.checkBoxShowHexinFromNet.AutoSize = true;
             this.checkBoxShowHexinFromNet.Checked = true;
             this.checkBoxShowHexinFromNet.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowHexinFromNet.Location = new System.Drawing.Point(101, 23);
+            this.checkBoxShowHexinFromNet.Location = new System.Drawing.Point(0, 44);
             this.checkBoxShowHexinFromNet.Name = "checkBoxShowHexinFromNet";
             this.checkBoxShowHexinFromNet.Size = new System.Drawing.Size(96, 16);
             this.checkBoxShowHexinFromNet.TabIndex = 29;
@@ -326,6 +332,34 @@
             this.checkBoxSHowCWFX.TabIndex = 27;
             this.checkBoxSHowCWFX.Text = "点击代码显示财务";
             this.checkBoxSHowCWFX.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.textBoxExchangeTime);
+            this.groupBox1.Controls.Add(this.buttonCheckData);
+            this.groupBox1.Location = new System.Drawing.Point(602, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(89, 60);
+            this.groupBox1.TabIndex = 27;
+            this.groupBox1.TabStop = false;
+            // 
+            // textBoxExchangeTime
+            // 
+            this.textBoxExchangeTime.Location = new System.Drawing.Point(4, 27);
+            this.textBoxExchangeTime.Name = "textBoxExchangeTime";
+            this.textBoxExchangeTime.ReadOnly = true;
+            this.textBoxExchangeTime.Size = new System.Drawing.Size(80, 21);
+            this.textBoxExchangeTime.TabIndex = 31;
+            // 
+            // buttonCheckData
+            // 
+            this.buttonCheckData.Location = new System.Drawing.Point(0, 6);
+            this.buttonCheckData.Name = "buttonCheckData";
+            this.buttonCheckData.Size = new System.Drawing.Size(85, 21);
+            this.buttonCheckData.TabIndex = 30;
+            this.buttonCheckData.Text = "实时交易数据";
+            this.buttonCheckData.UseVisualStyleBackColor = true;
+            this.buttonCheckData.Click += new System.EventHandler(this.buttonCheckData_Click);
             // 
             // dgv
             // 
@@ -410,16 +444,6 @@
             this.buttonCustomLog.UseVisualStyleBackColor = true;
             this.buttonCustomLog.Click += new System.EventHandler(this.buttonCustomLog_Click);
             // 
-            // buttonReCompute
-            // 
-            this.buttonReCompute.Location = new System.Drawing.Point(162, 44);
-            this.buttonReCompute.Name = "buttonReCompute";
-            this.buttonReCompute.Size = new System.Drawing.Size(96, 22);
-            this.buttonReCompute.TabIndex = 23;
-            this.buttonReCompute.Text = "计算";
-            this.buttonReCompute.UseVisualStyleBackColor = true;
-            this.buttonReCompute.Click += new System.EventHandler(this.buttonReCompute_Click);
-            // 
             // FormMonit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -437,10 +461,10 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
@@ -483,5 +507,7 @@
         private System.Windows.Forms.RadioButton radioButtonClos;
         private System.Windows.Forms.RadioButton radioButtonVol;
         private System.Windows.Forms.Button buttonReCompute;
+        private System.Windows.Forms.Button buttonComputeUnImage;
+        private System.Windows.Forms.CheckBox checkBoxKDate;
     }
 }

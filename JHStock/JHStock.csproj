@@ -236,6 +236,12 @@
       <DependentUpon>CWeb.cs</DependentUpon>
     </Compile>
     <Compile Include="DrawStock.cs" />
+    <Compile Include="FormImportCustomStocks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormImportCustomStocks.Designer.cs">
+      <DependentUpon>FormImportCustomStocks.cs</DependentUpon>
+    </Compile>
     <Compile Include="Share\MoveTracker.cs" />
     <Compile Include="Share\ThreadUpdateStocksJson.cs" />
     <Compile Include="Share\ZoomBox.cs" />
@@ -289,6 +295,9 @@
     <Compile Include="UserForm\StocksCustomLog.cs" />
     <Compile Include="UserForm\StocksLog.cs" />
     <Compile Include="UserForm\UpdateFin.cs" />
+    <EmbeddedResource Include="FormImportCustomStocks.resx">
+      <DependentUpon>FormImportCustomStocks.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserForm\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

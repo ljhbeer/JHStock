@@ -32,6 +32,7 @@
             this.textBoxMdbPath = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.checkBoxKDate = new System.Windows.Forms.CheckBox();
             this.radioButtonClos = new System.Windows.Forms.RadioButton();
             this.radioButtonVol = new System.Windows.Forms.RadioButton();
             this.checkBoxOrginKdata = new System.Windows.Forms.CheckBox();
@@ -58,6 +59,7 @@
             this.buttonFinCW1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.buttonImportCustom = new System.Windows.Forms.Button();
             this.buttonClearNextList = new System.Windows.Forms.Button();
             this.checkBoxIDIndex = new System.Windows.Forms.CheckBox();
             this.listBox2 = new System.Windows.Forms.ListBox();
@@ -140,6 +142,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.checkBoxKDate);
             this.groupBox6.Controls.Add(this.radioButtonClos);
             this.groupBox6.Controls.Add(this.radioButtonVol);
             this.groupBox6.Controls.Add(this.checkBoxOrginKdata);
@@ -153,6 +156,16 @@
             this.groupBox6.TabIndex = 50;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "导出数据";
+            // 
+            // checkBoxKDate
+            // 
+            this.checkBoxKDate.AutoSize = true;
+            this.checkBoxKDate.Location = new System.Drawing.Point(185, 73);
+            this.checkBoxKDate.Name = "checkBoxKDate";
+            this.checkBoxKDate.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxKDate.TabIndex = 33;
+            this.checkBoxKDate.Text = "穿越日线";
+            this.checkBoxKDate.UseVisualStyleBackColor = true;
             // 
             // radioButtonClos
             // 
@@ -438,6 +451,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.buttonImportCustom);
             this.splitContainer2.Panel1.Controls.Add(this.buttonClearNextList);
             this.splitContainer2.Panel1.Controls.Add(this.checkBoxIDIndex);
             this.splitContainer2.Panel1.Controls.Add(this.listBox2);
@@ -454,6 +468,16 @@
             this.splitContainer2.Size = new System.Drawing.Size(744, 488);
             this.splitContainer2.SplitterDistance = 200;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // buttonImportCustom
+            // 
+            this.buttonImportCustom.Location = new System.Drawing.Point(102, 312);
+            this.buttonImportCustom.Name = "buttonImportCustom";
+            this.buttonImportCustom.Size = new System.Drawing.Size(92, 22);
+            this.buttonImportCustom.TabIndex = 25;
+            this.buttonImportCustom.Text = "自定义导入";
+            this.buttonImportCustom.UseVisualStyleBackColor = true;
+            this.buttonImportCustom.Click += new System.EventHandler(this.buttonImportCustom_Click);
             // 
             // buttonClearNextList
             // 
@@ -749,6 +773,8 @@
         private System.Windows.Forms.RadioButton radioButtonClos;
         private System.Windows.Forms.RadioButton radioButtonVol;
         private System.Windows.Forms.Button ReCompute;
+        private System.Windows.Forms.CheckBox checkBoxKDate;
+        private System.Windows.Forms.Button buttonImportCustom;
     }
 }
 

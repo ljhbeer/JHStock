@@ -30,3 +30,4 @@ E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.UserForm.Form
 E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.UserForm.FormShowPicture.resources
 E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.csproj.GenerateResource.Cache
 E:\git\githome\Source\github\JHStock\JHStock\obj\x86\Debug\JHStock.csprojResolveAssemblyReference.cache
+E:\Git\GitHome\Source\github\jhstock\JHStock\obj\x86\Debug\JHStock.FormImportCustomStocks.resources

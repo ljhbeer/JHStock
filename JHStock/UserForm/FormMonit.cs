@@ -248,10 +248,10 @@ namespace JHStock
 				if(!(int.TryParse(textBoxdefineDays.Text,out days) && days>80))
 					days = 200; //TestStock中   ，int staticdaylenght = 200)
 				foreach (Stock s in DebugStocks)
-					TestStockSelect(s,checkBoxDebugOutPut.Checked,days);
+					TestStockSelect(s, ComputeVol,checkBoxKDate.Checked, checkBoxDebugOutPut.Checked,days);
 			}else{
 				foreach (Stock s in _stocks.stocks)
-					TestStockSelect(s);
+					TestStockSelect(s, ComputeVol,checkBoxKDate.Checked);
 			}
 			ShowSelectedStocks();
 		}
@@ -431,13 +431,14 @@ namespace JHStock
 			return outstr;
 		}
 		//List<KData> listclose = kd.Skip(0).Take(60).ToList();
-        public string TestStockSelect(Stock s, bool DebugOutPut = false, int staticdaylenght = 200, bool fromparent = false)
+        public string TestStockSelect(Stock s, bool  ComputeVol,  bool bCrossKdata,
+            bool DebugOutPut = false, int staticdaylenght = 200,  bool fromparent = false)
         {
             _FromParentCmd = fromparent;
             _ParentMsg = "";
             if (ComputeVol)
             {
-                TestStock(s, DebugOutPut, staticdaylenght);
+                TestStock(s,ComputeVol, DebugOutPut, staticdaylenght);
             }
             else
             {
@@ -458,13 +459,13 @@ namespace JHStock
                     S = 5;
                     L = 10;
                 }
-                TestStockMA(s,S,L, DebugOutPut, staticdaylenght);                 
+                TestStockMA(s,S,L,ComputeVol,bCrossKdata, DebugOutPut, staticdaylenght);                 
             }
             if (fromparent)
                 return _ParentMsg;
             return "";
         }
-		public void TestStock(Stock s,bool DebugOutPut = false, int staticdaylenght = 200)
+        public void TestStock(Stock s, bool ComputeVol, bool DebugOutPut = false, int staticdaylenght = 200)
 		{
 			if (!_stockdata.HasKdata(s.ID))
 				return;
@@ -527,7 +528,7 @@ namespace JHStock
 				MFile.WriteAllText(_jscfg.baseconfig.NowWorkPath ()+_kdatatype+"_debugCompute_Vol"+ComputeVol   +  s.Name + s.NumCode + ".txt", str);
 			}
 		}
-        private void TestStockMA(Stock s, int S, int L, bool DebugOutPut=false, int staticdaylenght=200)
+        private void TestStockMA(Stock s,  int S, int L,bool ComputeVol, bool bCrossKdata, bool DebugOutPut = false, int staticdaylenght = 200)
         {
             if (!_stockdata.HasKdata(s.ID))
 				return;
@@ -544,7 +545,16 @@ namespace JHStock
                 kdvol = kd.Select(r => (double)(r.close/100.0)).ToArray();				
 
             List<double> maL = MA(0, L, kdvol);
-            List<double> maS = MA(L - S, S, kdvol);
+            List<double> maS = new List<double>();
+            if (bCrossKdata)
+            {
+                maS = kd.Skip(L-1).Select(r => (Double)(Math.Max(r.close, r.open) / 100.0)).ToList();
+            }
+            else
+            {
+                maS = MA(L - S, S, kdvol);
+            }
+
             List<double> Bar = new List<double>();
             for (int i = 0; i < maL.Count; i++)
                 Bar.Add(maS[i] - maL[i]);
@@ -587,7 +597,7 @@ namespace JHStock
                 if (N >= 0 && P > 0)
                     skip = Bar.Count - N - P-1;
 				string str = string.Join(",", Bar.Skip(skip).Select( r=> r.ToString("0.000")).ToList());
-                _ParentMsg = s.Name + "\t" + s.NumCode + "\t" + P + "\t" + N + "\tBar\t" + str;
+                _ParentMsg = s.Name + "\t'" + s.NumCode + "\t" + P + "\t" + N + "\tBar\t" + str;
             }
 			if (DebugOutPut)
 			{
@@ -778,6 +788,11 @@ namespace JHStock
         private void radioButtonVol_CheckedChanged(object sender, EventArgs e)
         {
             ComputeVol = radioButtonVol.Checked;
+        }
+
+        private void buttonComputeUnImage_Click(object sender, EventArgs e)
+        {
+
         }
 
     }
