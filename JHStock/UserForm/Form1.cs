@@ -324,7 +324,7 @@ namespace JHStock
                         }).ToList()));
                     }
                 }
-                string savefilename = _jscfg.baseconfig.NowWorkPath() + "Export_" + ChineseName + ".txt";
+                string savefilename = _jscfg.baseconfig.NowWorkPath() + "Export_"+_CWDateType + ChineseName + ".txt";
                 MFile.WriteAllText(savefilename, sb.ToString());
                 MessageBox.Show("已保存到文件：" + savefilename);
             }
@@ -448,7 +448,23 @@ namespace JHStock
         {
             if (listBox2.Items.Count == 0) return;
             DealClass DC = new DealClass(_jscfg, _stocks, this);
-            DC.ExportTestKData(StocksByItemsShow(), GetActiveFormMonit(),ComputeVol,checkBoxKDate.Checked); 
+            int days = 0;
+            if (!ComputeVol && _MonitDateType == "dayly" && textBoxExchangeTime.Text.Trim()!="")
+            {
+                try
+                {
+                    days = Convert.ToInt32(textBoxExchangeTime.Text);
+                    if (days < 10 || days > 60)
+                        days = 0;
+                }
+                catch
+                {
+                    days = 0;
+                }
+            }
+
+
+            DC.ExportTestKData(StocksByItemsShow(), GetActiveFormMonit(),ComputeVol,checkBoxKDate.Checked,days); 
         }
         private void BTN_BACKMACDClick(object sender, EventArgs e)
         {

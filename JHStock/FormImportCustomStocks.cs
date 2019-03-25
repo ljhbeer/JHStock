@@ -87,5 +87,13 @@ namespace JHStock
             Tools.MFile.WriteAllText(_stocks.Gcfg.Baseconfig.BlockPath(), str);
             MessageBox.Show("已输出");
         }
+
+        private void textBoxInput_KeyDown(object sender, KeyEventArgs e)       
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                ((TextBox)sender).SelectAll();
+            }
+        }
     }
 }

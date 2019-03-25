@@ -33,11 +33,11 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonAddTXDBlock = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.buttonClearNextList = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonAddTXDBlock = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -66,13 +66,14 @@
             // 
             // textBoxInput
             // 
-            this.textBoxInput.AccessibleRole = System.Windows.Forms.AccessibleRole.ScrollBar;
             this.textBoxInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxInput.Location = new System.Drawing.Point(23, 43);
             this.textBoxInput.Multiline = true;
             this.textBoxInput.Name = "textBoxInput";
+            this.textBoxInput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxInput.Size = new System.Drawing.Size(178, 352);
             this.textBoxInput.TabIndex = 0;
+            this.textBoxInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxInput_KeyDown);
             // 
             // textBox1
             // 
@@ -108,6 +109,16 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(156, 352);
             this.flowLayoutPanel1.TabIndex = 21;
+            // 
+            // buttonAddTXDBlock
+            // 
+            this.buttonAddTXDBlock.Location = new System.Drawing.Point(3, 3);
+            this.buttonAddTXDBlock.Name = "buttonAddTXDBlock";
+            this.buttonAddTXDBlock.Size = new System.Drawing.Size(139, 32);
+            this.buttonAddTXDBlock.TabIndex = 25;
+            this.buttonAddTXDBlock.Text = "添加到股票自选";
+            this.buttonAddTXDBlock.UseVisualStyleBackColor = true;
+            this.buttonAddTXDBlock.Click += new System.EventHandler(this.buttonAddTXDBlock_Click);
             // 
             // buttonImport
             // 
@@ -148,16 +159,6 @@
             this.buttonCancel.Text = "取消";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // buttonAddTXDBlock
-            // 
-            this.buttonAddTXDBlock.Location = new System.Drawing.Point(3, 3);
-            this.buttonAddTXDBlock.Name = "buttonAddTXDBlock";
-            this.buttonAddTXDBlock.Size = new System.Drawing.Size(139, 32);
-            this.buttonAddTXDBlock.TabIndex = 25;
-            this.buttonAddTXDBlock.Text = "添加到股票自选";
-            this.buttonAddTXDBlock.UseVisualStyleBackColor = true;
-            this.buttonAddTXDBlock.Click += new System.EventHandler(this.buttonAddTXDBlock_Click);
             // 
             // FormImportCustomStocks
             // 

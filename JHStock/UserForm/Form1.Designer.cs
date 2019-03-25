@@ -136,7 +136,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.splitContainer1.Size = new System.Drawing.Size(750, 634);
+            this.splitContainer1.Size = new System.Drawing.Size(785, 634);
             this.splitContainer1.SplitterDistance = 104;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -326,9 +326,9 @@
             this.groupBox3.Controls.Add(this.buttonCreateMacd);
             this.groupBox3.Controls.Add(this.textBoxExchangeTime);
             this.groupBox3.Controls.Add(this.buttonDownloadsAllKdata);
-            this.groupBox3.Location = new System.Drawing.Point(667, 1);
+            this.groupBox3.Location = new System.Drawing.Point(683, 7);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(79, 93);
+            this.groupBox3.Size = new System.Drawing.Size(99, 93);
             this.groupBox3.TabIndex = 47;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "更新";
@@ -347,7 +347,7 @@
             // 
             this.textBoxExchangeTime.Location = new System.Drawing.Point(0, 35);
             this.textBoxExchangeTime.Name = "textBoxExchangeTime";
-            this.textBoxExchangeTime.Size = new System.Drawing.Size(112, 21);
+            this.textBoxExchangeTime.Size = new System.Drawing.Size(91, 21);
             this.textBoxExchangeTime.TabIndex = 1;
             // 
             // buttonDownloadsAllKdata
@@ -440,7 +440,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(750, 526);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(785, 526);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // splitContainer2
@@ -465,8 +465,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Controls.Add(this.dgv);
-            this.splitContainer2.Size = new System.Drawing.Size(744, 488);
-            this.splitContainer2.SplitterDistance = 200;
+            this.splitContainer2.Size = new System.Drawing.Size(779, 488);
+            this.splitContainer2.SplitterDistance = 209;
             this.splitContainer2.TabIndex = 0;
             // 
             // buttonImportCustom
@@ -576,7 +576,7 @@
             this.groupBox1.Controls.Add(this.textBox_backbeginday);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(526, 59);
+            this.groupBox1.Size = new System.Drawing.Size(560, 59);
             this.groupBox1.TabIndex = 29;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "回测";
@@ -667,11 +667,11 @@
             // dgv
             // 
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv.Location = new System.Drawing.Point(0, 144);
+            this.dgv.Location = new System.Drawing.Point(0, 63);
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
             this.dgv.RowTemplate.Height = 23;
-            this.dgv.Size = new System.Drawing.Size(529, 353);
+            this.dgv.Size = new System.Drawing.Size(563, 434);
             this.dgv.TabIndex = 1;
             // 
             // textBoxInfor
@@ -680,14 +680,14 @@
             this.textBoxInfor.Location = new System.Drawing.Point(3, 497);
             this.textBoxInfor.Name = "textBoxInfor";
             this.textBoxInfor.ReadOnly = true;
-            this.textBoxInfor.Size = new System.Drawing.Size(744, 21);
+            this.textBoxInfor.Size = new System.Drawing.Size(779, 21);
             this.textBoxInfor.TabIndex = 30;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(750, 634);
+            this.ClientSize = new System.Drawing.Size(785, 634);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Form1";

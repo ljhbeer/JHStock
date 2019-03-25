@@ -432,7 +432,7 @@ namespace JHStock
 		}
 		//List<KData> listclose = kd.Skip(0).Take(60).ToList();
         public string TestStockSelect(Stock s, bool  ComputeVol,  bool bCrossKdata,
-            bool DebugOutPut = false, int staticdaylenght = 200,  bool fromparent = false)
+            bool DebugOutPut = false, int staticdaylenght = 200, bool fromparent = false, int daylydays=0)
         {
             _FromParentCmd = fromparent;
             _ParentMsg = "";
@@ -448,6 +448,8 @@ namespace JHStock
                 {
                     S = 10;
                     L = 20;
+                    if (bCrossKdata && daylydays >= 10)
+                        L = daylydays;
                 }
                 else if (_kdatatype == "weekly") //20,40
                 {
