@@ -38,6 +38,8 @@
             this.buttonClearNextList = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.listBoxStockList = new System.Windows.Forms.ListBox();
+            this.buttonSaveToList = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -104,6 +106,8 @@
             this.flowLayoutPanel1.Controls.Add(this.buttonClearNextList);
             this.flowLayoutPanel1.Controls.Add(this.buttonOK);
             this.flowLayoutPanel1.Controls.Add(this.buttonCancel);
+            this.flowLayoutPanel1.Controls.Add(this.listBoxStockList);
+            this.flowLayoutPanel1.Controls.Add(this.buttonSaveToList);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(207, 43);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -160,6 +164,27 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // listBoxStockList
+            // 
+            this.listBoxStockList.FormattingEnabled = true;
+            this.listBoxStockList.ItemHeight = 12;
+            this.listBoxStockList.Location = new System.Drawing.Point(3, 155);
+            this.listBoxStockList.Name = "listBoxStockList";
+            this.listBoxStockList.Size = new System.Drawing.Size(153, 160);
+            this.listBoxStockList.TabIndex = 29;
+            this.listBoxStockList.SelectedIndexChanged += new System.EventHandler(this.listBoxStockList_SelectedIndexChanged);
+            this.listBoxStockList.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listBoxStockList_KeyUp);
+            // 
+            // buttonSaveToList
+            // 
+            this.buttonSaveToList.Location = new System.Drawing.Point(3, 321);
+            this.buttonSaveToList.Name = "buttonSaveToList";
+            this.buttonSaveToList.Size = new System.Drawing.Size(75, 29);
+            this.buttonSaveToList.TabIndex = 30;
+            this.buttonSaveToList.Text = "保存到列表";
+            this.buttonSaveToList.UseVisualStyleBackColor = true;
+            this.buttonSaveToList.Click += new System.EventHandler(this.buttonSaveToList_Click);
+            // 
             // FormImportCustomStocks
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -168,6 +193,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FormImportCustomStocks";
             this.Text = "FormImportCustomStocks";
+            this.Load += new System.EventHandler(this.FormImportCustomStocks_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -187,5 +213,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonAddTXDBlock;
+        private System.Windows.Forms.ListBox listBoxStockList;
+        private System.Windows.Forms.Button buttonSaveToList;
     }
 }

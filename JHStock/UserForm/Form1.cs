@@ -306,9 +306,12 @@ namespace JHStock
             PropertyInfo property = type.GetProperty(propertyname);
             if (property == null) MessageBox.Show("找不到属性名称");
             StringBuilder sb = new StringBuilder();
+            List<Stock> DealStocks = StocksByItemsShow();
+            if (DealStocks.Count == 0)
+                DealStocks = _stocks.stocks;
             try
             {
-                foreach (Stock s in _stocks.stocks)
+                foreach (Stock s in DealStocks)
                 {
                     sb.Append(s.Name + "\t" + s.Code + "\t");
                     Tagstock t = _jscfg.globalconfig.Stocks.GetTagstock(s.ID);

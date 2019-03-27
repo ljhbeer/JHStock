@@ -252,6 +252,24 @@
     <Compile Include="UserForm\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserForm\FormDeleteConfirm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserForm\FormDeleteConfirm.Designer.cs">
+      <DependentUpon>FormDeleteConfirm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserForm\FormInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserForm\FormInput.Designer.cs">
+      <DependentUpon>FormInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserForm\FormInputComboBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserForm\FormInputComboBox.Designer.cs">
+      <DependentUpon>FormInputComboBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserForm\FormShowPicture.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -303,6 +321,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserForm\FormCustomLog.resx">
       <DependentUpon>FormCustomLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserForm\FormDeleteConfirm.resx">
+      <DependentUpon>FormDeleteConfirm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserForm\FormInput.resx">
+      <DependentUpon>FormInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserForm\FormInputComboBox.resx">
+      <DependentUpon>FormInputComboBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserForm\FormLog.resx">
       <DependentUpon>FormLog.cs</DependentUpon>
